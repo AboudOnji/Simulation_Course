@@ -1,0 +1,173 @@
+\documentclass{beamer}
+\usepackage{physics}
+\usepackage{ragged2e}
+\usepackage{times}
+\usepackage{array}
+\usepackage{amsmath}  % Paquete principal para ecuaciones avanzadas
+\usepackage{amssymb}  % Símbolos matemáticos adicionales
+\usepackage{amsfonts} % Fuentes matemáticas adicionales
+\usepackage{mathtools}
+\usepackage{booktabs} % Para formato APA en tablas
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+%\usecolortheme{dolphin}%crane, beaver,dolphin,wolverine,seagull,fly,albatross
+\setbeamertemplate{caption}[numbered]
+\usepackage[english]{babel}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{changepage}
+\usepackage{hyperref}
+
+
+
+\captionsetup{
+    font=footnotesize, % Tamaño de la letra para las captions
+    labelfont=bf,      % Hace "Figura X" en negrita
+    labelsep=colon     % Cambia el separador después de "Figura X"
+}
+\usepackage[style=apa, backend=biber]{biblatex} % Configuración para APA o el estilo deseado
+\addbibresource{sample.bib} % Archivo .bib
+
+\justifying
+
+% Tema para la presentación
+\usetheme{cambridge} %  "Madrid"  "Berlin", "CambridgeUS","Warsaw" etc.
+\setbeamertemplate{caption}[numbered]
+\addtolength{\topskip}{-1cm} % Reduce el espacio superior
+\usefonttheme{professionalfonts}
+% Personalizar el footline
+\setbeamertemplate{footline}{%
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.8\paperwidth,ht=2.25ex,dp=1ex,leftskip=1em]{author in head/foot}%
+      \usebeamerfont{author in head/foot}BARSEKH-ONJI Aboud, ORCID: 0009-0004-5440-8092
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.2\paperwidth,ht=2.25ex,dp=1ex,rightskip=1em]{page number in head/foot}%
+      \usebeamerfont{ page number in head/foot}\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}%
+  }%
+}
+% Información del título
+\institute{\textbf{Universidad Anáhuac México, Facultad de Ingeniería}}
+\title{\textbf {{Example: Export results to Workspace}}}
+\author{\textbf{BARSEKH-ONJI Aboud (DSc.)}}
+\date \today
+
+\begin{document}
+
+% Página de título
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Example 1}
+    \justifying
+    Use Simulink to solve the following problem for \( 0 \leq t \leq 13 \) 
+    
+    \begin{equation}
+        \dv{y}{t} =10 sin (t)
+    \end{equation}
+   
+    Where: \(y(0)=0\)
+
+Note: use 'Sin(t)' block from sources.  
+    
+\end{frame}
+
+\begin{frame}{Example 1}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figs/ex1.png}
+    \caption{Simulink model for example 1}
+    \label{fig:enter-label}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Example 1}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figs/ex12.png}
+    \caption{Simulink model for Example 1 using Clock and To Workspace blocks}
+    \label{fig:enter-label}
+\end{figure}
+    
+\end{frame}
+
+\begin{frame}{Example 2}
+    Construct a Simulink model to solve
+
+    \begin{equation}
+        \dv{y}{t} =-10y+f(t)
+    \end{equation}
+
+    Where:  \(y(0)=1\) and \(f(t)=2sin(4t)\) for \( 0 \leq t \leq 3 \)
+\end{frame}
+
+\begin{frame}{Example 2}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figs/ex2.png}
+    \caption{Simulink model for Example 2}
+    \label{fig:enter-label}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Example 3: Two-Mass Suspension System}
+    \justifying
+    The following are the eqquations of motion of two-mass suspension model shown in figure (\ref{fig:3})
+    
+    \begin{equation}
+        m_1\Ddot{x_1}=k1(x_2-x_1)+c_1(\Dot{x_2}-\Dot{x_1})
+    \end{equation}
+    \begin{equation}
+        m_2\Ddot{x_2}=-k1(x_2-x_1)-c_1(\Dot{x_2}-\Dot{x_1})+k_2(y-x_2)
+    \end{equation}
+
+    Where: \( m_1=250kg, m_2=40kg, k_1=1.5.10^4 N/m, 
+    
+    k_2=1.5.10^5 N/m, c_1=1917N.s/m \)
+\end{frame}
+
+\begin{frame}{Example 3}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/ex3.png}
+    \caption{Two-Mass suspension model}
+    \label{fig:3}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Example 3}
+The equations of motion can be expressed in state-variable form by letting \( z_1=x_1, z2=\Dot{x_1}, z_3=x_2, z_4=\Dot{x_2}\). The equations of motion become: 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/eq3.png}
+\end{figure}
+    
+\end{frame}
+
+\begin{frame}{Example 3}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figs/eq5.png}
+\end{figure}
+    
+\end{frame}
+
+\begin{frame}{Example 3}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/eq6.png}
+\end{figure}
+    
+\end{frame}
+\begin{frame}{Example 3}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.65\linewidth]{figs/eq8.png}
+\end{figure}
+    
+\end{frame}
+
+
+\end{document}

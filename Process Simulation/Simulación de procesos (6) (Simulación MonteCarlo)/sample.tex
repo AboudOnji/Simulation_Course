@@ -1,0 +1,272 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass[aspectratio=169,xcolor=dvipsnames]{beamer}
+\usetheme{SimpleDarkBlue}
+
+\usepackage[spanish]{babel}
+\usepackage{hyperref}
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsmath}
+\usepackage{lettrine}
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}% Para definir y usar colores (ej. en hipervínculos)
+\usepackage{xurl}
+\usepackage{hyperref}       % Para crear hipervínculos internos y externos
+\hypersetup{
+    colorlinks=true,        % Colorear los enlaces en lugar de usar recuadros
+    linkcolor=blue,     % Color para enlaces internos (índice, referencias cruzadas)
+    filecolor=blue, % Color para enlaces a archivos locales
+    urlcolor=blue,      % Color para URLs
+    citecolor=blue,     % Color para citas bibliográficas
+}
+
+% --- Añade esta línea aquí para numerar figuras ---
+\setbeamertemplate{caption}[numbered]
+% --------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{Simulación de Monte Carlo}
+\subtitle{Materia: Simulación de procesos}
+
+\author{Prof. D.Sc. BARSEKH-ONJI Aboud}
+
+\institute
+{
+    Facultad de Ingeniería \\
+    Universidad Anáhua México % Your institution for the title page
+}
+\date{\today} % Date, can be changed to a custom date
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+% Poner esto en el preámbulo
+\AtBeginSection[]
+{
+  \begin{frame}{Agenda}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\begin{document}
+
+\begin{frame}
+    % Print the title page as the first slide
+    \titlepage
+\end{frame}
+
+%------------------------------------------------
+\section{Introducción a la Simulación de Monte Carlo}
+%------------------------------------------------
+
+\begin{frame}{Orígenes de la Simulación de Monte Carlo}
+    \begin{block}{El Problema: Proyecto Manhattan}
+    Los matemáticos Stanislaw Ulam y John von Neumann se enfrentaron a un problema intratable: modelar el comportamiento de los neutrones en una bomba atómica. Las ecuaciones analíticas eran demasiado complejas.
+    \end{block}
+    
+    \begin{alertblock}{La Idea Revolucionaria de Ulam}
+    En lugar de resolver las ecuaciones, ¿por qué no simular los caminos de miles de 'neutrones virtuales'? Se usarían números aleatorios para decidir el resultado de cada interacción (colisión, absorción, etc.) y luego se promediarían los resultados.
+    \end{alertblock}
+    
+    \begin{block}{El Nacimiento de un Método}
+    Este fue el nacimiento de la simulación de Monte Carlo: una poderosa fusión de la estadística y el poder emergente de la computación para resolver problemas complejos mediante la experimentación aleatoria.
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+
+%------------------------------------------------
+\subsection{Fundamentos teóricos de la simulación Monte Carlo}
+%------------------------------------------------
+
+\begin{frame}{El Principio Fundamental}
+    \begin{block}{Inferencia a través del Muestreo Aleatorio}
+    El principio detrás de Monte Carlo es usar el \textbf{muestreo aleatorio} para realizar inferencias o estimar un valor numérico. Transformamos un problema determinístico en uno de probabilidad.
+    \end{block}
+    
+            \begin{alertblock}{Ejemplo: Estimar el Área de un Lago}
+                \begin{enumerate}
+                    \item Encerrar el lago en un rectángulo de área conocida.
+                    \item Lanzar $N$ 'dardos' (puntos aleatorios) uniformemente dentro del rectángulo.
+                    \item Contar cuántos dardos, $M$, caen dentro del lago.
+                    \item La estimación del área es:
+                    $$ \text{Área} \approx \left( \frac{M}{N} \right) \times \text{Área del Rectángulo} $$
+                \end{enumerate}
+            \end{alertblock}
+        
+\end{frame}
+
+%------------------------------------------------
+\subsection{Fundamento Matemático: La Ley de los Grandes Números}
+%------------------------------------------------
+
+\begin{frame}{La Ley de los Grandes Números (LGN)}
+    \begin{block}{El Fundamento Teórico}
+    La razón por la que la simulación de Monte Carlo funciona se basa en uno de los teoremas más importantes de la probabilidad: la \textbf{Ley de los Grandes Números (LGN)}.
+    \end{block}
+    
+    \begin{alertblock}{¿Qué establece la LGN?}
+    Si se repite un experimento aleatorio un gran número de veces, el \textbf{promedio} de los resultados obtenidos se aproximará cada vez más al \textbf{valor esperado} teórico.
+    \end{alertblock}
+    
+    \begin{block}{En Términos Matemáticos}
+    Si $X_1, X_2, \dots, X_n$ son variables aleatorias independientes con un valor esperado finito $E[X] = \mu$, entonces el promedio de la muestra, $\bar{X}_n$, converge a $\mu$ a medida que $n$ tiende a infinito.
+    $$ \lim_{n \to \infty} P(|\bar{X}_n - \mu| > \epsilon) = 0 $$
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsubsection{Aplicación a la Integración Numérica}
+%------------------------------------------------
+
+\begin{frame}{Aplicación: Integración con Monte Carlo}
+    \begin{block}{El Problema: Calcular una Integral}
+    Supongamos que queremos calcular el área bajo la curva $g(x)$ desde $a$ hasta $b$:
+    $$ I = \int_a^b g(x) dx $$
+    \end{block}
+    
+    \begin{alertblock}{La Solución con Monte Carlo}
+    Podemos reescribir la integral como $I = (b-a) E[g(X)]$, donde $X$ es una variable aleatoria uniforme en $[a, b]$. La LGN nos dice que podemos estimar $E[g(X)]$ promediando $g(x)$ sobre muchas muestras aleatorias.
+    
+    \textbf{Procedimiento:}
+        \begin{enumerate}
+            \item Generar $n$ números aleatorios $x_i$ de la distribución uniforme en $[a, b]$.
+            \item Calcular $g(x_i)$ para cada número.
+            \item La estimación de la integral es: $\hat{I} = (b-a) \frac{1}{n} \sum_{i=1}^{n} g(x_i)$.
+        \end{enumerate}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\subsection{El Procedimiento de Simulación de Monte Carlo}
+%------------------------------------------------
+
+\begin{frame}{El Procedimiento de Simulación de Monte Carlo}
+    \begin{block}{Un Procedimiento General de Cinco Pasos}
+    Aunque las aplicaciones pueden variar enormemente, cualquier simulación de Monte Carlo sigue un procedimiento estructurado.
+    \end{block}
+    
+    \begin{enumerate}
+        \item \textbf{Definir el Dominio de Entradas Posibles:} Identificar todas las variables del problema que contienen incertidumbre. \pause
+        
+        \item \textbf{Generar Entradas Aleatorias:} Especificar una distribución de probabilidad para cada variable incierta y generar un gran número de muestras aleatorias. \pause
+        
+        \item \textbf{Realizar un Cálculo Determinístico:} Para cada conjunto de entradas aleatorias, ejecutar el modelo del sistema y calcular la salida de interés. \pause
+        
+        \item \textbf{Agregar los Resultados:} Recopilar los resultados de todas las ejecuciones y calcular estadísticas clave (promedio, desviación estándar) y construir un histograma de las salidas. \pause
+        
+        \item \textbf{Analizar y Tomar Decisiones:} Interpretar las estadísticas y la distribución de salida para responder a la pregunta original del problema (e.g., ¿cuál es la probabilidad de que el costo exceda un umbral?).
+    \end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Aplicaciones, Ventajas y Limitaciones}
+%------------------------------------------------
+
+\begin{frame}{Aplicaciones Clave de la Simulación de Monte Carlo}
+    \begin{block}{Una Herramienta Indispensable y Versátil}
+    La simplicidad y flexibilidad de la simulación de Monte Carlo la han convertido en una herramienta esencial en campos tan diversos como:
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Gestión de Proyectos:} Estimar la duración y el costo total de un proyecto (análisis PERT).
+        \pause
+        \item \textbf{Finanzas e Inversión:} Valorar opciones financieras complejas y realizar análisis de riesgo de carteras.
+        \pause
+        \item \textbf{Ingeniería de Fiabilidad:} Estimar la probabilidad de fallo de un sistema complejo.
+        \pause
+        \item \textbf{Logística y Cadena de Suministro:} Analizar el impacto de la variabilidad de la demanda y los tiempos de entrega en los inventarios.
+        \pause
+        \item \textbf{Física y Ciencia:} Modelar desde partículas subatómicas hasta la formación de galaxias.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Ventajas y Limitaciones}
+
+
+            \begin{block}{Ventajas}
+                \begin{itemize}
+                    \item \textbf{Flexibilidad:} Puede aplicarse a problemas complejos con muchas variables inciertas donde los métodos analíticos fallan.
+                    \item \textbf{Intuitiva:} El concepto de experimentar con números aleatorios es relativamente fácil de entender y comunicar.
+                    \item \textbf{Cuantificación de la Incertidumbre:} Su principal fortaleza es que la salida es una distribución de probabilidad completa, lo que permite cuantificar el riesgo y la probabilidad de resultados extremos.
+                \end{itemize}
+            \end{block}
+
+\end{frame}
+\begin{frame}{Ventajas y Limitaciones}
+
+ \begin{alertblock}{Limitaciones}
+                 \begin{itemize}
+                    \item \textbf{Computacionalmente Intensiva:} Puede requerir un gran número de ensayos para alcanzar una precisión aceptable.
+                    \item \textbf{Dependencia de las Entradas:} Los resultados son tan buenos como las distribuciones de probabilidad de entrada que se asumen ('basura entra, basura sale').
+                    \item \textbf{No es una Herramienta de Optimización:} Es una herramienta de evaluación ('¿Qué pasa si...?') pero no encuentra la solución óptima por sí misma ('¿Cuál es la mejor...?').
+                \end{itemize}
+            \end{alertblock}
+\end{frame}
+
+
+
+%------------------------------------------------
+\subsection{Ejemplo Práctico: Pronóstico con Incertidumbre}
+%------------------------------------------------
+\begin{frame}{Ejemplo de Simulación MonteCarlo en MATLAB}
+\begin{examples}
+    El ejemplo se encuentra en el repositorio: \\
+    \url{https://github.com/AboudOnji/MonteCarlo}
+\end{examples}
+\end{frame}
+
+\begin{frame}{Interpretación Detallada de la Simulación}
+    
+    \begin{columns}[T] % Divide la diapositiva en columnas
+        
+        \begin{column}{0.5\textwidth} % Columna para la imagen
+            \begin{figure}
+                \includegraphics[width=\textwidth]{Figuras/Cap14/montecarlo.png}
+                \caption{Simulación de Monte Carlo aplicada a un pronóstico ARIMA.}
+            \end{figure}
+        \end{column}
+        
+        \begin{column}{0.5\textwidth} % Columna para el texto
+            \begin{block}{Análisis de Componentes:}
+            \begin{itemize}
+                \item<2-> \textbf{Datos Históricos (Negro):} Muestran una serie con fluctuaciones pero con una leve tendencia general a la baja.
+                
+                \item<3-> \textbf{Pronóstico Promedio (Rojo):} Su trayectoria es una continuación lógica de la tendencia histórica, reflejando esa misma disminución suave.
+                
+                \item<4-> \textbf{Incertidumbre (Gris):} La 'nube' de simulaciones se expande con el tiempo, ilustrando correctamente que la certeza del pronóstico disminuye a futuro.
+            \end{itemize}
+            \end{block}
+        \end{column}
+        
+    \end{columns}
+
+   
+
+\end{frame}
+
+\begin{frame}{Interpretación Detallada de la Simulación}
+\begin{columns}[T] % Divide la diapositiva en columnas
+        
+        \begin{column}{0.5\textwidth} % Columna para la imagen
+            \begin{figure}
+                \includegraphics[width=\textwidth]{Figuras/Cap14/montecarlo.png}
+                \caption{Simulación de Monte Carlo aplicada a un pronóstico ARIMA.}
+            \end{figure}
+        \end{column}
+        
+        \begin{column}{0.5\textwidth} % Columna para el texto
+    \begin{alertblock}{Conclusión Final sobre el Modelo}
+        El alineamiento entre la tendencia histórica y la pronosticada confirma que este modelo ARIMA es un \textbf{ajuste adecuado y efectivo} para los datos. La simulación de Monte Carlo nos permite visualizar el rango de posibles resultados futuros.
+    \end{alertblock}
+            \end{column}
+\end{columns}
+\end{frame}
+
+\end{document}

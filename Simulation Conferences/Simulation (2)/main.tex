@@ -1,0 +1,182 @@
+\documentclass{beamer}
+\usepackage{ragged2e}
+\usepackage{times}
+\usepackage{array}
+\usepackage{amsmath}  % Paquete principal para ecuaciones avanzadas
+\usepackage{amssymb}  % Símbolos matemáticos adicionales
+\usepackage{amsfonts} % Fuentes matemáticas adicionales
+\usepackage{mathtools}
+\usepackage{booktabs} % Para formato APA en tablas
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+%\usecolortheme{dolphin}%crane, beaver,dolphin,wolverine,seagull,fly,albatross
+\setbeamertemplate{caption}[numbered]
+\usepackage[english]{babel}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{changepage}
+\usepackage{hyperref}
+
+
+\captionsetup{
+    font=footnotesize, % Tamaño de la letra para las captions
+    labelfont=bf,      % Hace "Figura X" en negrita
+    labelsep=colon     % Cambia el separador después de "Figura X"
+}
+\usepackage[style=apa, backend=biber]{biblatex} % Configuración para APA o el estilo deseado
+\addbibresource{sample.bib} % Archivo .bib
+
+\justifying
+
+% Tema para la presentación
+\usetheme{cambridge} %  "Madrid"  "Berlin", "CambridgeUS","Warsaw" etc.
+\setbeamertemplate{caption}[numbered]
+\addtolength{\topskip}{-1cm} % Reduce el espacio superior
+\usefonttheme{professionalfonts}
+% Personalizar el footline
+\setbeamertemplate{footline}{%
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.8\paperwidth,ht=2.25ex,dp=1ex,leftskip=1em]{author in head/foot}%
+      \usebeamerfont{author in head/foot}BARSEKH-ONJI Aboud, ORCID: 0009-0004-5440-8092
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.2\paperwidth,ht=2.25ex,dp=1ex,rightskip=1em]{page number in head/foot}%
+      \usebeamerfont{ page number in head/foot}\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}%
+  }%
+}
+% Información del título
+\institute{\textbf{Universidad Anáhuac México, Facultad de Ingeniería}}
+\title{\textbf {{Mathematical Modeling of Physical Systems}}}
+\author{\textbf{BARSEKH-ONJI Aboud (DSc.)}}
+\date \today
+
+\begin{document}
+
+% Página de título
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Tabla de contenido
+\begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents
+\end{frame}
+
+% Inicio de la presentación
+\section{Introduction}
+
+\subsection{What is Mathematical Modeling}
+\begin{frame}{Introduction - Mathematical Modeling}
+    \justifying
+    The task of mathematical modeling is an important step in the analysis and design of physical systems. In this conference, we will develop mathematical models for mechanical, electrical, hydraulic, and thermal systems. The mathematical models of systems are obtained by applying the fundamental physical laws that govern the nature of the components making these systems. 
+\end{frame}
+
+\subsection{Real Systems vs. Mathematical Modeling}
+\begin{frame}{Real Systems vs. Mathematical Modeling}
+    \justifying
+    Real systems are usually quite complex and exact analysis is often impossible. We shall make approximations and reduce the system components to idealized versions whose behaviors are similar to the real components.
+\end{frame}
+\subsection{Laplace Transformation \& Differential equations}
+\begin{frame}{Laplace Transformation \& Differential equations}
+    \justifying
+    The mathematical model of a system is one that consists of one or more differential equations that describe the dynamic behavior of the system. \textbf{The Laplace transformation is applied to the mathematical model and then the model is converted into an algebraic equation.} The properties and behavior of the system can then be represented as a block diagram, with the \textbf{transfer function} of each component describing the relationship between its input and output behavior. 
+\end{frame}
+
+\section{State-Space Modeling}
+\subsection{What is State-Space System?}
+\begin{frame}{What is State-Space System?}
+    \justifying
+    State refers to the past, present and future condition of the system from a mathematical cell. State could be defined as a set of state variables and state equations to model the dynamic system. All the state equations are first-order differential equations.
+\end{frame}
+
+\subsection{State Variables and equations}
+\begin{frame}{State Variables and equations}
+    \justifying
+    It is defined as the minimal set of variables $[x_1(t), x_2(t), \dots, x_n(t)]$ such that knowledge of these variables at any time $t = 0$ and information on the input excitation subsequently applied are sufficient to determine the state of the system at time $t > t_0$. One is likely to confuse state variables with output variables. Output variables can be measured, but state variables do not always satisfy this condition.
+\end{frame}
+
+\begin{frame}{State Variables and equations}
+    \justifying
+    The variable $U(t)$ is controllable at all time instants $t > t_0$. The input $U(t)$ is taken from the input space. The output variable $Z(t)$ is observable at all time instants $t > t_0$, but there is no direct control on the output variables. $Z(t)$ is taken from the universe of output $Z$.
+
+\textbf{State equation}
+\[
+\dot{X}(t) = A X(t) + B U(t) 
+\]
+
+\textbf{Output equation}
+\[
+Z(t) = C X(t) + D U(t)
+\]
+\end{frame}
+\section{Examples}
+\subsection{Moving car simple model}
+\begin{frame}{Moving car simple model}
+\begin{block}{Example 1}
+\justifying
+Please check this link:
+\href{https://la.mathworks.com/help/simulink/gs/create-a-simple-model.html}{\textbf{Moving car simple model}}
+\end{block}
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/fig11.png}
+    \caption{Example 1}
+    \label{fig:enter-label}
+\end{figure}
+\end{frame}
+
+\subsection{Simple mechanical translational system}
+\begin{frame}{Simple mechanical translational system}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/model2.png}
+    \caption{Simple mechanical system}
+    \label{fig:enter-label}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Simple mechanical translational system}
+\begin{block}
+\footnotesize
+         \begin{equation}
+            F - ky - b \frac{dy}{dt} = m \frac{d^2y}{dt^2}
+        \end{equation}
+        \begin{equation}
+            F = m \frac{d^2y}{dt^2} + b \frac{dy}{dt} + ky
+        \end{equation}
+        \begin{equation}
+            F(s) = ms^2Y(s) + bsY(s) + kY(s)
+        \end{equation}
+         \begin{equation}
+            \frac{Y(s)}{F(s)} = \frac{1}{ms^2 + bs + k}
+        \end{equation}
+\end{block}
+\end{frame}
+
+\subsection{Van Der Pol equation}
+\begin{frame}{Van Der Pol equation}
+\begin{block}{}
+    \begin{equation}
+    \ddot{y} + \mu (y^2 - 1) \dot{y} + y = 0
+\end{equation}
+ $\mu=1$, $X_{01}=1$, $X_{02}=-2$
+\end{block}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{figs/Van.png}
+    \caption{Van Der Pol eq Model}
+    \label{fig:enter-label}
+\end{figure}
+\end{frame}
+
+\section{Activity}
+\begin{frame}{Activity}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figs/act.png}
+        \caption{Mechanical system with two masses and two springs\\ $m_1=1 $,$m_2=1.5 $,$B=0.1 $, $K_1=0.2 $, $K_2=0.15$}
+        \label{fig:enter-label}
+    \end{figure}
+\end{frame}
+
+\end{document}

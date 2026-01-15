@@ -1,0 +1,592 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass[aspectratio=169,xcolor=dvipsnames]{beamer}
+\usetheme{SimpleDarkBlue}
+
+\usepackage[spanish]{babel}
+\usepackage{hyperref}
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsmath}
+\usepackage{lettrine}
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}% Para definir y usar colores (ej. en hipervínculos)
+\usepackage{xurl}
+\usepackage{hyperref}       % Para crear hipervínculos internos y externos
+\hypersetup{
+    colorlinks=true,        % Colorear los enlaces en lugar de usar recuadros
+    linkcolor=blue,     % Color para enlaces internos (índice, referencias cruzadas)
+    filecolor=blue, % Color para enlaces a archivos locales
+    urlcolor=blue,      % Color para URLs
+    citecolor=blue,     % Color para citas bibliográficas
+}
+% --- Añade esta línea aquí para numerar figuras ---
+\setbeamertemplate{caption}[numbered]
+% --------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{Modelado de las Series Temporales}
+\subtitle{Materia: Simulación de procesos}
+
+\author{Prof. D.Sc. BARSEKH-ONJI Aboud}
+
+\institute
+{
+    Facultad de Ingeniería \\
+    Universidad Anáhuac México % Your institution for the title page
+}
+\date{\today} % Date, can be changed to a custom date
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+% Poner esto en el preámbulo
+\AtBeginSection[]
+{
+  \begin{frame}{Agenda}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\begin{document}
+
+\begin{frame}
+    % Print the title page as the first slide
+    \titlepage
+\end{frame}
+
+%------------------------------------------------
+\section{Introducción al Modelado de Series Temporales}
+%------------------------------------------------
+
+\begin{frame}{¿Qué es una Serie Temporal?}
+    \begin{block}{Definición}
+    Una \textbf{serie temporal} es una secuencia de puntos de datos medidos en instantes sucesivos en el tiempo, espaciados uniformemente.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Análisis de series temporales:} Consiste en extraer estadísticas y características significativas de los datos.
+        \item \textbf{Modelado de series temporales:} Es el proceso de construir un modelo estocástico que describa la estructura de la serie para poder realizar predicciones (\textit{forecasting}).
+    \end{itemize}
+    
+    \begin{alertblock}{Característica Clave: Dependencia Temporal}
+    A diferencia de otros tipos de datos, los datos de series temporales tienen una estructura de dependencia temporal inherente: el valor de hoy a menudo depende del valor de ayer.
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Regresión en Series Temporales}
+    \begin{block}{Modelos Autorregresivos (AR)}
+    En las series temporales, los predictores más importantes suelen ser los propios valores pasados de la serie. Esto da lugar a los modelos \textbf{autorregresivos}, donde la serie se regresa sobre sus propios valores rezagados (\textit{lags}).
+    \end{block}
+    
+    \begin{alertblock}{Modelo AR de orden $p$, denotado como AR(p)}
+    $$ y_t = c + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} + \epsilon_t $$
+    Donde $y_t$ se predice como una función lineal de sus $p$ valores anteriores.
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Herramientas y Objetivos del Capítulo}
+    \begin{block}{Econometric Modeler App de MATLAB}
+    Utilizaremos este entorno interactivo que facilita todo el flujo de trabajo del modelado econométrico, desde la visualización hasta la estimación y validación de modelos complejos como ARIMA y GARCH.
+    \end{block}
+    
+    \begin{alertblock}{Al finalizar, serás capaz de:}
+        \begin{itemize}
+            \item Visualizar y transformar datos de series temporales.
+            \item Realizar pruebas estadísticas para la identificación de modelos.
+            \item Estimar y comparar modelos candidatos.
+            \item Realizar diagnósticos de residuos.
+            \item Generar automáticamente código o informes.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\section{Análisis de Correlación Pearson}
+%------------------------------------------------
+
+\begin{frame}{Visualización de Datos con Econometric Modeler}
+    \begin{block}{El Primer Paso: Visualizar}
+    El primer paso en cualquier análisis de series temporales es la visualización. Un gráfico de la serie a lo largo del tiempo puede revelar patrones importantes como tendencias, estacionalidad y cambios en la volatilidad.
+    \end{block}
+\end{frame}
+\begin{frame}{Visualización de Datos con Econometric Modeler}
+   
+    
+    \begin{columns}[c]
+        \column{0.5\textwidth}
+            \begin{alertblock}{Econometric Modeler App}
+            Proporciona una interfaz gráfica para importar y visualizar series temporales sin necesidad de escribir código. Al importar datos, la aplicación genera automáticamente un gráfico interactivo.
+            \end{alertblock}
+        \column{0.45\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\linewidth]{Figuras/cap13/fig13.1.png}
+                \caption{Visualización de los índices NASDAQ y NYSE.}
+                \label{fig:em_plot}
+            \end{figure}
+    \end{columns}
+\end{frame}
+%------------------------------------------------
+\subsection{Correlación de Pearson}
+%------------------------------------------------
+
+\begin{frame}{Correlación de Pearson}
+    \begin{block}{Definición}
+    Para cuantificar la relación \textbf{lineal} entre dos series temporales, se utiliza el coeficiente de correlación de Pearson ($\rho$). Su valor varía entre -1 (correlación negativa perfecta) y +1 (correlación positiva perfecta). Un valor de 0 indica que no hay correlación lineal.
+    \end{block}
+    
+    \begin{alertblock}{Fórmula Muestral}
+    $$ r_{xy} = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i - \bar{x})^2} \sqrt{\sum_{i=1}^{n}(y_i - \bar{y})^2}} $$
+    \end{alertblock}
+
+\end{frame}
+
+\begin{frame}{Correlación de Pearson}
+
+    
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.75\textwidth]{Figuras/cap13/corr.png}
+        \caption{La correlación Pearson entre variables}
+        \label{fig:em_corr}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Identificación de la Dependencia Temporal: ACF y PACF}
+%------------------------------------------------
+
+\begin{frame}{Dependencia Temporal: ACF y PACF}
+    Para analizar la dependencia \textbf{dentro de una misma serie temporal}, se utilizan dos herramientas gráficas clave:
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Función de Autocorrelación (ACF)}
+                \begin{itemize}
+                    \item Mide la correlación \textbf{total} (directa e indirecta) de una serie con sus propios valores pasados (rezagos).
+                    \item Responde a: ¿Cómo se relaciona $y_t$ con $y_{t-k}$ en general?
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Función de Autocorrelación Parcial (PACF)}
+                 \begin{itemize}
+                    \item Mide la correlación \textbf{directa} entre $y_t$ y $y_{t-k}$, después de eliminar el efecto de los rezagos intermedios.
+                    \item Responde a: ¿Qué nueva información aporta $y_{t-k}$ que no estuviera ya en $y_{t-1}, \dots, y_{t-k+1}$?
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Ejemplo ACF y PACF: Detección de correlación serial en el PIB}
+\begin{block}{PIB}
+    Consideremos una serie temporal del Producto Interno Bruto (PIB) de EE. UU. Para identificar su estructura de dependencia, podemos visualizar su ACF y PACF en \textbf{Econometric Modeler}.
+
+    Se puede acceder a más detalles del este ejemplo a través del siguiente enlace del repositorio de Mathworks:
+    \end{block}
+    \begin{examples}
+        \url{https://la.mathworks.com/help/econ/detect-serial-correlation-using-econometric-modeler-app.html}
+
+    \end{examples}
+  
+\end{frame}
+\begin{frame}{Identificación de Modelos ARMA con ACF y PACF}
+    \begin{block}{Reglas Clave de Identificación}
+    La interpretación conjunta de la ACF y la PACF es la clave para la identificación de modelos ARMA:
+    \end{block}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{alertblock}{Modelo Autorregresivo AR(p)}
+                 \begin{itemize}
+                    \item La \textbf{PACF} se 'corta' (se vuelve no significativa) después del rezago $p$.
+                    \item La \textbf{ACF} decae exponencialmente.
+                \end{itemize}
+            \end{alertblock}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Modelo de Media Móvil MA(q)}
+                \begin{itemize}
+                    \item La \textbf{ACF} se 'corta' después del rezago $q$.
+                    \item La \textbf{PACF} decae exponencialmente.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+
+%------------------------------------------------
+
+\begin{frame}{Ejemplo: Análisis de la Serie del PIB}
+    \begin{columns}[c]
+        \column{0.5\textwidth}
+            \begin{block}{Interpretación de los Correlogramas}
+                \begin{itemize}
+                    \item \textbf{ACF:} Decae muy lentamente, lo que es una señal clásica de una serie \textbf{no estacionaria} con una fuerte tendencia. Indica que se necesita diferenciar la serie.
+                    \item \textbf{PACF:} Se 'corta' abruptamente después del primer rezago, lo que sugiere que la dinámica de la serie (una vez diferenciada) podría ser descrita por un modelo \textbf{AR(1)}.
+                \end{itemize}
+            \end{block}
+        \column{0.45\textwidth}
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/cap13/fig13.3.png}
+                \caption{ACF y PACF de la serie temporal del PIB.}
+                \label{fig:em_acf_pacf}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\section{Pruebas Estadísticas para la detección de estacionariedad}
+%------------------------------------------------
+
+\begin{frame}{Pruebas Estadísticas para Estacionariedad}
+    \begin{block}{Más Allá del Análisis Gráfico}
+    Además del análisis visual con la ACF y la PACF, es fundamental utilizar pruebas estadísticas formales para evaluar las propiedades de una serie temporal. Estas pruebas proporcionan una base cuantitativa para tomar decisiones sobre la estructura del modelo.
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsection{La Prueba Q de Ljung-Box}
+%------------------------------------------------
+
+\begin{frame}{Prueba Q de Ljung-Box: Detección de Autocorrelación}
+    \begin{block}{Propósito}
+    Es una prueba de hipótesis que se utiliza para determinar si un grupo de autocorrelaciones de una serie temporal son estadísticamente diferentes de cero. Confirma formalmente la presencia de correlación serial.
+    \end{block}
+            \begin{alertblock}{Hipótesis}
+                \begin{itemize}
+                    \item \textbf{$H_0$ (Hipótesis Nula):} No hay correlación serial. Las autocorrelaciones hasta el rezago $m$ son cero (la serie es ruido blanco).
+                    \item \textbf{$H_a$ (Hipótesis Alternativa):} Hay correlación serial.
+                \end{itemize}
+            \end{alertblock}
+\end{frame}
+
+\begin{frame}{Prueba Q de Ljung-Box: Detección de Autocorrelación}
+\begin{block}{Regla de Decisión}
+             Si el \textbf{p-valor $<$ 0.05}, se rechaza $H_0$, concluyendo que existe evidencia de correlación serial.
+            \end{block}
+ 
+            \begin{figure}
+                \includegraphics[width=0.8\linewidth]{Figuras/cap13/fig13.4.png}
+                \caption{Resultados de la prueba en Econometric Modeler.}
+                \label{fig:em_ljungbox}
+            \end{figure}
+            \begin{examples}
+                \url{https://la.mathworks.com/help/econ/detect-serial-correlation-using-econometric-modeler-app.html}
+            \end{examples}
+\end{frame}
+
+\begin{frame}{Prueba Q de Ljung-Box: Detección de Autocorrelación}
+\begin{block}{Discusión de los resultados}
+    Para la serie del PIB no diferenciada, el p-valor resultante será extremadamente pequeño (cercano a cero). Esto nos lleva a rechazar la hipótesis nula de no correlación, confirmando de manera formal lo que la ACF sugería visualmente: la serie del PIB tiene una fuerte estructura de dependencia temporal y no es estacionaria. Este resultado refuerza la necesidad de transformar la serie (por ejemplo, mediante diferenciación) antes de proceder con el modelado.
+\end{block}    
+\end{frame}
+%------------------------------------------------
+\subsection{Detección de Volatilidad Condicional: Prueba de Efectos ARCH}
+%------------------------------------------------
+
+\begin{frame}{Prueba de Efectos ARCH}
+    \frametitle{Detección de Volatilidad Variable}
+    \begin{block}{Heterocedasticidad Condicional (ARCH)}
+    Muchas series, especialmente las financieras, exhiben \textbf{agrupamiento de volatilidad} (\textit{volatility clustering}): períodos de alta volatilidad son seguidos por períodos de alta volatilidad. Esto viola el supuesto de varianza constante.
+    \end{block}
+
+    \begin{alertblock}{Prueba ARCH de Engle}
+    Detecta formalmente la presencia de efectos ARCH.
+    \begin{itemize}
+        \item \textbf{$H_0$:} No existen efectos ARCH (la varianza de los errores es constante).
+        \item \textbf{$H_a$:} Existen efectos ARCH.
+        \item \textbf{Decisión:} Un p-valor bajo confirma la presencia de ARCH, indicando que se necesitan modelos como GARCH.
+    \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Prueba ARCH de Engle}
+   \begin{examples}
+       \url{https://la.mathworks.com/help/econ/detect-arch-effects-using-econometric-modeler.html}
+   \end{examples} 
+   \begin{block}{Aplicación Práctica: Detección de Efectos ARCH en Rendimientos Cambiarios}
+       Consideremos una serie de rendimientos diarios del tipo de cambio entre el Marco Alemán y la Libra Esterlina.
+
+   \end{block}
+\end{frame}
+
+\begin{frame}{Prueba ARCH de Engle}
+   \begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{Figuras/cap13/fig13.5.png}
+    \caption{Correlograma de los residuos al cuadrado, mostrando una clara dependencia.}
+    \label{fig:em_arch_acf}
+\end{figure}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Pruebas de Raíz Unitaria}
+%------------------------------------------------
+
+\begin{frame}{Pruebas de Raíz Unitaria: ADF vs. KPSS}
+    \frametitle{¿Es la serie estacionaria?}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Prueba de Dickey-Fuller Aumentada (ADF)}
+                Prueba para detectar una \textbf{raíz unitaria} (característica de series no estacionarias).
+                \begin{itemize}
+                    \item \textbf{$H_0$:} La serie tiene una raíz unitaria \textbf{(NO es estacionaria)}.
+                    \item \textbf{$H_a$:} La serie \textbf{es estacionaria}.
+                    \item \textit{Un p-valor bajo indica estacionariedad.}
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Prueba KPSS}
+                 Es una prueba para la estacionariedad, con las hipótesis invertidas, lo que la hace un excelente complemento.
+                 \begin{itemize}
+                    \item \textbf{$H_0$:} La serie \textbf{es estacionaria}.
+                    \item \textbf{$H_a$:} La serie tiene una raíz unitaria \textbf{(NO es estacionaria)}.
+                    \item \textit{Un p-valor bajo indica no estacionariedad.}
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Ejemplo Práctico: Detección de Estacionariedad}
+%------------------------------------------------
+
+\begin{frame}{Ejemplo: Flujo de Trabajo para Evaluar Estacionariedad}
+\begin{examples}
+    \url{https://la.mathworks.com/help/econ/assess-stationarity-of-time-series-using-econometric-modeler.html}
+\end{examples}
+    \begin{enumerate}
+        \item \textbf{Visualización:} El gráfico de la serie del PIB muestra una clara tendencia ascendente, sugiriendo no estacionariedad.
+        \item \textbf{Análisis de ACF:} La ACF decae muy lentamente, un patrón típico de una serie con raíz unitaria.
+        \item \textbf{Pruebas Formales (ADF y KPSS):} Ambas pruebas confirman que la serie es \textbf{no estacionaria}.
+        \item \textbf{Transformación:} Se aplica la \textbf{primera diferencia} para eliminar la tendencia.
+        \item \textbf{Reevaluación:} Las pruebas sobre la serie diferenciada confirman que ahora es \textbf{estacionaria} y está lista para ser modelada.
+    \end{enumerate} 
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{¿Qué es Diferenciar una Serie Temporal?}
+    \frametitle{El Proceso de 'Quitar la Tendencia'}
+    \begin{block}{Objetivo Principal: Alcanzar la Estacionariedad}
+    La diferenciación es el proceso más común para \textbf{estabilizar la media} de una serie temporal que no es estacionaria. Su principal propósito es \textbf{eliminar la tendencia}.
+    \end{block}
+    
+    \begin{alertblock}{El Mecanismo: La Primera Diferencia}
+    Se crea una nueva serie temporal calculando la diferencia entre cada observación y la anterior. La nueva serie representa los \textbf{cambios} o \textbf{incrementos} de un período al siguiente.
+    $$ \Delta y_t = y_t - y_{t-1} $$
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Intuición Visual de la Diferenciación}
+    \begin{columns}[c]
+        \column{0.5\textwidth}
+            \begin{block}{Serie Original (No Estacionaria)}
+                Imagina una serie que crece constantemente con el tiempo (una tendencia lineal). Su media no es constante, por lo tanto, no es estacionaria.
+                \begin{itemize}
+                    \item Su valor en el tiempo $t$ es predeciblemente más alto que en $t-1$.
+                \end{itemize}
+            \end{block}
+        \column{0.5\textwidth}
+            \begin{alertblock}{Serie Diferenciada (Estacionaria)}
+                Si calculamos la diferencia en cada paso ($\Delta y_t$), la nueva serie ya no mostrará la tendencia, sino que fluctuará alrededor de una media constante (el cambio promedio).
+                \begin{itemize}
+                    \item Esta nueva serie de 'cambios' sí es estacionaria y está lista para ser modelada con ARMA.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+    
+    \begin{block}{En Resumen}
+    Diferenciar es como pasar de ver la \textbf{posición} de un coche en una autopista a ver su \textbf{velocidad}. Si el coche sube una cuesta a velocidad constante (tendencia en la posición), su velocidad (la diferencia) será una línea plana (estacionaria).
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+\section{Modelos Autorregresivos Integrados de Media Móvil (ARIMA)}
+%------------------------------------------------
+
+\begin{frame}{Modelos ARIMA: Introducción}
+    \begin{block}{La Familia de Modelos ARIMA}
+    Popularizada por Box y Jenkins, representa una de las clases de modelos más importantes y flexibles para el análisis y la predicción de series temporales.
+    \end{block}
+    
+    \begin{alertblock}{Idea Central}
+    El comportamiento de una serie temporal puede ser explicado por:
+        \begin{itemize}
+            \item Sus propios valores pasados $\rightarrow$ \textbf{Componente Autorregresivo (AR)}.
+            \item Sus errores de predicción pasados $\rightarrow$ \textbf{Componente de Media Móvil (MA)}.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Componentes Fundamentales: Procesos AR y MA}
+%------------------------------------------------
+
+\begin{frame}{El Proceso Autorregresivo (AR)}
+    \begin{block}{Intuición}
+    Modela el valor actual de la serie como una función lineal de sus valores pasados. La 'inercia' de la serie hace que los valores pasados sean buenos predictores del valor actual.
+    \end{block}
+    
+    \begin{alertblock}{Modelo AR(p)}
+    Un modelo Autorregresivo de orden $p$:
+    $$ y_t = c + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} + \epsilon_t $$
+    \end{alertblock}
+    
+    \begin{block}{Identificación de un Proceso AR(p)}
+    La 'firma' en los correlogramas es una \textbf{PACF que se corta abruptamente} después del rezago $p$ y una \textbf{ACF que decae exponencialmente}.
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{El Proceso de Media Móvil (MA)}
+    \begin{block}{Intuición}
+    Modela el valor actual de la serie como una función lineal de los errores de predicción pasados. Los 'choques' o 'sorpresas' aleatorias del pasado todavía tienen un efecto persistente.
+    \end{block}
+    
+    \begin{alertblock}{Modelo MA(q)}
+    Un modelo de Media Móvil de orden $q$:
+    $$ y_t = \mu + \epsilon_t + \theta_1 \epsilon_{t-1} + \theta_2 \epsilon_{t-2} + \dots + \theta_q \epsilon_{t-q} $$
+    \end{alertblock}
+    
+    \begin{block}{Identificación de un Proceso MA(q)}
+    La 'firma' es una \textbf{ACF que se corta abruptamente} después del rezago $q$ y una \textbf{PACF que decae exponencialmente}.
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsection{El Modelo ARMA: Combinando Dependencia Pasada y Errores Aleatorios}
+%------------------------------------------------
+
+\begin{frame}{El Modelo ARMA: Combinando AR y MA}
+    \begin{block}{Combinando Componentes}
+    En la práctica, muchas series temporales exhiben características tanto de procesos AR como MA. El modelo \textbf{Autorregresivo de Media Móvil (ARMA)} combina ambos para proporcionar un modelo más parsimonioso y flexible.
+    \end{block}
+    
+    \begin{alertblock}{Modelo ARMA(p,q)}
+    Un modelo ARMA(p,q) indica que el valor actual $y_t$ depende de los $p$ valores pasados de la serie y de los $q$ errores de predicción pasados.
+    $$ y_t = c + \underbrace{\phi_1 y_{t-1} + \dots + \phi_p y_{t-p}}_{\text{Parte AR(p)}} + \epsilon_t + \underbrace{\theta_1 \epsilon_{t-1} + \dots + \theta_q \epsilon_{t-q}}_{\text{Parte MA(q)}} $$
+    \end{alertblock}
+\end{frame}
+\begin{frame}{El Modelo ARMA: Combinando AR y MA}
+    \begin{block}{Identificación}
+    La identificación de modelos ARMA es más compleja, ya que tanto la ACF como la PACF tienden a decaer exponencialmente. La selección de los órdenes $p$ y $q$ a menudo se basa en \textbf{criterios de información} que equilibran el ajuste y la complejidad.
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsection{El Modelo ARIMA: Manejando la No Estacionariedad}
+%------------------------------------------------
+
+\begin{frame}{El Modelo ARIMA: Manejando la No Estacionariedad}
+    \begin{block}{El Problema: Series No Estacionarias}
+    Los modelos AR, MA y ARMA requieren que la serie temporal sea \textbf{estacionaria} (con media y varianza constantes). Sin embargo, la mayoría de las series económicas y financieras reales tienen \textbf{tendencias} y, por lo tanto, no son estacionarias.
+    \end{block}
+    
+    \begin{alertblock}{La Solución: El Componente 'Integrado' (I)}
+    El modelo \textbf{Autorregresivo Integrado de Media Móvil (ARIMA)} extiende al ARMA para manejar estas series. El componente 'Integrado' se refiere al proceso de \textbf{diferenciación} para hacer que la serie sea estacionaria.
+    $$ \Delta y_t = y_t - y_{t-1} $$
+    \end{alertblock}
+    
+    
+\end{frame}
+\begin{frame}{El Modelo ARIMA: Manejando la No Estacionariedad}
+
+\begin{block}{Modelo ARIMA(p,d,q)}
+    Se define por tres parámetros:
+        \begin{itemize}
+            \item \textbf{p:} El orden del componente Autorregresivo (AR).
+            \item \textbf{d:} El número de veces que la serie necesita ser diferenciada.
+            \item \textbf{q:} El orden del componente de Media Móvil (MA).
+        \end{itemize}
+    Un ARIMA(p,d,q) es, en esencia, un modelo ARMA(p,q) ajustado a la serie después de diferenciarla $d$ veces.
+    \end{block}
+    \end{frame}
+
+%------------------------------------------------
+\subsection{Extensiones del Modelo ARIMA}
+%------------------------------------------------
+
+\begin{frame}{Extensiones del Modelo ARIMA}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Modelos Estacionales (SARIMA)}
+                Para series que exhiben patrones estacionales (e.g., ventas que aumentan cada diciembre), se utiliza el modelo \textbf{ARIMA Estacional}.
+                
+                \vspace{1em}
+                \textbf{Notación: ARIMA(p,d,q)(P,D,Q)s}
+                \begin{itemize}
+                    \item \textbf{(p,d,q):} Términos no estacionales.
+                    \item \textbf{(P,D,Q):} Términos estacionales.
+                    \item \textbf{s:} Periodicidad de la estacionalidad (e.g., s=12 para datos mensuales).
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Inclusión de Predictores Externos (ARIMAX)}
+                 Para series cuyo comportamiento puede ser explicado por otras variables externas (exógenas).
+                 
+                 \vspace{1em}
+                 \textbf{Modelo: $y'_t = \beta x_t + \eta_t$}
+                 \begin{itemize}
+                    \item El modelo extiende al ARIMA para incluir una o más variables predictoras ($x_t$).
+                    \item El término de error ($\eta_t$) se modela como un proceso ARMA.
+                    \item Útil para análisis de intervención.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+%------------------------------------------------
+\subsection{La Metodología Box-Jenkins para el Modelado ARIMA}
+%------------------------------------------------
+
+\begin{frame}{La Metodología Box-Jenkins}
+    \begin{block}{Un Enfoque Iterativo para Construir Modelos ARIMA}
+    Propuesto por Box y Jenkins, este es el proceso estándar y estructurado para la construcción de modelos ARIMA. Consta de tres etapas principales que se repiten hasta encontrar un modelo adecuado.
+    \end{block}
+    
+    
+\end{frame}
+\begin{frame}{La Metodología Box-Jenkins}
+
+\begin{enumerate}
+        \item \textbf{Identificación:}
+        \begin{itemize}
+            \item Se determina si la serie es estacionaria y se identifica el orden de diferenciación ($d$) necesario usando gráficos y pruebas de raíz unitaria (ADF, KPSS).
+            \item Se analizan la ACF y la PACF de la serie ya estacionaria para proponer órdenes tentativos para $p$ y $q$.
+        \end{itemize}
+        \pause
+        \item \textbf{Estimación:}
+        \begin{itemize}
+            \item Una vez identificado un modelo candidato ARIMA(p,d,q), se utilizan métodos numéricos (como máxima verosimilitud) para estimar los parámetros del modelo ($\phi_i, \theta_j$).
+        \end{itemize}
+        \pause
+        \item \textbf{Diagnóstico y Verificación:}
+        \begin{itemize}
+            \item Se analizan los residuos del modelo (la diferencia entre los valores reales y los predichos).
+            \item Los residuos deben comportarse como \textbf{ruido blanco} (sin autocorrelación) y seguir una distribución normal.
+        \end{itemize}
+    \end{enumerate}
+    
+    \begin{alertblock}{Ciclo Iterativo}
+    Si el diagnóstico revela problemas (p. ej., correlación en los residuos), el proceso vuelve a la etapa de \textbf{Identificación} para probar un modelo diferente.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Video: Econometric Modeler - Repositorio de Matlab}
+   \begin{block}{Creating ARIMA Models Using Econometric Modeler App}
+       \url{https://la.mathworks.com/videos/creating-arima-models-using-econometric-modeler-app-1515711526970.html}
+   \end{block} 
+\end{frame}
+\end{document}

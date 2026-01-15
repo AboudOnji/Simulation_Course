@@ -1,0 +1,182 @@
+\documentclass{beamer}
+\usetheme{Berkeley}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\title{Definir el comportamiento del gráfico usando acciones de estado y etiquetas de transición}
+\author{Prof. DSc. BARSEKH-ONJI Aboud}
+\institute{Universidad Anáhuac México\\ Facultad de Ingeniería}
+\date \today
+
+\begin{document}
+
+\frame{\titlepage}
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+%---------------------------------------
+\section{Objetivo}
+\begin{frame}{Objetivo}
+    Comprender cómo se puede definir el comportamiento de un gráfico de Stateflow mediante:
+    \begin{itemize}
+        \item Acciones de estado (\textit{entry}, \textit{during}, \textit{exit})
+        \item Etiquetas de transición con condiciones y acciones
+    \end{itemize}
+    \vspace{0.5cm}
+    Caso de estudio: Verificación empírica de la conjetura de Collatz.
+\end{frame}
+
+%---------------------------------------
+\section{Caso: Regla de la conjetura de Collatz}
+\begin{frame}{Regla de la conjetura de Collatz}
+    Dado un número entero positivo $n$:
+    \begin{itemize}
+        \item Si $n_i$ es par, entonces $n_{i+1} = n_i / 2$
+        \item Si $n$ es impar, entonces $n_{i+1} = 3n_i + 1$
+    \end{itemize}
+    El proceso se repite hasta llegar a $n = 1$
+\end{frame}
+
+%--------------------------------------
+\section{Estructura del gráfico}
+\begin{frame}{Estructura del gráfico}
+    \begin{itemize}
+        \item 3 estados: \textbf{Init}, \textbf{Even}, \textbf{Odd}
+        \item Transición predeterminada inicial hacia Init
+        \item Transiciones condicionales entre Even y Odd
+    \end{itemize}
+    \vspace{0.3cm}
+    \centering\includegraphics[width=0.6\linewidth]{StateTransitionActionsGetStartedExample_01.png}
+\end{frame}
+
+\section{Tipos de acciones de estado}
+\begin{frame}{Tipos de acciones de estado}
+    \textbf{Entry:} cuando el estado se vuelve activo \\
+    \textbf{During:} en cada instante mientras el estado está activo \\
+    \textbf{Exit:} cuando el estado se vuelve inactivo
+    \vspace{0.4cm}
+    \begin{block}{Ejemplo combinado}
+        \texttt{entry, during:} se ejecuta al entrar y mientras el estado permanece activo
+    \end{block}
+\end{frame}
+
+\begin{frame}{Tipos de acciones de estado}
+    \centering\includegraphics[width=0.9\linewidth]{StateTransitionActionsGetStartedExample_01.png}
+\end{frame}
+%---------------------------------------
+
+\begin{frame}{Acciones del estado}
+   
+    \begin{block}{Init}
+        cuando este estado se convierte en activo al inicio de la simulación, la acción entry determina la paridad de n y establece y en false. Cuando el gráfico sale de Init después de una unidad de tiempo, la acción exit determina si n es igual a uno.
+    \end{block}
+
+\end{frame}
+
+\begin{frame}{Acciones del estado}
+   
+   \begin{block}{Even}
+       cuando este estado se convierte en activo y en cada unidad de tiempo posterior en la que el estado está activo, la acción combinada entry, during calcula el valor y la paridad para el siguiente número de la secuencia de granizo, n/2.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Acciones del estado}
+   
+    \begin{block}{Odd}
+        cuando este estado se convierte en activo y en cada unidad de tiempo posterior en la que el estado está activo, la acción combinada entry, during comprueba si n es mayor que uno y, si lo es, calcula el valor y la paridad para el siguiente número de la secuencia de granizo, 3*n+1.
+    \end{block}
+
+\end{frame}
+ 
+\section{Configuración detallada del modelo}
+\begin{frame}{Acciones en Init}
+    \textbf{Entry:}
+    \begin{itemize}
+        \item $n2 = rem(n,2)$
+        \item $y = \text{false}$
+    \end{itemize}
+    \textbf{Exit:}
+    \begin{itemize}
+        \item $y = isequal(n,1)$
+    \end{itemize}
+    \textbf{Transición desde Init:}
+    \begin{itemize}
+        \item Si $n2 == 0$: transición a Even
+        \item Si $n2 \neq 0$: transición a Odd
+    \end{itemize}
+\end{frame}
+
+%---------------------------------------
+
+
+\begin{frame}{Acciones en Even}
+    \textbf{Entry, During:}
+    \begin{itemize}
+        \item $n = n / 2$
+        \item $n2 = rem(n,2)$ 
+    \end{itemize}
+    \textbf{Transición:}
+    \begin{itemize}
+        \item Si $n2 \neq 0$: transición a Odd
+        \item Acción de transición: $y = isequal(n,1)$
+    \end{itemize}
+\end{frame}
+
+%---------------------------------------
+\begin{frame}{Acciones en Odd}
+    \textbf{Entry, During:}
+    \begin{itemize}
+        \item Si $n > 1$:
+        \begin{itemize}
+            \item $n = 3n + 1$
+            \item $n2 = rem(n,2)$
+        \end{itemize}
+    \end{itemize}
+    \textbf{Transición:}
+    \begin{itemize}
+        \item Si $n2 == 0$: transición a Even
+    \end{itemize}
+\end{frame}
+
+%---------------------------------------
+\begin{frame}{Simulación: valor inicial $n = 9$}
+    \begin{itemize}
+        \item Transición a Init: $n = 9$, $n2 = 1$
+        \item Init $\rightarrow$ Odd: $n = 28$
+        \item Odd $\rightarrow$ Even: $n = 14$
+        \item Even $\rightarrow$ Odd: $n = 22$
+        \item $\cdots$
+        \item Proceso termina cuando $n = 1$
+    \end{itemize}
+    \vspace{0.3cm}
+    \centering \includegraphics[width=0.7\linewidth]{xxsf_collatz-sdi.png}
+\end{frame}
+
+%---------------------------------------
+
+%---------------------------------------
+\section{Etiquetas de transición}
+\begin{frame}{Etiquetas de transición}
+    \textbf{Formato general:} \texttt{[Condición]\{Acción de condición\}}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item La condición determina si se realiza la transición
+        \item La acción de condición se ejecuta antes de salir del estado origen
+    \end{itemize}
+    \textbf{Ejemplo:} \texttt{[n2 $\sim=$ 0]\{y = isequal(n,1)\}}
+\end{frame}
+
+%---------------------------------------
+\section{Resumen}
+\begin{frame}{Resumen}
+    \begin{itemize}
+        \item Las acciones de estado permiten definir la lógica dentro de cada estado
+        \item Las etiquetas de transición controlan el flujo entre estados
+        \item El ejemplo de la secuencia de Collatz muestra una aplicación empírica clara
+        \item El gráfico termina la simulación automáticamente cuando $n = 1$
+    \end{itemize}
+\end{frame}
+
+\end{document}

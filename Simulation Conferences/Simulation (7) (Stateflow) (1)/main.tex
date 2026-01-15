@@ -1,0 +1,145 @@
+\documentclass{beamer}
+\usetheme{Berkeley}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\title{Introducción a Stateflow}
+\author{Prof. DSc. BARSEKH-ONJI Aboud}
+\institute{Universidad Anáhuac México\\ Facultad de Ingeniería}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% Índice
+\begin{frame}{Contenido}
+    \tableofcontents
+\end{frame}
+
+%---------------------------------------
+\section{¿Qué es Stateflow?}
+\begin{frame}{¿Qué es Stateflow?}
+    Stateflow es una herramienta de MATLAB/Simulink para modelar:
+    \begin{itemize}
+        \item Máquinas de estado finito
+        \item Lógica de control basada en eventos
+        \item Diagramas de flujo y decisiones condicionales
+    \end{itemize}
+    Permite representar visualmente el comportamiento lógico de sistemas reactivos.
+\end{frame}
+
+%---------------------------------------
+\section{Ejemplo 1: Rectificador de media onda}
+\begin{frame}{Ejemplo 1: Rectificador}
+    Este gráfico implementa la lógica de un rectificador de media onda:
+    \begin{itemize}
+        \item Estado \textbf{On}: salida $y = x$
+        \item Estado \textbf{Off}: salida $y = 0$
+        \item Transiciones según el umbral $t_0$
+    \end{itemize}
+    \vspace{0.4cm}
+    \centering\includegraphics[width=0.5\linewidth]{rectify-step4.png}
+\end{frame}
+
+\begin{frame}{Simulación del modelo}
+    \centering\includegraphics[width=0.7\linewidth]{rectify-scope.png}
+    
+\end{frame}
+
+\begin{frame}{Simulación del modelo}
+    \centering\includegraphics[width=0.4\linewidth]{rectify-scope.png}
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item En la parte superior se muestra la señal de entrada $x$
+        \item En la parte inferior, la señal de salida $y$ con valores negativos filtrados
+    \end{itemize}
+\end{frame}
+%---------------------------------------
+\section{Construcción del gráfico}
+\begin{frame}{Pasos para crear un gráfico}
+    \begin{enumerate}
+        \item Crear modelo con `sfnew rectify`
+        \item Agregar los estados y las transiciones
+        \item Establecer condiciones: $x < t_0$ y $x \geq t_0$
+        \item Resolver símbolos: entradas, salidas y constantes
+    \end{enumerate}
+    \centering\includegraphics[width=0.6\linewidth]{stateflow-editor.png}
+\end{frame}
+
+\begin{frame}{Edición del gráfico}
+    \begin{itemize}
+        \item Estados: On y Off
+        \item Transiciones con condiciones en corchetes
+        \item Acciones dentro de cada estado
+    \end{itemize}
+    \vspace{0.3cm}
+    \centering\includegraphics[width=0.6\linewidth]{rectify-step2.png}
+    \hfill
+    
+\end{frame}
+
+%---------------------------------------
+\section{Resolución de símbolos}
+\begin{frame}{Símbolos en Stateflow}
+    Antes de simular el modelo, es necesario declarar todos los símbolos:
+    \begin{itemize}
+        \item $x$: entrada
+        \item $t_0$: dato constante
+        \item $y$: salida
+    \end{itemize}
+    \vspace{0.3cm}
+    \centering\includegraphics[width=0.85\linewidth]{rectify-resolve-symbols.png}
+\end{frame}
+
+%---------------------------------------
+\section{Transiciones y estados}
+\begin{frame}{Gráficos posibles}
+    Ejemplo de un gráfico básico con solo estado On:\\
+    \centering\includegraphics[width=0.4\linewidth]{rectify-step3.png}
+    \vspace{0.3cm}
+    
+    \begin{itemize}
+        \item Estado \textbf{Off}
+        \item Transición con condición $[x<t_0]$
+        \item Transición de regreso con $[x\geq t_0]$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Gráfico completo}
+    \centering\includegraphics[width=0.55\linewidth]{rectify-step4.png}
+    \vspace{0.4cm}
+   \\ Este gráfico contiene toda la lógica del rectificador.
+\end{frame}
+
+%---------------------------------------
+\section{Modelo en Simulink}
+\begin{frame}{Modelo completo}
+    \centering\includegraphics[width=0.6\linewidth]{rectify-model.png}
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item Fuente: \textbf{Sine Wave}
+        \item Gráfico: \textbf{Chart}
+        \item Visualización: \textbf{Scope}
+    \end{itemize}
+\end{frame}
+
+%---------------------------------------
+\section{Ejemplo2: Simulación de un semáforo}
+\begin{frame}{Ejemplo2: Simulación de un semáforo}
+ \centering\includegraphics[width=0.9\linewidth]{semaforo.png}   
+\end{frame}
+
+\section{Resumen}
+\begin{frame}{Resumen}
+    \begin{itemize}
+        \item Stateflow permite modelar lógica de control con estados y transiciones.
+        \item Los símbolos deben estar bien definidos antes de simular.
+        \item El entorno facilita la depuración visual y la simulación paso a paso.
+        \item Es útil para representar sistemas reactivos y condicionales.
+    \end{itemize}
+\end{frame}
+
+\end{document}

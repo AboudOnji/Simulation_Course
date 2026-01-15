@@ -1,0 +1,738 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass[aspectratio=169,xcolor=dvipsnames]{beamer}
+\usetheme{SimpleDarkBlue}
+
+\usepackage[spanish]{babel}
+\usepackage{hyperref}
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsmath}
+\usepackage{lettrine}
+\usepackage{rotating}
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}% Para definir y usar colores (ej. en hipervínculos)
+\usepackage{xurl}
+\usepackage{hyperref}       % Para crear hipervínculos internos y externos
+\hypersetup{
+    colorlinks=true,        % Colorear los enlaces en lugar de usar recuadros
+    linkcolor=blue,     % Color para enlaces internos (índice, referencias cruzadas)
+    filecolor=blue, % Color para enlaces a archivos locales
+    urlcolor=blue,      % Color para URLs
+    citecolor=blue,     % Color para citas bibliográficas
+}
+\setbeamertemplate{caption}[numbered]
+%----------------------------------------------------------------------------------------
+
+\usepackage{listings}
+\usepackage{xcolor} % Para colores en listings
+ \definecolor{codegreen}{rgb}{0,0.6,0}
+ \definecolor{codegray}{rgb}{0.5,0.5,0.5}
+ \definecolor{codepurple}{rgb}{0.58,0,0.82}
+ \definecolor{backcolour}{rgb}{0.97,0.97,0.99}
+
+\lstdefinestyle{MATLABStyle}{
+  language=Matlab,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{codegreen},
+  stringstyle=\color{violet},
+  numberstyle=\tiny\color{gray},
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  frame=lines, % Añade un marco alrededor del código
+  framerule=0.4pt, % Grosor del marco
+  backgroundcolor=\color{backcolour} % Color de fondo suave
+}
+\lstset{style=MATLABStyle}
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{Simulación de Máquinas Finitas (Stateflow)}
+\subtitle{Materia: Simulación de procesos}
+
+\author{Prof. D.Sc. BARSEKH-ONJI Aboud}
+
+\institute
+{
+    Facultad de Ingeniería \\
+    Universidad Anáhuac México % Your institution for the title page
+}
+\date{\today} % Date, can be changed to a custom date
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+% Poner esto en el preámbulo
+\AtBeginSection[]
+{
+  \begin{frame}{Agenda}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\begin{document}
+
+\begin{frame}
+    % Print the title page as the first slide
+    \titlepage
+\end{frame}
+
+%------------------------------------------------
+\section{Introducción a los Sistemas Reactivos y las Máquinas de Estados}
+%------------------------------------------------
+
+\begin{frame}{Sistemas Reactivos}
+    \begin{block}{¿Qué es un Sistema Reactivo?}
+    Es un sistema cuyo comportamiento está dominado por su \textbf{interacción con el entorno}. No ejecuta un algoritmo de principio a fin, sino que reacciona a una secuencia de eventos que pueden ocurrir en cualquier momento y en cualquier orden.
+    \end{block}
+    
+    \begin{alertblock}{Ejemplos}
+        \begin{itemize}
+            \item El controlador de un robot industrial (agarrar, soltar, esperar).
+            \item La lógica de una transacción en línea.
+            \item Un sistema de control de vuelo.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Máquinas de Estados Finitos (FSM)}
+    \frametitle{Finite State Machines (FSM)}
+    \begin{block}{Definición}
+    Una FSM es un modelo matemático de computación que se puede encontrar en exactamente uno de un número finito de \textbf{estados} en un momento dado. Puede cambiar de un estado a otro en respuesta a \textbf{eventos}; este cambio se denomina \textbf{transición}.
+    \end{block}
+
+    Una FSM se define por:
+    \begin{itemize}
+        \item Un conjunto de \textbf{estados} posibles.
+        \item Un \textbf{estado inicial}.
+        \item Un conjunto de \textbf{eventos} (o entradas).
+        \item Un conjunto de \textbf{acciones} (o salidas).
+        \item Una \textbf{función de transición} que define el siguiente estado.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Limitaciones de las FSM Clásicas}
+    \begin{alertblock}{El Problema de la 'Explosión de Estados'}
+    A medida que un sistema crece, el número de estados necesarios para describir todas las posibles condiciones puede volverse inmanejable.
+    \end{alertblock}
+
+    \begin{itemize}
+        \item Los diagramas se vuelven planos, extensos y difíciles de entender.
+        \item Las FSM clásicas carecen de mecanismos eficientes para representar:
+            \begin{itemize}
+                \item La \textbf{jerarquía} (estados dentro de otros estados).
+                \item La \textbf{concurrencia} (procesos que ocurren al mismo tiempo).
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\section{Stateflow: Evolución de las Máquinas de Estados}
+%------------------------------------------------
+
+\begin{frame}{Stateflow: La Evolución de las FSM}
+    \begin{block}{De los Statecharts a Stateflow}
+    Para superar las limitaciones de las FSM, David Harel introdujo los \textbf{statecharts}, un lenguaje visual que extiende las máquinas de estados. \textbf{Stateflow} es la implementación de MathWorks de este poderoso formalismo, integrado completamente en Simulink.
+    \end{block}
+    
+    \begin{alertblock}{Características Clave de Stateflow}
+    Stateflow añade a las FSM conceptos cruciales como:
+        \begin{itemize}
+            \item Jerarquía (Hierarchy)
+            \item Paralelismo (Parallelism / Orthogonality)
+            \item Historial (History Junctions)
+            \item Comunicación con Eventos y Datos
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Características Clave: Jerarquía y Paralelismo}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Jerarquía (Hierarchy)}
+                \begin{itemize}
+                    \item Los estados pueden contener otros estados (subestados), creando \textbf{superestados}.
+                    \item Permite organizar la lógica de manera modular y por niveles de abstracción.
+                    \item \textbf{Ejemplo:} Un estado \texttt{Procesando\_Orden} puede contener subestados como \texttt{Verificando\_Pago} y \texttt{Asignando\_Inventario}.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Paralelismo (Parallelism)}
+                 \begin{itemize}
+                    \item Un superestado puede tener múltiples subestados activos \textbf{simultáneamente} (estados AND).
+                    \item Fundamental para modelar sistemas con modos de operación independientes y concurrentes.
+                    \item \textbf{Ejemplo:} En un vehículo, el sistema de transmisión y el de climatización operan en paralelo.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Características Clave: Historial y Datos}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Historial (History Junctions)}
+                \begin{itemize}
+                    \item Permite que un superestado 'recuerde' el último subestado que estuvo activo antes de una transición de salida.
+                    \item Al reingresar al superestado, se puede reanudar la ejecución desde donde se quedó.
+                    \item Muy útil para modelar interrupciones.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Eventos y Datos}
+                 \begin{itemize}
+                    \item Los diagramas de Stateflow se comunican con el modelo de Simulink a través de:
+                        \begin{itemize}
+                            \item \textbf{Entradas:} Eventos y datos que activan transiciones y modifican la lógica.
+                            \item \textbf{Salidas:} Señales y llamadas a funciones que afectan al resto del sistema.
+                        \end{itemize}
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\section{El Formalismo Visual de los Statecharts de Harel}
+%------------------------------------------------
+
+\begin{frame}{La Crisis de las Máquinas de Estados Convencionales}
+    \begin{block}{El Problema: La 'Explosión de Estados'}
+    David Harel se propuso superar las limitaciones de las FSM tradicionales, que fallaban al describir sistemas complejos del mundo real. El principal problema era la falta de estructura, que llevaba a diagramas planos, masivos y visualmente caóticos.
+    \end{block}
+    
+    \begin{alertblock}{La Solución de Harel}
+    \begin{center}
+     \textbf{statecharts = state-diagrams + depth + orthogonality + broadcast-communication}
+    \end{center}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Profundidad: Jerarquía, Agrupamiento y Refinamiento}
+%------------------------------------------------
+
+\begin{frame}{Profundidad: Jerarquía y Agrupamiento}
+    La primera innovación clave es la \textbf{profundidad}, que introduce el concepto de jerarquía en los estados.
+    \begin{columns}[c]
+        \column{0.5\textwidth}
+            \begin{block}{Agrupamiento (Clustering)}
+                Si varios estados tienen una transición común bajo el mismo evento, podemos agruparlos en un \textbf{superestado}. La transición se dibuja una sola vez desde el borde del superestado, economizando drásticamente el diagrama.
+            \end{block}
+        \column{0.45\textwidth}
+            \begin{figure}
+                \includegraphics[width=0.8\linewidth]{Figuras/Cap10/fig10.2H.png}
+                \caption{Agrupamiento de estados con una transición común.}
+                \label{fig:H2}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Profundidad: Entradas por Defecto e Historial}
+    \begin{columns}[c]
+        \column{0.5\textwidth}
+            \begin{alertblock}{Entrada por Defecto}
+            Especifica a cuál de los subestados se debe entrar si la transición de entrada no lo indica explícitamente.
+            \begin{figure}
+                \includegraphics[width=0.7\linewidth]{Figuras/Cap10/fig10.6H.png}
+                \caption{Transición por defecto.}
+                \label{fig:H6}
+            \end{figure}
+            \end{alertblock}
+            
+        \column{0.5\textwidth}
+            \begin{block}{Conector de Historial (H)}
+             Permite que un superestado 'recuerde' el último subestado activo. Al reingresar, la ejecución se reanuda donde se quedó, lo cual es ideal para modelar interrupciones.
+            \begin{figure}
+                \includegraphics[width=0.8\linewidth]{Figuras/Cap10/fig10.10H.png}
+                \caption{Conector de Historial.}
+                \label{fig:H10}
+            \end{figure}
+            \end{block}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Ejemplo Práctico: Alarma de Reloj Digital}
+    \begin{columns}[c]
+        \column{0.5\textwidth}
+            En este ejemplo de Harel, los estados de sonido de la alarma se agrupan en el superestado \texttt{alarms-beep}.
+            
+            \begin{block}{Ventaja de la Jerarquía}
+            En lugar de dibujar múltiples flechas de salida (una desde cada subestado), se dibuja una única transición desde el borde del superestado. La transición \texttt{any button pressed} se aplica sin importar en cuál de los subestados de alarma se encuentre el sistema, simplificando enormemente el diagrama.
+            \end{block}
+        \column{0.5\textwidth}
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/Cap10/fig10.8H.png}
+                \caption{Agrupamiento de estados de alarma en un superestado.}
+                \label{fig:harel_8}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Diagrama Completo: Reloj Citizen según Harel}
+    \begin{figure}
+        \centering
+        \includegraphics[height=1.35\textheight, angle=-90]{Figuras/Cap10/fig10.9H.png}
+        \caption{Diagrama de estado del sistema Citizen Quartz Multi-Alarm III.}
+        \label{fig:harel_9}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+\section{Componentes Fundamentales de un Diagrama de Stateflow}
+%------------------------------------------------
+
+\begin{frame}{Componentes Fundamentales: Estado y Transición}
+   
+            \begin{block}{Estado (State)}
+            Representado por un rectángulo con esquinas redondeadas, es un modo de operación del sistema. Puede tener acciones asociadas:
+                \begin{itemize}
+                    \item \texttt{entry (en)}: Se ejecuta una vez al entrar al estado.
+                    \item \texttt{during (du)}: Se ejecuta en cada paso de tiempo mientras el estado está activo.
+                    \item \texttt{exit (ex)}: Se ejecuta una vez al salir del estado.
+                \end{itemize}
+            \end{block}
+            \begin{figure}
+                \includegraphics[width=0.6\linewidth]{Figuras/Cap10/fig10.1.png}
+                \caption{Diagrama simple de dos estados.}
+                \label{fig:enter-label}
+            \end{figure}
+
+
+            
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Componentes Fundamentales: Estado y Transición}
+\begin{alertblock}{Transición (Transition)}
+            Representada por una flecha, indica un posible cambio de estado. Su etiqueta define la lógica:
+            \begin{center}
+            \texttt{evento[condición]\{acción\}/acción}
+            \end{center}
+                \begin{itemize}
+                    \item \texttt{evento}: El suceso que 'despierta' la transición.
+                    \item \texttt{[condición]}: Expresión booleana que debe ser verdadera.
+                    \item \texttt{\{acción\}}: Se ejecuta si la condición es verdadera.
+                    \item \texttt{/acción}: Se ejecuta al completar la transición.
+                \end{itemize}
+            \end{alertblock}
+\end{frame}
+\begin{frame}{Componentes Fundamentales: Flujo y Datos}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+            \begin{block}{Elementos de Flujo}
+                \begin{itemize}
+                    \item \textbf{Transición por Defecto:} Una flecha que indica cuál es el primer estado que se activa en un nivel jerárquico.
+                    \item \textbf{Conector de Unión (Junction):} Un círculo que sirve como punto de decisión para crear lógica condicional (if-then-else) en las transiciones.
+                \end{itemize}
+            \end{block}
+        
+        \column{0.5\textwidth}
+            \begin{alertblock}{Interfaz del Diagrama}
+                 \begin{itemize}
+                    \item \textbf{Datos (Data):} Son las variables del diagrama (Input, Output, Local, Parámetros).
+                    \item \textbf{Eventos (Events):} Son disparadores explícitos e instantáneos que notifican que 'algo ha sucedido'.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\section{Ejemplo de Aplicación: El Ciclo de Vida de una Orden de Compra}
+%------------------------------------------------
+
+\begin{frame}{Ejemplo: Ciclo de Vida de una Orden}
+    \frametitle{Modelando el Proceso de \textit{Order Fulfillment}}
+    \begin{block}{La Columna Vertebral del Negocio}
+    El proceso de cumplimiento de pedidos es la secuencia de pasos desde que se recibe un pedido hasta que el producto es entregado. Su eficiencia y precisión tienen un impacto directo en la satisfacción del cliente y los costos operativos.
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Contexto y Relevancia en B2C y B2B}
+%------------------------------------------------
+
+\begin{frame}{Relevancia en B2C vs. B2B}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Contexto B2C (e-commerce)}
+                \begin{itemize}
+                    \item La \textbf{experiencia del cliente} es primordial.
+                    \item Se esperan visibilidad total del pedido y entregas rápidas.
+                    \item El principal desafío es gestionar un \textbf{alto volumen} de pedidos pequeños y personalizados.
+                    \item Un fallo puede resultar en la pérdida de un cliente para siempre.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Contexto B2B (Negocio a Negocio)}
+                 \begin{itemize}
+                    \item Las transacciones son de \textbf{mayor valor} y complejidad.
+                    \item La \textbf{fiabilidad y la precisión} son cruciales.
+                    \item Un retraso puede detener la línea de producción de un cliente, generando costos enormes.
+                    \item La integración con sistemas ERP es fundamental.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection{¿Por qué modelar este proceso con Stateflow?}
+%------------------------------------------------
+
+\begin{frame}{¿Por qué modelar este proceso con Stateflow?}
+    \begin{block}{Naturaleza Basada en Estados y Eventos}
+    Una orden de compra no es un simple dato que fluye; es una entidad que posee un \textbf{estado} en todo momento ('Pendiente', 'Procesando', 'Enviado', 'Cancelado'). Este estado cambia en respuesta a \textbf{eventos} discretos ('pago\_confirmado', 'inventario\_insuficiente'). Esta naturaleza hace que Stateflow sea la herramienta ideal.
+    \end{block}
+    
+    \begin{alertblock}{Con Stateflow, podemos:}
+        \begin{itemize}
+            \item Representar visualmente todos los estados posibles de una orden.
+            \item Definir explícitamente las condiciones y eventos que provocan un cambio de estado.
+            \item Modelar lógicas de excepción complejas (pagos fallidos, falta de stock).
+            \item Simular el proceso bajo diferentes escenarios para identificar cuellos de botella.
+            \item Crear un modelo lógico que sirva como especificación para un sistema real.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Fase 1: Modelo Básico del Ciclo de Vida de la Orden}
+%------------------------------------------------
+
+\begin{frame}{Fase 1: El 'Camino Feliz'}
+
+    \begin{block}{Objetivo}
+    Nos centraremos en el 'camino feliz' (\textit{happy path}): un flujo de proceso lineal donde no ocurren excepciones. El objetivo es familiarizarnos con la creación de estados, transiciones y la interacción básica entre Simulink y Stateflow.
+    \end{block}
+    
+    \begin{alertblock}{Estados del Proceso Básico}
+        \begin{itemize}
+            \item \texttt{Inactivo} $\rightarrow$ \texttt{Recibida} $\rightarrow$ \texttt{Pago\_Verificado} $\rightarrow$ \texttt{Inventario\_Asignado} $\rightarrow$ \texttt{Orden\_Enviada} $\rightarrow$ \texttt{Orden\_Entregada}
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[fragile]{Paso 1: Crear el Tipo de Dato Enumerado}
+    \begin{block}{¿Por qué usar una enumeración?}
+    Para mejorar la legibilidad y robustez del modelo, usamos un tipo de dato enumerado para representar los estados. Esto nos permite usar nombres descriptivos (como \texttt{Recibida}) en lugar de números (1, 2, 3).
+    \end{block}
+
+   
+\end{frame}
+
+\begin{frame}[fragile]{Paso 1: Crear el Tipo de Dato Enumerado}
+
+ \begin{alertblock}{Código: \texttt{OrdenStatus.m}}
+    Cree un archivo \texttt{.m} con el mismo nombre que la clase y guarde este código:
+    \begin{lstlisting}
+classdef OrdenStatus < Simulink.IntEnumType
+  % Enumeracion para los estados de una orden.
+  enumeration
+      Inactivo(0)
+      Recibida(1)
+      Pago_Verificado(2)
+      Inventario_Asignado(3)
+      Orden_Enviada(4)
+      Orden_Entregada(5)
+  end
+end
+    \end{lstlisting}
+    \end{alertblock}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}{Paso 2 y 3: Configurar Simulink y las Variables de Stateflow}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+            \begin{block}{Modelo en Simulink}
+            Se construye la estructura principal que se comunicará con el \textit{Chart} de Stateflow.
+                \begin{itemize}
+                    \item 5 bloques \texttt{Constant} para simular las entradas de control.
+                    \item 1 bloque \texttt{Stateflow Chart} para la lógica.
+                    \item 1 bloque \texttt{Display} para ver el estado actual.
+                \end{itemize}
+            \end{block}
+
+        \column{0.5\textwidth}
+            \begin{alertblock}{Variables (Símbolos) en Stateflow}
+            Se define la interfaz de datos del \textit{chart}.
+                \begin{itemize}
+                    \item 5 variables de \textbf{entrada} (booleanas) para las condiciones: \texttt{nueva\_orden}, \texttt{pago\_ok}, etc.
+                    \item 1 variable de \textbf{salida} (del tipo \texttt{OrdenStatus}) para reportar el estado: \texttt{estado\_orden}.
+                \end{itemize}
+            \end{alertblock}
+            
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}{Paso 2 y 3: Configurar Simulink y las Variables de Stateflow}
+
+\begin{figure}
+                \includegraphics[width=0.8\linewidth]{Figuras/Cap10/fig10.2.png}
+                \caption{Panel de Símbolos con las variables.}
+                \label{fig:sf_fase1_symbols_fig}
+            \end{figure}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}{Paso 4: Construir el Diagrama de Estados}
+    \begin{block}{Lógica del 'Camino Feliz'}
+    Se dibujan los estados y se conectan con transiciones.
+        \begin{itemize}
+            \item Cada estado tiene una acción de entrada (\texttt{entry}) que actualiza la variable de salida \texttt{estado\_orden}.
+            \item Cada transición está 'protegida' por una condición que debe ser verdadera para que el sistema avance al siguiente estado (e.g., \texttt{[pago\_ok == 1]}).
+        \end{itemize}
+    \end{block}
+    
+\end{frame}
+
+
+\begin{frame}{Paso 4: Construir el Diagrama de Estados}
+
+\begin{figure}
+        \centering
+        \includegraphics[width=0.7\textwidth]{Figuras/Cap10/fig10.3.png}
+        \caption{Diagrama de Stateflow completo para el modelo básico.}
+        \label{fig:sf_fase1_chart}
+    \end{figure}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}{Paso 5: Simular y Verificar el Modelo}
+    \begin{block}{Prueba Interactiva}
+        \begin{enumerate}
+            \item Configure el tiempo de simulación en \texttt{inf} e inicie la simulación. El \texttt{Display} mostrará \texttt{0} (Inactivo).
+            \item Durante la simulación, haga doble clic en el bloque \texttt{Constant} \texttt{nueva\_orden} y cambie su valor a \texttt{1}.
+            \item Observe cómo el \textit{chart} se anima, la transición se activa y el \texttt{Display} cambia a \texttt{1} (Recibida).
+            \item Repita el proceso para las demás entradas en secuencia para hacer que la orden avance por todos los estados hasta ser entregada.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Fase 2: Introducción de Excepciones y Decisiones}
+%------------------------------------------------
+
+\begin{frame}{Fase 2: Manejo de Excepciones y añadir realismo}
+    \begin{block}{Objetivo}
+    El 'camino feliz' es poco realista. Haremos nuestro modelo más robusto al introducir dos excepciones comunes: un \textbf{fallo en el pago} y la \textbf{falta de inventario}.
+    \end{block}
+    
+    \begin{alertblock}{Herramienta Clave: Conector de Unión (Junction)}
+    Utilizaremos el conector de unión, un pequeño círculo que nos permite implementar lógica de decisión tipo \textbf{if-then-else} de manera gráfica para crear bifurcaciones en el flujo del proceso.
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[fragile]{Paso 1: Actualizar el Tipo de Dato Enumerado}
+    \begin{block}{Nuevos Estados de Excepción}
+    Debemos añadir los nuevos estados a nuestra clase \texttt{OrdenStatus.m} para poder referenciarlos en el modelo.
+    \end{block}
+
+    
+\end{frame}
+
+\begin{frame}[fragile]{Paso 1: Actualizar el Tipo de Dato Enumerado}
+
+\begin{alertblock}{Código Actualizado: \texttt{OrdenStatus.m}}
+    \begin{lstlisting}
+classdef OrdenStatus < Simulink.IntEnumType
+  enumeration
+      Inactivo(0)
+      Recibida(1)
+      Pago_Verificado(2)
+      Inventario_Asignado(3)
+      Orden_Enviada(4)
+      Orden_Entregada(5)
+      % --- Nuevos estados de excepcion ---
+      Pago_Fallido(6)
+      Fuera_de_Stock(7)
+  end
+end
+    \end{lstlisting}
+    \end{alertblock}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}{Paso 2: Modificar el Diagrama de Estados con Uniones}
+            \begin{block}{Lógica de Decisión}
+                \begin{itemize}
+                    \item Se añaden los estados \texttt{Pago\_Fallido} y \texttt{Fuera\_de\_Stock}.
+                    \item Se elimina la transición directa entre \texttt{Recibida} y \texttt{Pago\_Verificado}.
+                    \item Se inserta un \textbf{conector de unión}.
+                    \item Desde la unión, una transición va a \texttt{Pago\_Verificado} con la condición \texttt{[pago\_ok == 1]}.
+                    \item Otra transición va a \texttt{Pago\_Fallido} con la condición \texttt{[pago\_ok == 0]}.
+                    \item Se repite un proceso similar para la decisión del inventario.
+                \end{itemize}
+            \end{block}
+\end{frame}
+
+\begin{frame}{Paso 2: Modificar el Diagrama de Estados con Uniones}
+
+\begin{figure}
+                \centering
+                \includegraphics[width=0.8\linewidth]{Figuras/Cap10/fig10.4.png}
+                \caption{Diagrama con lógica de decisión para manejar excepciones.}
+                \label{fig:sf_fase2_chart}
+            \end{figure}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}{Paso 3: Simular los Escenarios de Excepción}
+    \begin{block}{Prueba de Fallo de Pago}
+        \begin{enumerate}
+            \item Activar \texttt{nueva\_orden = 1}. El sistema transita a \texttt{Recibida}.
+            \item Asegurarse de que \texttt{pago\_ok = 0}.
+            \item En el siguiente paso, el sistema tomará el camino hacia \texttt{Pago\_Fallido}.
+            \item Después de 5 segundos, la orden se cancela y el sistema vuelve a \texttt{Inactivo}.
+        \end{enumerate}
+    \end{block}
+    
+    \begin{alertblock}{Prueba de Falta de Stock}
+        \begin{enumerate}
+            \item Activar \texttt{nueva\_orden = 1} y \texttt{pago\_ok = 1}. El sistema llega a \texttt{Pago\_Verificado}.
+            \item Asegurarse de que \texttt{stock\_disponible = 0}.
+            \item El sistema tomará la ruta hacia \texttt{Fuera\_de\_Stock} y luego volverá a \texttt{Inactivo}.
+        \end{enumerate}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Fase 3: Modelado de Procesos Paralelos y Jerarquía}
+%------------------------------------------------
+
+\begin{frame}{Fase 3: Añadiendo Complejidad con Jerarquía y Paralelismo}
+
+    \begin{block}{Objetivo}
+    Los procesos logísticos reales rara vez son secuenciales. Usaremos dos conceptos avanzados de Stateflow para modelar subprocesos que ocurren de forma concurrente:
+        \begin{itemize}
+            \item \textbf{Jerarquía (Superestados):} Para agrupar la lógica principal del procesamiento de la orden.
+            \item \textbf{Paralelismo (Estados Ortogonales):} Para modelar la cancelación de una orden o el proceso de devolución, que pueden ocurrir en paralelo al flujo principal.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[fragile]{Paso 1: Actualizar Enumeración y Variables}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+            \begin{alertblock}{Nuevos Estados}
+            Añadimos estados para la cancelación y el ciclo de devolución a \texttt{OrdenStatus.m}.
+            \begin{lstlisting}
+    % ... (estados anteriores)
+    Cancelada(8)
+    Devolucion_Solicitada(9)
+    Paquete_Recibido_Dev(10)
+    Reembolso_Procesado(11)
+            \end{lstlisting}
+            \end{alertblock}
+        \column{0.5\textwidth}
+            \begin{block}{Nuevas Variables}
+            Añadimos nuevas variables de \textbf{entrada} y \textbf{salida} al \textit{chart} para gestionar los nuevos procesos.
+                \begin{itemize}
+                    \item \texttt{solicitud\_cancelar}
+                    \item \texttt{solicitud\_devolver}
+                    \item \texttt{paquete\_devuelto}
+                    \item \texttt{estado\_devolucion}
+                \end{itemize}
+            \end{block}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Paso 2: Reestructurar con Jerarquía y Paralelismo}
+    \begin{columns}[t]
+        \column{0.5\textwidth}
+            \begin{block}{Crear un Superestado}
+                \begin{itemize}
+                    \item Se crea un estado grande \texttt{Orden\_Activa} y se arrastran todos los estados del proceso principal (excepto \texttt{Inactivo}) dentro de él.
+                    \item Una única transición desde el \textbf{borde} de este superestado hacia un nuevo estado \texttt{Cancelada} permite interrumpir \textit{cualquier} subestado activo con la condición \texttt{[solicitud\_cancelar == 1]}.
+                \end{itemize}
+            \end{block}
+        \column{0.5\textwidth}
+            \begin{alertblock}{Añadir Paralelismo}
+                \begin{itemize}
+                    \item El superestado \texttt{Orden\_Activa} se descompone en dos regiones paralelas (AND) con una línea discontinua.
+                    \item Una región mantiene el flujo principal del pedido.
+                    \item La otra región contiene una nueva máquina de estados para gestionar el proceso de \textbf{devolución}, que se activa solo cuando el proceso principal llega al estado \texttt{Orden\_Entregada}.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Diagrama Final del Modelo}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figuras/Cap10/fig10.5.png}
+        \caption{Diagrama de Stateflow final con jerarquía y estados paralelos.}
+        \label{fig:sf_fase3_chart}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Diagrama Final del Modelo}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\textwidth]{Figuras/Cap10/fig10.6.png}
+        \caption{Diagrama de Stateflow final con jerarquía y estados paralelos.}
+        \label{fig:sf_fase3_chart}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Paso 3: Simular Escenarios Avanzados}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Simular una Cancelación}
+                \begin{enumerate}
+                    \item Iniciar el proceso de una orden hasta un estado intermedio (e.g., \texttt{Inventario\_Asignado}).
+                    \item Activar la señal \texttt{solicitud\_cancelar = 1}.
+                    \item Observar cómo la ejecución salta inmediatamente del subestado activo al estado \texttt{Cancelada}, demostrando el poder de la transición de alto nivel.
+                \end{enumerate}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Simular una Devolución}
+                 \begin{enumerate}
+                    \item Completar el flujo principal hasta que la orden llegue a \texttt{Orden\_Entregada}.
+                    \item En este punto, la máquina de estados paralela de devolución se activa.
+                    \item Activar \texttt{solicitud\_devolver = 1}.
+                    \item Observar cómo el subproceso de devolución avanza por sus propios estados, mientras el estado principal de la orden permanece en \texttt{Orden\_Entregada}.
+                \end{enumerate}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+\end{document}

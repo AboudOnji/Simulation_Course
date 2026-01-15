@@ -1,0 +1,228 @@
+\documentclass{beamer}
+\usetheme{Berkeley}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usecolortheme{dolphin}
+
+\title{Control de sistemas en Simulink}
+\author{Prof. D.Sc. BARSEKH-ONJI Aboud \inst{1}}
+\date{\today}
+\institute[Institución]{%
+  \inst{1}%
+  Facultad de Ingeniería \\ % Ajusta el nombre si es necesario
+  Universidad Anáhuac México 
+}
+
+%--- Inicio del Documento ---
+\begin{document}
+
+%--- Diapositiva de Título ---
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%--- Tabla de Contenido (Opcional) ---
+ \begin{frame}{Tabla de Contenido}
+  \tableofcontents
+\end{frame}
+
+%===============================================================================
+% Sección 1: Introducción a los Sistemas de Control
+%===============================================================================
+\section{Introducción}
+
+\begin{frame}{¿Qué es un Sistema de Control?}
+  \begin{itemize}
+    \item Un sistema de control busca mantener una variable de salida en un valor deseado (punto de ajuste o referencia), a pesar de las perturbaciones.
+    \item Ejemplos: Control de temperatura en un horno, control de velocidad en un coche, control de nivel de líquido en un tanque.
+    \item Los sistemas de control a menudo usan retroalimentación (feedback) para comparar la salida actual con la referencia y ajustar la entrada al sistema.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Simulink: Una Herramienta para Simulación y Diseño de Control}
+  \begin{itemize}
+    \item Simulink (parte de MATLAB) es un entorno de diagrama de bloques para modelar, simular y analizar sistemas dinámicos.
+    \item Permite visualizar el comportamiento del sistema y diseñar controladores de manera gráfica.
+  \end{itemize}
+\end{frame}
+
+%===============================================================================
+% Sección 2: El Controlador PID - Teoría y Base
+%===============================================================================
+\section{El Controlador PID}
+
+\begin{frame}{¿Qué es un Controlador PID?}
+  \begin{itemize}
+    \item PID significa Proporcional-Integral-Derivativo.
+    \item Es el tipo de controlador más común en la industria debido a su simplicidad y efectividad para muchas aplicaciones.
+    \item Calcula una señal de control ($u(t)$) basada en el error ($e(t)$), que es la diferencia entre la referencia ($r(t)$) y la salida del sistema ($y(t)$): $e(t) = r(t) - y(t)$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Componentes del Controlador PID}
+  \begin{itemize}
+    \item **Proporcional (P):** La acción de control es proporcional al error actual.
+    $$u_P(t) = K_p \cdot e(t)$$
+    $K_p$ es la ganancia proporcional. Una $K_p$ alta reduce el error de estado estacionario y el tiempo de subida, pero puede aumentar el sobreimpulso y la oscilación.
+
+    \item **Integral (I):** La acción de control es proporcional a la integral del error a lo largo del tiempo.
+    $$u_I(t) = K_i \int e(\tau) d\tau$$
+    $K_i$ es la ganancia integral. La acción integral elimina el error de estado estacionario acumulado, pero puede empeorar la estabilidad y aumentar el sobreimpulso.
+
+    \item **Derivativo (D):** La acción de control es proporcional a la tasa de cambio (derivada) del error.
+    $$u_D(t) = K_d \frac{de(t)}{dt}$$
+    $K_d$ es la ganancia derivativa. La acción derivativa predice el error futuro y ayuda a amortiguar las oscilaciones y reducir el sobreimpulso. Puede ser sensible al ruido en la señal de error.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ecuación del Controlador PID}
+  La señal de control total $u(t)$ es la suma de las contribuciones Proporcional, Integral y Derivativa:
+  $$u(t) = K_p \cdot e(t) + K_i \int e(\tau) d\tau + K_d \frac{de(t)}{dt}$$
+
+  En el dominio de Laplace, la función de transferencia del controlador PID es:
+  $$C(s) = K_p + \frac{K_i}{s} + K_d s = K_p \left(1 + \frac{1}{T_i s} + T_d s\right)$$
+  Donde $T_i = K_p/K_i$ es el tiempo integral y $T_d = K_d/K_p$ es el tiempo derivativo.
+
+  (Puedes usar la forma estándar o paralela dependiendo de cómo el bloque PID de Simulink implemente las ganancias).
+\end{frame}
+
+%===============================================================================
+% Sección 3: Modelado del Sistema de Control en Simulink
+%===============================================================================
+\section{Modelado en Simulink: Nuestro Ejemplo}
+
+\begin{frame}{Diagrama de Bloques del Sistema de Control}
+  Aquí vemos un sistema de control típico implementado en Simulink:
+  \begin{figure}
+    % Asegúrate de que la imagen esté en el mismo directorio o especifica la ruta
+    \includegraphics[width=0.9\textwidth]{PID.png}
+    \caption{Diagrama de bloques del sistema de control en Simulink.}
+  \end{figure}
+  Vamos a analizar cada bloque.
+\end{frame}
+
+\begin{frame}{Bloques del Modelo en Simulink}
+  \begin{itemize}
+    \item \textbf{Step:} Genera la señal de referencia $r$. En este caso, es un cambio escalón, simulando una entrada que cambia abruptamente de un valor a otro (ej. encender un interruptor, cambiar la temperatura deseada).
+    \item \textbf{Sum:} Calcula el error $e = r - y$. Tiene una entrada positiva para la referencia (+) y una negativa para la retroalimentación (-).
+    \item \textbf{Gain:} Multiplica la señal de error (o una señal intermedia) por una constante. En este ejemplo, multiplica por 2.5. Esto podría ser parte del controlador o una ganancia adicional en la cadena directa.
+    
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Bloques del Modelo en Simulink}
+  \begin{itemize}
+    
+    \item \textbf{PID Controller:} Este es el bloque que implementa la lógica Proporcional, Integral y Derivativa. Toma el error (escalado por el Gain en este caso) como entrada y genera la señal de control $u$.
+    \item \textbf{Plant:} Representa el sistema físico que queremos controlar. Está modelado por su función de transferencia en el dominio de Laplace:
+    $$G(s) = \frac{1}{s^2+2s+4}$$
+    La entrada es la señal de control $u$ y la salida es la variable controlada $y$.
+    
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Bloques del Modelo en Simulink}
+  \begin{itemize}
+    
+    
+    \item \textbf{Feedback Loop:} La conexión que lleva la salida $y$ de vuelta a la entrada negativa del bloque Sum. Cierra el lazo de control.
+    \item \textbf{Scope:} Visualiza las señales seleccionadas durante la simulación, típicamente la referencia $r$ y la salida del sistema $y$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Proceso de Creación del Modelo en Simulink}
+\begin{itemize}
+    \item Abre MATLAB y escribe \texttt{simulink} para iniciar.
+    \item Crea un nuevo modelo en blanco.
+    \item Arrastra los bloques necesarios desde el Library Browser a tu modelo (busca por nombre o en las categorías: \texttt{Sources}, \texttt{Math Operations}, \texttt{Continuous}, \texttt{Sinks}).
+       \begin{itemize}
+           \item Step, Sum, Gain, PID Controller, Transfer Fcn (para la Planta), Scope.
+       \end{itemize}
+    \item Conecta las entradas y salidas de los bloques como se muestra en el diagrama. Asegúrate de que el bloque Sum tenga la configuración \texttt{+-}.
+    \end{itemize}
+ \end{frame}
+
+\begin{frame}{Proceso de Creación del Modelo en Simulink}
+ \begin{itemize}
+      \item Configura los parámetros de cada bloque haciendo doble clic en ellos:
+       \begin{itemize}
+           \item \textbf{Step:} Define el tiempo y los valores inicial y final.
+           \item \textbf{Gain:} Define el valor de la ganancia (2.5).
+           \item \textbf{Transfer Fcn:} Ingresa los coeficientes del numerador ([1]) y del denominador ([1 2 4]).
+           \item \textbf{PID Controller:} Inicialmente, puedes dejar las ganancias P, I, D en sus valores por defecto (o 0 si es la primera vez que lo usas), ya que las sintonizaremos después. Asegúrate de que el tipo de controlador sea "PID" (o "PI" si solo vas a usar esos términos, aunque el bloque se llama PID Controller).
+           \item \textbf{Scope:} Configura el número de entradas si vas a visualizar múltiples señales (ej. 2 para $r$ y $y$).
+       \end{itemize}
+    \item Configura los parámetros de simulación (Tiempo de parada) en `Modeling` $>$ `Model Settings`.
+ \end{itemize}
+   
+ 
+\end{frame}
+
+%===============================================================================
+% Sección 4: Sintonización del Controlador PID con la App PID Tuner
+%===============================================================================
+\section{Sintonización del Controlador PID}
+
+\begin{frame}{¿Por qué Sintonizar el PID?}
+  \begin{itemize}
+    \item Elegir los valores correctos para $K_p, K_i, K_d$ es crucial para el rendimiento del sistema de control.
+    \item Un PID mal sintonizado puede llevar a:
+    \begin{itemize}
+        \item Respuesta lenta.
+        \item Sobreimpulso excesivo.
+        \item Oscilaciones constantes.
+        \item Inestabilidad del sistema.
+    \end{itemize}
+    \item El proceso de sintonización ajusta las ganancias para lograr un comportamiento deseado (ej. tiempo de subida rápido, bajo sobreimpulso, error de estado estacionario nulo, buena estabilidad).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{La App PID Tuner de Simulink}
+  \begin{itemize}
+    \item Simulink ofrece una herramienta automática e interactiva para sintonizar controladores PID: la **App PID Tuner**.
+    \item Esta app analiza el modelo del sistema (la Planta y el lazo de retroalimentación) y propone ganancias iniciales.
+    \item Permite ajustar el balance entre rendimiento (rapidez, sobreimpulso) y robustez (estabilidad frente a incertidumbres).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Uso Básico de la App PID Tuner}
+\footnotesize
+  \begin{enumerate}
+    \item Una vez que tu modelo de Simulink con el bloque PID está construido, haz doble clic en el bloque \texttt{PID Controller}.
+    \item Haz clic en el botón \texttt{Tune} (o \texttt{Manage and Tune} en versiones más recientes) en la ventana de parámetros del bloque.
+    \item Simulink linealizará el sistema (si es necesario) y abrirá la ventana de la app PID Tuner.
+    \item La app mostrará una respuesta inicial (ej. respuesta al escalón).
+    \item Puedes usar los controles deslizantes (Performance vs. Robustness) para ajustar rápidamente la respuesta, o especificar requisitos de diseño más detallados.
+    \item La app te mostrará las ganancias PID resultantes ($K_p, K_i, K_d$).
+    \item Haz clic en \texttt{Update Block} (o similar) para aplicar las ganancias sintonizadas a tu bloque PID en el modelo de Simulink.
+    \item Cierra la app y ejecuta la simulación en tu modelo para ver la respuesta con las ganancias sintonizadas. Compara con la respuesta inicial.
+  \end{enumerate}
+  Esto simplifica enormemente el proceso tradicional de sintonización manual o por métodos clásicos.
+\end{frame}
+
+%===============================================================================
+% Sección 5: Conclusiones
+%===============================================================================
+\section{Conclusiones}
+
+\begin{frame}{Conclusiones}
+  \begin{itemize}
+    \item Los controladores PID son fundamentales en ingeniería de control.
+    \item Simulink permite modelar sistemas dinámicos y diseñar/simular controladores de forma gráfica.
+    \item El bloque PID Controller en Simulink simplifica la implementación de esta lógica de control.
+    \item La App PID Tuner es una herramienta poderosa para encontrar eficientemente las ganancias $K_p, K_i, K_d$ adecuadas para tu sistema, mejorando su rendimiento.
+    \item La simulación es clave para probar y validar el diseño del controlador antes de implementarlo en un sistema físico.
+  \end{itemize}
+\end{frame}
+
+%===============================================================================
+% Sección 6: Preguntas
+%===============================================================================
+
+
+
+
+%--- Fin del Documento ---
+\end{document}

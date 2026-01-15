@@ -1,0 +1,248 @@
+\documentclass{beamer}
+\usepackage{ragged2e}
+\usepackage{times}
+\usepackage{array}
+\usepackage{amsmath}  % Paquete principal para ecuaciones avanzadas
+\usepackage{amssymb}  % Símbolos matemáticos adicionales
+\usepackage{amsfonts} % Fuentes matemáticas adicionales
+\usepackage{mathtools}
+\usepackage{booktabs} % Para formato APA en tablas
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+%\usecolortheme{dolphin}%crane, beaver,dolphin,wolverine,seagull,fly,albatross
+\setbeamertemplate{caption}[numbered]
+\usepackage[english]{babel}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{changepage}
+\usepackage{hyperref}
+
+
+\captionsetup{
+    font=footnotesize, % Tamaño de la letra para las captions
+    labelfont=bf,      % Hace "Figura X" en negrita
+    labelsep=colon     % Cambia el separador después de "Figura X"
+}
+\usepackage[style=apa, backend=biber]{biblatex} % Configuración para APA o el estilo deseado
+\addbibresource{sample.bib} % Archivo .bib
+
+\justifying
+
+% Tema para la presentación
+\usetheme{cambridge} %  "Madrid"  "Berlin", "CambridgeUS","Warsaw" etc.
+\setbeamertemplate{caption}[numbered]
+\addtolength{\topskip}{-1cm} % Reduce el espacio superior
+\usefonttheme{professionalfonts}
+% Personalizar el footline
+\setbeamertemplate{footline}{%
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.8\paperwidth,ht=2.25ex,dp=1ex,leftskip=1em]{author in head/foot}%
+      \usebeamerfont{author in head/foot}BARSEKH-ONJI Aboud, ORCID: 0009-0004-5440-8092
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.2\paperwidth,ht=2.25ex,dp=1ex,rightskip=1em]{page number in head/foot}%
+      \usebeamerfont{ page number in head/foot}\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}%
+  }%
+}
+% Información del título
+\institute{\textbf{Universidad Anáhuac México, Facultad de Ingeniería}}
+\title{\textbf {{Discrete Events Simulation (SimEvents)}}}
+\author{\textbf{BARSEKH-ONJI Aboud (DSc.)}}
+\date \today
+
+\begin{document}
+
+% Página de título
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Tabla de contenido
+\begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents
+\end{frame}
+
+% Inicio de la presentación
+\section{Introduction}
+
+\subsection{Time-based vs. Discrete-Events Systems}
+\begin{frame}{Time-based vs. Discrete-Events Systems}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{figs/pic11.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Time-based vs. Discrete-Events Systems}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{figs/pic22.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Time-based vs. Discrete-Events Systems}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figs/pic33.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Time-based vs. Discrete-Events Systems}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{figs/elevator.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Time-based vs. Discrete-Events Systems}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{figs/fly.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Time-based vs. Discrete-Events Systems}
+    \justifying
+    SimEvents integrates discrete-event system modeling into the Simulink time-based framework. In time-based systems, a signal changes value in response to the simulation clock, and state updates occur synchronously with time. By contrast, in discrete-event or event-based systems state transitions depend on asynchronous discrete incidents called events.
+\end{frame}
+
+\begin{frame}{Time-based vs. Discrete-Events Systems}
+    \justifying
+   Suppose that you want to measure how long the average car\textbf{ waits in a queue for its turn} to fill its tank at a busy gas station. Suppose that you also want to model the motion of the car by solving differential equations. You can use a combination of time-based simulation and discrete-event simulation, where:
+   \begin{block}{}
+       \begin{itemize}
+        \justifying
+           \item The time-based aspect controls the details of the car's trajectory.
+           \item The discrete-event aspect controls the queuing behavior.
+       \end{itemize}
+   \end{block}
+\end{frame}
+
+\begin{frame}{Time-based vs. Discrete-Events Systems}
+    \justifying
+  In a Simulink model, you typically construct a \textbf{discrete-event system} by adding various blocks, such as generators, queues, and servers, from the \textbf{SimEvents} block library. These blocks are suitable for producing and processing \textbf{entities}, which are abstractions of discrete items of interest. 
+  
+  Examples of \textbf{entities} are:
+  \begin{itemize}
+      \item vehicles arriving at a gas station,
+      \item packets within a communication network, planes on a runway,
+      \item or trains within a signaling system. 
+      \item Asynchronous events correspond to motion and changes in entity attributes through the system model, and they update the states of the underlying system. Examples of states are lengths of queues or service time for an entity in a server.
+  \end{itemize}
+\end{frame}
+
+
+\section{A Simple Queuing System}
+\begin{frame}{A Simple Queuing System}
+    \justifying
+    This SimEvents model represents a simple queuing system that generates entities of interest and queues them in a \textbf{specified order} (figure \ref{fig:1}, services them to change their \textbf{attributes}, and terminates them to represent their departure from the line.
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{figs/Model1.png}
+        \caption{Simple Queuing System}
+        \label{fig:1}
+    \end{figure}
+    
+\end{frame}
+
+\begin{frame}{A Simple Queuing System}
+    \begin{block}{}
+        \begin{itemize}
+            \item The \textbf{Entity Generator block} is used to generate entities with a fixed or randomized inter-generation time. 
+            \item The \textbf{Entity Queue block} queues the entities based on a specified order.
+            \item The \textbf{Entity Server block} services entities for a length of time. 
+            \item The entities depart the line through the Entity Terminator block.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+\subsection{SimEvents Common Design Patterns}
+\begin{frame}{SimEvents Common Design Patterns}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{figs/SimEvents Patterns.png}
+        \caption{SimEvents Library}
+        \label{fig:2}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{SimEvents Common Design Patterns}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.7\linewidth]{figs/table1.png}
+        \caption{Design Patterns}
+        \label{fig:3}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{SimEvents Common Design Patterns}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figs/Table2.png}
+        \caption{Design Patterns}
+        \label{fig:4}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{SimEvents Common Design Patterns}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figs/table3.png}
+        \caption{Design Patterns}
+        \label{fig:4}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{SimEvents Common Design Patterns}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figs/table4.png}
+        \caption{Design Patterns}
+        \label{fig:4}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{SimEvents Common Design Patterns}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figs/table5.png}
+        \caption{Design Patterns}
+        \label{fig:4}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{SimEvents Common Design Patterns}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figs/table6.png}
+        \caption{Design Patterns}
+        \label{fig:4}
+    \end{figure}
+\end{frame}
+
+\section{Create a Discrete-Event Model}
+\begin{frame}{Create a Discrete-Event Model}
+\begin{block}{}
+\justifying
+    This example describes how to build a new SimEvents model representing a discrete-event system. 
+    
+    For more information about discrete-event systems, see “Discrete-Event Simulation in Simulink Models” on the following page.
+    
+    The example features a simple queuing system in which trucks arrive at a gas station to fill up their tanks. 
+    
+    The tank of a truck is represented by an entity that arrives at a fixed deterministic rate, waits in a queue, and advances to a server that fills the tanks and also operates at a fixed deterministic rate. 
+    
+    This type of system is known as a D/D/1 queuing system in queuing notation. The notation indicates the deterministic arrival rate, the deterministic service rate, and a single server.
+
+\end{block}
+\end{frame}
+\begin{frame}{Create a Discrete-Event Model}
+\justifying
+Copy this command and paste it in your Matlab Command Window
+\begin{block}{}
+    openExample('simevents/GettingStartedSimpleQueueExample')
+\end{block}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,190 @@
+
+\documentclass{beamer}
+\usepackage{ragged2e}
+\usepackage{times}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usepackage[spanish]{babel}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{changepage}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+\tikzstyle{block} = [rectangle, draw, text centered, minimum height=2em]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+\justifying
+
+\usetheme{cambridge}
+\usefonttheme{professionalfonts}
+
+\setbeamertemplate{footline}{%
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.8\paperwidth,ht=2.25ex,dp=1ex,leftskip=1em]{author in head/foot}%
+      \usebeamerfont{author in head/foot}BARSEKH-ONJI Aboud, ORCID: 0009-0004-5440-8092
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.2\paperwidth,ht=2.25ex,dp=1ex,rightskip=1em]{page number in head/foot}%
+      \usebeamerfont{page number in head/foot}\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}%
+  }%
+}
+
+\institute{\textbf{Universidad Anáhuac México, Facultad de Ingeniería}}
+\title{\textbf{Comparación de Algoritmos de Optimización: PSO vs GA}}
+\author{\textbf{BARSEKH-ONJI Aboud (DSc.)}}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{Tabla de Contenidos}
+    \tableofcontents
+\end{frame}
+
+\section{Introducción}
+\begin{frame}{Introducción}
+\begin{itemize}
+    \item \textbf{Objetivo}: Comparar la convergencia de los algoritmos de Optimización por Enjambre de Partículas (PSO) y Algoritmos Genéticos (GA) en la optimización de la función de Rastrigin.
+    \item \textbf{Función de Rastrigin}: $$f(x) = 10n + \sum_{i=1}^{n} \left[ x_i^2 - 10 \cos(2 \pi x_i) \right]$$
+    \item \textbf{Características}: Múltiples mínimos locales, ideal para evaluar algoritmos de optimización.
+\end{itemize}
+\end{frame}
+
+\section{Teoría de PSO}
+\begin{frame}{Teoría de PSO}
+\begin{itemize}
+    \item \textbf{Inspiración}: Comportamiento colectivo de aves y peces.
+    \item \textbf{Mecanismo}:
+    \begin{itemize}
+        \item \textbf{Partículas}: Representan posibles soluciones.
+        \item \textbf{Movimiento}: Ajuste basado en la experiencia propia y la de los vecinos.
+    \end{itemize}
+    \item \textbf{Ventajas}:
+    \begin{itemize}
+        \item Simplicidad y rapidez.
+        \item Adaptabilidad a problemas no lineales y multiobjetivo.
+    \end{itemize}
+    \item \textbf{Desventajas}:
+    \begin{itemize}
+        \item Tendencia a quedar atrapado en óptimos locales.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Teoría de GA}
+\begin{frame}{Teoría de GA}
+\begin{itemize}
+    \item \textbf{Inspiración}: Evolución biológica.
+    \item \textbf{Mecanismo}:
+    \begin{itemize}
+        \item \textbf{Individuos}: Representan soluciones mediante cromosomas.
+        \item \textbf{Operadores}: Mutación, cruce y selección.
+    \end{itemize}
+    \item \textbf{Ventajas}:
+    \begin{itemize}
+        \item Exploración de grandes espacios de búsqueda.
+        \item Robustez ante problemas complejos y no lineales.
+    \end{itemize}
+    \item \textbf{Desventajas}:
+    \begin{itemize}
+        \item Requiere más tiempo computacional.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Implementación en MATLAB}
+\begin{frame}[fragile]{Implementación en MATLAB}
+\begin{itemize}
+    \item \textbf{Función de Rastrigin}:
+    \begin{block}{Código}
+    \texttt{rastrigin = @(x) 10 * numel(x) + sum(x.\^2 - 10 * cos(2 * pi * x));}
+    \end{block}
+    \item \textbf{Parámetros comunes}:
+    \begin{itemize}
+        \item Dimensión del problema: \texttt{dim = 10;}
+        \item Número máximo de iteraciones: \texttt{max_iter = 100;}
+        \item Límite inferior: \texttt{lb = -5.12;}
+        \item Límite superior: \texttt{ub = 5.12;}
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{PSO}
+\begin{itemize}
+    \item \textbf{Configuración}:
+    \begin{block}{Código}
+    \texttt{options\_pso = optimoptions('particleswarm', 'SwarmSize', 30, 'MaxIterations', max\_iter, 'Display', 'off');}
+    \end{block}
+    \item \textbf{Ejecución}:
+    \begin{block}{Código}
+    \texttt{[x\_pso, fval\_pso, exitflag\_pso, output\_pso] = particleswarm(rastrigin, dim, lb, ub, options\_pso);}
+    \end{block}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{GA}
+\begin{itemize}
+    \item \textbf{Configuración}:
+    \begin{block}{Código}
+    \texttt{options\_ga = optimoptions('ga', 'PopulationSize', 30, 'MaxGenerations', max\_iter, 'Display', 'off');}
+    \end{block}
+    \item \textbf{Ejecución}:
+    \begin{block}{Código}
+    \texttt{[x\_ga, fval\_ga, exitflag\_ga, output\_ga] = ga(rastrigin, dim, [], [], [], [], lb, ub, [], options\_ga);}
+    \end{block}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Resultados}
+\begin{itemize}
+    \item \textbf{PSO}:
+    \begin{block}{Código}
+    \texttt{fprintf('PSO: Mejor valor encontrado = %.4f en %d iteraciones\n', fval\_pso, output\_pso.iterations);}
+    \end{block}
+    \item \textbf{GA}:
+    \begin{block}{Código}
+    \texttt{fprintf('GA: Mejor valor encontrado = %.4f en %d generaciones\n', fval\_ga, output\_ga.generations);}
+    \end{block}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Gráfica de Convergencia}
+\begin{itemize}
+    \item \textbf{Código para la gráfica}:
+    \begin{block}{Código}
+    \begin{verbatim}
+figure;
+plot(output_pso.bestfvals, 'b', 'LineWidth', 2);
+hold on;
+plot(output_ga.bestfvals, 'r', 'LineWidth', 2);
+xlabel('Iteraciones/Generaciones');
+ylabel('Mejor valor de la función');
+legend('PSO', 'GA');
+title('Comparación de convergencia: PSO vs GA');
+grid on;
+    \end{verbatim}
+    \end{block}
+\end{itemize}
+\end{frame}
+
+\section{Análisis de Convergencia}
+\begin{frame}{Análisis de Convergencia}
+\begin{itemize}
+    \item \textbf{PSO}:
+    \begin{itemize}
+        \item Convergencia rápida.
+        \item Posible estancamiento en óptimos locales.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+\end{document}

@@ -1,0 +1,1189 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass[aspectratio=169,xcolor=dvipsnames]{beamer}
+\usetheme{SimpleDarkBlue}
+
+\usepackage[spanish]{babel}
+\usepackage{hyperref}
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsmath}
+\usepackage{lettrine}
+\setbeamertemplate{caption}[numbered]
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}% Para definir y usar colores (ej. en hipervínculos)
+\usepackage{xurl}
+\usepackage{hyperref}       % Para crear hipervínculos internos y externos
+\hypersetup{
+    colorlinks=true,        % Colorear los enlaces en lugar de usar recuadros
+    linkcolor=blue,     % Color para enlaces internos (índice, referencias cruzadas)
+    filecolor=blue, % Color para enlaces a archivos locales
+    urlcolor=blue,      % Color para URLs
+    citecolor=blue,     % Color para citas bibliográficas
+}
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{Introducción al Modelado y Simulación de Sistemas}
+\subtitle{Materia: Simulación de procesos}
+
+\author{Prof. D.Sc. BARSEKH-ONJI Aboud}
+
+\institute
+{
+    Facultad de Ingeniería \\
+    Universidad Anáhuac México % Your institution for the title page
+}
+\date{\today} % Date, can be changed to a custom date
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+% Poner esto en el preámbulo
+\AtBeginSection[]
+{
+  \begin{frame}{Índice}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\begin{document}
+
+\begin{frame}
+    % Print the title page as the first slide
+    \titlepage
+\end{frame}
+
+
+%------------------------------------------------
+\section{Introducción a la Teoría de Sistemas}
+%------------------------------------------------
+
+\begin{frame}{¿Qué es un Sistema?}
+
+    \begin{block}{Definición Rigurosa}
+        Un \textbf{sistema} es una colección de entidades (o componentes) que actúan e interactúan entre sí para lograr un objetivo lógico común.
+    \end{block}
+    \begin{itemize}
+        \item Un sistema está definido por un \textbf{límite} que lo separa de su \textbf{entorno}.
+        \item La elección del límite es una decisión crítica en el modelado.
+        \item \textbf{Endógeno:} Elementos dentro del sistema.
+        \item \textbf{Exógeno:} Elementos fuera del sistema (en el entorno).
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Características de un Sistema}
+    \begin{columns}[c]
+        \column{.5\textwidth}
+            Dentro de sus límites, un sistema se caracteriza por:
+            \begin{itemize}
+                \item \textbf{Componentes o Entidades:} Elementos discretos (e.g., camiones, operarios, paquetes).
+                \item \textbf{Atributos:} Propiedades de las entidades (e.g., capacidad, velocidad, estado).
+                \item \textbf{Actividades:} Procesos que consumen tiempo y causan cambios (e.g., carga de un camión, viaje).
+                \item \textbf{Estado del Sistema:} Descripción completa del sistema en un punto específico del tiempo.
+            \end{itemize}
+
+        \column{.5\textwidth}
+            \begin{figure}
+                \includegraphics[width=\textwidth]{Figuras/Cap1/fig1.1.png}
+                \caption{Representación conceptual de un sistema y su interacción con el entorno.}
+                \label{fig:1.1}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Ejemplo: Una Fábrica como Sistema}
+    \begin{block}{Aplicando los Conceptos}
+    Consideremos una fábrica como sistema:
+    \end{block}
+        \begin{itemize}
+            \item \textbf{Componentes:} Trabajadores, máquinas, materias primas.
+            \item \textbf{Atributos:} Velocidad de producción, tasa de fallos de las máquinas.
+            \item \textbf{Actividades:} Fabricación de piezas, ensamblaje, mantenimiento.
+            \item \textbf{Estado:} Número de piezas en buffer, estado de cada máquina.
+            \item \textbf{Entorno:} Proveedores, clientes, factores económicos.
+        \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Límites del Sistema}
+    \frametitle{Delimitando el Campo de Estudio}
+    \begin{alertblock}{Definición del Límite}
+    Es una partición que diferencia las entidades del entorno. La elección del límite depende del observador, del tiempo y de la naturaleza del estudio.
+    \end{alertblock}
+    \begin{itemize}
+        \item Puede ser material (piel de un cuerpo) o inmaterial (pertenencia a un grupo).
+        \item Determina qué puede entrar o salir del sistema (entradas y salidas).
+        \item Puede ser \textbf{nítido} (claramente definido) o \textbf{difuso} (mal definido).
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Componentes e Interacciones}
+    \begin{columns}[c]
+    \column{.5\textwidth}
+        \textbf{Componentes:}
+        \begin{itemize}
+            \item Son los bloques de construcción fundamentales.
+            \item Sus relaciones de entrada-salida se pueden modelar con ecuaciones diferenciales o en diferencias.
+            \item \textbf{Ejemplo de negocio:} Clientes, proveedores, gobierno.
+        \end{itemize}
+
+    \column{.5\textwidth}
+        \textbf{Interacciones:}
+        \begin{itemize}
+            \item Pueden ser estáticas o dinámicas.
+            \item Restringidas o no restringidas.
+            \item Unidireccionales o bidireccionales.
+            \item Fuerza de interacción:
+                \begin{itemize}
+                    \item 0: Sin interacción.
+                    \item 1: Interacción total.
+                    \item Entre 0 y 1: Interacción parcial.
+                \end{itemize}
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{El Entorno del Sistema}
+    \frametitle{Entradas, Salidas y Procesamiento}
+    \begin{block}{Interacción Continua}
+    Los sistemas abiertos, como los organismos vivos, intercambian continuamente materia y energía con su entorno para sobrevivir.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Entrada (Input):} Lo que entra al sistema desde el exterior.
+        \item \textbf{Salida (Output):} Lo que sale del sistema hacia el entorno.
+        \item \textbf{Procesamiento (Throughput):} La transformación de la entrada en salida.
+        \item El entorno incluye: competencia, tecnología, capital, regulación, etc.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Enfoques de Estudio: Caja Negra vs. Caja Blanca}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{alertblock}{Caja Negra (Black Box)}
+                \begin{itemize}
+                    \item Nos preocupamos solo por la \textbf{entrada} y la \textbf{salida}.
+                    \item Se ignoran las complejidades internas del sistema.
+                    \item \textbf{Ejemplo:} Medir el consumo total de combustible (entrada) de una ciudad y su nivel de emisiones (salida) sin detallar el consumo individual.
+                \end{itemize}
+            \end{alertblock}
+
+        \column{.48\textwidth}
+            \begin{block}{Caja Blanca (White Box)}
+                \begin{itemize}
+                    \item Nos preocupamos por los \textbf{detalles internos} y los procesos del sistema, además de las entradas y salidas.
+                    \item \textbf{Ejemplo:} Rastrear el movimiento de cada tanque de combustible a cada edificio particular de la ciudad para entender la contaminación.
+                \end{itemize}
+            \end{block}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+%------------------------------------------------
+\section{Clasificación de Sistemas}
+%------------------------------------------------
+
+\begin{frame}{Clasificación de Sistemas}
+    \frametitle{Dimensiones para Clasificar Sistemas}
+    \begin{block}{Importancia}
+        Comprender las diversas clasificaciones de los sistemas es esencial para seleccionar la metodología de modelado y simulación más apropiada para un problema dado.
+    \end{block}
+    \begin{itemize}
+        \item Según el marco temporal.
+        \item Según la complejidad.
+        \item Según el nivel de incertidumbre.
+        \item Según la varianza en el tiempo.
+        \item Linealidad y no linealidad.
+        \item Varianza e invarianza en el tiempo.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Según el marco temporal}
+%------------------------------------------------
+
+\begin{frame}{Sistemas Continuos vs. Discretos}
+    \frametitle{Clasificación según el Marco Temporal}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Sistemas Continuos}
+                \begin{itemize}
+                    \item Las variables de estado cambian de manera \textbf{continua} e ininterrumpida.
+                    \item Descritos por \alert{ecuaciones diferenciales}.
+                    \item \textbf{Ejemplo:} El nivel de agua en un tanque que se llena y vacía, el vuelo de un misil.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Sistemas Discretos}
+                 \begin{itemize}
+                    \item Las variables de estado cambian solo en puntos \textbf{discretos} en el tiempo (eventos).
+                    \item El estado permanece constante entre eventos.
+                    \item \textbf{Ejemplo:} Un sistema de colas en un banco, sistemas logísticos y de manufactura.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+    \vspace{1em}
+    \begin{block}{Sistemas Híbridos}
+    Contienen componentes tanto continuos como discretos. Ejemplo: una planta química con flujo continuo controlado por válvulas discretas.
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Según la complejidad}
+%------------------------------------------------
+
+\begin{frame}{Clasificación por Complejidad}
+    \begin{block}{Sistemas Físicos:}
+        Variables medibles cuantitativamente con dispositivos (eléctricos, mecánicos, etc.). Menos complejos.
+    \end{block} 
+    \begin{block}{Sistemas Conceptuales:} 
+    Mediciones cualitativas o imaginarias (psicológicos, sociales, económicos). Más complejos.
+    \end{block}
+    \begin{block}{Sistemas Esotéricos:}
+    Las mediciones no son posibles con dispositivos físicos. Complejidad del más alto orden.
+    \end{block}
+
+\end{frame}
+
+\begin{frame}{Clasificación por Complejidad}
+    \begin{figure}
+                \includegraphics[width=0.9\linewidth]{Figuras/Cap1/fig1.2.png}
+                \caption{Clasificación de sistemas con base en su complejidad}
+                \label{fig:1.2}
+            \end{figure}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Según la incertidumbre}
+%------------------------------------------------
+
+\begin{frame}{Sistemas Determinísticos, Estocásticos y Difusos}
+    \frametitle{Clasificación según el Nivel de Incertidumbre}
+    \begin{block}{Determinísticos:}
+        \begin{itemize}
+            \item Comportamiento futuro predecible con certeza si se conoce el estado actual y las entradas. Sin componentes aleatorios.
+            \item \textit{Ejemplo:} Movimiento de los planetas.
+        \end{itemize}
+        \end{block}
+
+        \begin{alertblock}{Estocásticos:}
+        \begin{itemize}
+            \item Contienen al menos un componente aleatorio. El comportamiento no puede predecirse con certeza.
+            \item \textit{Ejemplo:} Tiempos de llegada de clientes, fallos de máquinas.
+        \end{itemize}
+        \end{alertblock}
+
+      \begin{block}{Difusos:}
+        \begin{itemize}
+            \item Caracterizados por variables cuantificables en términos lingüísticos y con alto grado de ambigüedad.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Señales y Sistemas: Continuo vs. Discreto}
+    \begin{columns}[c]
+        \column{.5\textwidth}
+            \begin{itemize}
+                \item \textbf{Sistemas de Tiempo Continuo:} Entradas y salidas son señales de tiempo continuo.
+                \item \textbf{Sistemas de Tiempo Discreto:} Entradas y salidas son señales definidas solo en instantes discretos.
+            \end{itemize}
+        \column{.45\textwidth}
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/Cap1/fig1.6.png}
+                \caption{Sistemas analógicos y digitales.}
+                \label{fig:1.6}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Procesamiento de Señales}
+    \frametitle{Procesando Señales Continuas con Sistemas Discretos}
+    \begin{block}{Conversión Analógico-Digital (ADC) y Digital-Analógico (DAC)}
+    Para procesar señales continuas con sistemas discretos, es necesario convertirlas.
+    \end{block}
+    \begin{figure}
+        \includegraphics[width=0.9\textwidth]{Figuras/Cap1/fig1.7.png}
+        \caption{Procesamiento de señales de tiempo continuo por sistemas de tiempo discreto.}
+        \label{fig:1.7}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Tipos de Señales: Eje de Tiempo vs. Amplitud}
+    \begin{alertblock}{Calificando las Señales}
+    \textbf{Tiempo Discreto/Continuo:} Califica la naturaleza de la señal en el eje del tiempo (eje X). \\
+    \textbf{Analógico/Digital:} Califica la naturaleza de la amplitud de la señal (eje Y).
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Tipos de Señales: Eje de Tiempo vs. Amplitud}
+    
+    \begin{figure}
+        \includegraphics[width=0.5\textwidth]{Figuras/Cap1/fig1.8.png}
+        \caption{Diferentes tipos de señales.}
+        \label{fig:1.8}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Según la varianza en el tiempo}
+%------------------------------------------------
+
+\begin{frame}{Sistemas Estáticos vs. Dinámicos}
+    \frametitle{Clasificación según la Varianza en el Tiempo}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Sistemas Estáticos}
+                \begin{itemize}
+                    \item El tiempo no juega un papel explícito.
+                    \item Representan el sistema en un único punto en el tiempo.
+                    \item \textbf{Técnica:} Simulación de Monte Carlo.
+                    \item \textit{Ejemplo:} Estimar el costo de un proyecto con costos de actividad aleatorios.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Sistemas Dinámicos}
+                 \begin{itemize}
+                    \item El estado del sistema evoluciona con el tiempo.
+                    \item La gran mayoría de los sistemas de interés.
+                    \item \textit{Ejemplos:} Sistemas de colas (discreto), nivel de un tanque (continuo).
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Sistemas Lineales y No Lineales}
+%------------------------------------------------
+
+\begin{frame}{Sistemas Lineales y No Lineales}
+    \begin{columns}[c]
+    \column{.45\textwidth}
+     \textbf{Importancia de los Sistemas Lineales:}
+        \begin{enumerate}
+            \item La mayoría de las situaciones de ingeniería son lineales (en un rango).
+            \item La mayoría de las situaciones en ciencias sociales no son lineales.
+            \item Existen soluciones exactas mediante técnicas estándar.
+        \end{enumerate}
+    \textbf{Sistemas No Lineales:}
+    \begin{itemize}
+        \item No hay métodos estándar para analizarlos.
+        \item Requieren enfoques gráficos, experimentales o aproximaciones.
+    \end{itemize}
+    \column{.45\textwidth}
+     \begin{figure}
+        \includegraphics[width=\linewidth]{Figuras/Cap1/fig1.3.png}
+        \caption{Representación de un sistema de dos puertos.}
+        \label{fig:1.3}
+    \end{figure}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Linealidad en la Práctica: Ley de Ohm y Ley de Hooke}
+    \begin{block}{Ley de Ohm}
+    La relación lineal ($V \propto I$) no se mantiene siempre. Si la corriente aumenta excesivamente, la resistencia cambia por la temperatura:
+    \begin{equation*}
+        R_t = R_0(1 + \alpha \Delta T)
+    \end{equation*}
+    \end{block}
+
+    \begin{alertblock}{Ley de Hooke}
+    La relación lineal (Esfuerzo $\propto$ Deformación) se rompe cuando el esfuerzo excede el límite elástico del material.
+    \end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Principios de los Sistemas Lineales}
+    \frametitle{Superposición y Homogeneidad}
+    Un sistema lineal obedece los teoremas de superposición y homogeneidad.
+    \begin{block}{Teorema de Superposición}
+     Si $e_1(t) \rightarrow \omega_1(t)$ y $e_2(t) \rightarrow \omega_2(t)$, entonces:
+     \begin{equation*}
+     e_1(t) + e_2(t) \rightarrow \omega_1(t) + \omega_2(t)
+     \end{equation*}
+     Una superposición de excitaciones resulta en una superposición de respuestas.
+    \end{block}
+ \begin{Example}
+ La relación entre venta y utilidad en una gasolinera
+ \begin{itemize}
+     \item Si vende 100 lts de gasolina gana \$400 M.N.
+     \item Si vende 500 lts de gasolina gana \$2000 M.N.
+     \item Entonces, si vende 500 + 100 lts de gasolina gana \$2000 + 400 M.N.
+ \end{itemize}
+ \end{Example}
+\end{frame}
+
+\begin{frame}{Principios de los Sistemas Lineales}
+    \frametitle{Superposición y Homogeneidad}
+\begin{alertblock}{Homogeneidad}
+    Si se aplican $n$ excitaciones idénticas $e_1(t)$, entonces:
+     \begin{equation*}
+     n \cdot e_1(t) \rightarrow n \cdot \omega_1(t)
+     \end{equation*}
+     La magnitud de la respuesta es proporcional a la magnitud de la excitación.
+    \end{alertblock}
+    \begin{Example}
+ La relación entre venta y utilidad en una gasolinera
+ \begin{itemize}
+     \item Si vende 100 lts de gasolina gana \$400 M.N.
+     \item Entonces, si vende 5 x 100 lts de gasolina gana \$5 x 400 M.N.
+ \end{itemize}
+ \end{Example}
+\end{frame}
+\begin{frame}{Definición Matemática de Sistemas Lineales}
+    \frametitle{Ecuaciones Diferenciales}
+    \begin{block}{Ecuación Diferencial Lineal}
+        Una ecuación diferencial ordinaria de segundo orden lineal:
+        \begin{equation*}
+            \frac{d^2\omega}{dt^2} + a_1\frac{d\omega}{dt} + a_0\omega = e(t)
+        \end{equation*}
+        Es lineal porque ni $\omega$ ni sus derivadas están elevadas a una potencia o multiplicadas entre sí.
+    \end{block}
+
+    \begin{alertblock}{Ecuaciones Diferenciales No Lineales}
+        Se vuelven no lineales si hay:
+        \begin{itemize}
+            \item Un producto de la variable dependiente y su derivada: $y\frac{dy}{dt}$
+            \item Una potencia de la variable dependiente: $u^2$
+            \item Una potencia de una derivada: $\left(\frac{d^2y}{dt^2}\right)^2$
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Sistemas Variables vs. Invariantes en el Tiempo}
+%------------------------------------------------
+
+\begin{frame}{Sistemas Variables vs. Invariantes en el Tiempo}
+    \begin{columns}[c]
+        \column{.48\textwidth}
+            \begin{block}{Sistemas Variables en el Tiempo}
+                \begin{itemize}
+                    \item Sus parámetros cambian con el tiempo.
+                    \item \textbf{Ejemplo:} Un micrófono de carbón (la resistencia cambia con la presión), el rendimiento de combustible de un auto a lo largo de su vida.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/Cap1/fig1.4.png}
+                \caption{Respuestas de un sistema invariante en el tiempo.}
+                \label{fig:1.4}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Sistemas Variables vs. Invariantes en el Tiempo}
+    \begin{columns}[c]
+        \column{.48\textwidth}
+             \begin{alertblock}{Sistemas Invariantes en el Tiempo}
+                 \begin{itemize}
+                    \item Sus parámetros no cambian con el tiempo.
+                    \item La salida depende de la forma de la entrada, no del instante en que se aplica.
+                    \item Si $e(t) \rightarrow \omega(t)$, entonces $e(t - \tau) \rightarrow \omega(t - \tau)$.
+                \end{itemize}
+            \end{alertblock}
+
+        \column{.48\textwidth}
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/Cap1/fig1.4.png}
+                \caption{Respuestas de un sistema invariante en el tiempo.}
+                \label{fig:1.4}
+            \end{figure}
+    \end{columns}
+\end{frame}
+%----------------------------------------------------------------------------------------
+%------------------------------------------------
+\section{La Filosofía de Sistemas}
+%------------------------------------------------
+
+\begin{frame}{La Filosofía de Sistemas}
+    \begin{block}{Teoría General de Sistemas}
+        Postulada por \textbf{Ludwig Von Bertalanffy}, aboga por la existencia de una ley general de sistemas aplicable tanto a sistemas físicos como humanos y sociales, integrando ciencia, artes, ética y política.
+    \end{block}
+    \begin{itemize}
+        \item Surge cuando la ciencia tradicional no lograba explicar los \textbf{sistemas abiertos}.
+        \item Se basa en las analogías formales entre sistemas físicos, químicos y biológicos.
+        \item Busca una comprensión holística del mundo.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Karl Ludwig von Bertalanffy}
+    \frametitle{(1901-1972)}
+        \begin{columns}[c]
+        \column{.6\textwidth}
+                \begin{alertblock}{Padre del Pensamiento Sistémico Moderno}
+                 Biólogo austriaco, fundador de la 'teoría general de sistemas' o 'sistemología general'.
+                \end{alertblock}
+                \begin{itemize}
+                    \item Sus contribuciones se extendieron a la cibernética, educación, filosofía, psicología y sociología.
+                    \item Su modelo de crecimiento individual (1934) es ampliamente utilizado en modelos biológicos.
+                    \item Su contribución más aclamada es la \textbf{teoría de los sistemas abiertos}.
+                \end{itemize}
+        \column{.4\textwidth}
+            \begin{figure}
+                \includegraphics[width=0.8\linewidth]{Figuras/Cap1/Bertalanffy.jpeg} % Sugerencia de imagen, puedes cambiarla
+                \caption{Karl Ludwig von Bertalanffy.}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{De Aristóteles a Newton}
+    \frametitle{Dos Visiones del Mundo}
+     \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Visión Holística de Aristóteles}
+                \begin{itemize}
+                    \item 'Un todo es más que la suma de sus partes.'
+                    \item Visión \textbf{teleológica}: las cosas suceden para cumplir su propósito interno.
+                    \item Base conceptual de la filosofía de sistemas.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Revolución Científica (S. XVII)}
+                 \begin{itemize}
+                    \item \textbf{Copérnico, Kepler, Galileo, Newton}.
+                    \item Demolió la visión aristotélica.
+                    \item Propuso una imagen \textbf{mecánica} del universo, expresada en lenguaje matemático.
+                    \item La perspectiva teleológica pareció innecesaria.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection{El Método de la Ciencia}
+%------------------------------------------------
+
+\begin{frame}{El Método Científico: Las 3R}
+    \frametitle{¿Cómo se adquiere conocimiento científicamente?}
+    \begin{block}{Definición}
+    La ciencia adquiere conocimiento públicamente comprobable mediante el pensamiento racional aplicado a la observación y experimentación.
+    \end{block}
+
+    Se caracteriza por tres pilares fundamentales, las 3R:
+    \begin{columns}[c]
+        \column{.3\textwidth}
+        \begin{center}
+        \huge \alert{R}
+        \end{center}
+        \textbf{Reduccionismo}
+
+        \column{.3\textwidth}
+        \begin{center}
+        \huge \alert{R}
+        \end{center}
+        \textbf{Repetibilidad}
+
+        \column{.3\textwidth}
+        \begin{center}
+        \huge \alert{R}
+        \end{center}
+        \textbf{Refutación}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}{Explicando las 3R}
+ 
+        \begin{block}{Reduccionismo:}
+            \begin{itemize}
+                \item Seleccionar solo algunos elementos para investigar.
+                \item Descomponer problemas complejos y analizarlos por partes.
+                \item Aceptar la explicación más simple requerida por los hechos.
+            \end{itemize}
+       \end{block}
+        
+        \begin{block}{Repetibilidad:}
+            \begin{itemize}
+                \item La salida de un sistema es la misma para una excitación dada, sin importar el tiempo o lugar.
+                \item Hace que el conocimiento sea \alert{público} y verificable por cualquiera.
+            \end{itemize}
+        \end{block}
+         \begin{block}{Refutación:}
+            \begin{itemize}
+                \item El progreso intelectual se produce al intentar refutar hipótesis audaces.
+                \item No conformarse, sino desafiar el paradigma existente.
+            \end{itemize}
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Problemas de la Ciencia y el Surgimiento del Sistema}
+%------------------------------------------------
+
+\begin{frame}{Limitaciones de la Ciencia}
+    \frametitle{¿Por qué necesitamos la Filosofía de Sistemas?}
+    \begin{alertblock}{La Debilidad del Reduccionismo}
+    El reduccionismo, aunque es una herramienta poderosa, también es la principal debilidad del método científico tradicional.
+    \end{alertblock}
+    \begin{itemize}
+        \item La ciencia asume que los componentes de un todo son los mismos cuando se examinan de forma aislada.
+
+        \item Esto es cierto para sistemas físicos \textbf{regulares y bien estructurados}.
+
+        \item Sin embargo, \textbf{falla} al estudiar fenómenos complejos como la sociedad humana o los sistemas biológicos, donde las interacciones son cruciales.
+
+        \item Es en este contexto que Von Bertalanffy retoma la noción holística de Aristóteles: \textbf{'Un todo es más que la suma de sus partes'}.
+    \end{itemize}
+\end{frame}
+%------------------------------------------------
+\section{Modelado de Sistemas}
+%------------------------------------------------
+
+\begin{frame}{Modelado de Sistemas - Introducción}
+    \begin{block}{El Modelado en la Vida Cotidiana}
+    El ser humano ha modelado desde que desarrolló la capacidad de imaginar. Un modelo es una representación o abstracción de un sistema real.
+    \end{block}
+    \begin{itemize}
+        \item Un niño con una muñeca.
+        \item Un arquitecto con una maqueta.
+        \item Un empresario con un plan de negocios.
+    \end{itemize}
+    \begin{alertblock}{Objetivo del Modelado}
+    El modelado nos permite entender, predecir y analizar sistemas complejos sin necesidad de interactuar directamente con ellos.
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Objetivos del Modelado}
+    \frametitle{¿Qué problemas podemos resolver?}
+    \begin{columns}[t]
+        \column{.5\textwidth}
+        Un modelo nos ayuda a:
+            \begin{itemize}
+                \item Medir la altura de una torre.
+                \item Medir el ancho de un río.
+                \item Calcular la masa de la Tierra.
+                \item Estimar la temperatura del sol.
+                \item Predecir el rendimiento de un cultivo.
+                \item Cuantificar la sangre en un cuerpo.
+            \end{itemize}
+        \column{.5\textwidth}
+            \begin{itemize}
+                \item Proyectar la población futura.
+                \item Determinar la órbita de un satélite.
+                \item Evaluar el impacto de políticas económicas.
+                \item Optimizar el diseño de un producto.
+                \item Estimar la vida útil de un componente.
+                \item Pronosticar reclamaciones de seguros.
+            \end{itemize}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{El Proceso de Modelado}
+    \begin{block}{Abstracción de la Realidad}
+    Un modelo es un marco conceptual que describe un sistema. Puede ser una réplica física o una abstracción lógica/matemática.
+    \end{block}
+
+    \begin{alertblock}{Compromiso entre Simplicidad y Precisión}
+    El desarrollo de un modelo requiere un balance entre:
+    \begin{enumerate}
+        \item \textbf{La simplicidad del modelo:} A más suposiciones, más simple el modelo.
+        \item \textbf{La precisión (fidelidad) del modelo:} A menos suposiciones, más complejo pero más preciso.
+    \end{enumerate}
+    La precisión de un modelo es complementaria a su simplicidad.
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Modelos de Caja Blanca vs. Caja Negra}
+    \frametitle{Clasificación según la Información Disponible}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Caja Blanca (White Box)}
+                \begin{itemize}
+                    \item Toda la información necesaria sobre el sistema está disponible.
+                    \item Se conoce la relación funcional entre variables.
+                    \item \textit{Ejemplo:} Modelar el efecto de un medicamento sabiendo que sigue una función de decaimiento exponencial (aunque los parámetros deban estimarse).
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Caja Negra (Black Box)}
+                 \begin{itemize}
+                    \item No hay información previa disponible sobre el sistema.
+                    \item Se busca estimar tanto la relación funcional como los parámetros.
+                    \item Se usan funciones generales como las \textbf{Redes Neuronales Artificiales (ANN)}.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Necesidad del Modelado}
+%------------------------------------------------
+
+\begin{frame}{¿Por qué Modelar en Lugar de Experimentar?}
+    \frametitle{La Necesidad del Modelado de Sistemas}
+    A veces es inapropiado o imposible experimentar en sistemas reales.
+    \begin{block}{Razones Principales}
+        \begin{description}
+            \item[\textbf{Demasiado Caro:}] La experimentación física con sistemas complejos (e.g., satélites) es extremadamente costosa y requiere mucho tiempo.
+            \item[\textbf{Arriesgado:}] Existe el riesgo de dañar el sistema o, peor aún, un riesgo para la vida humana (e.g., entrenar a un operario en una planta nuclear).
+        \end{description}
+    \end{block}
+
+    \begin{alertblock}{Situaciones Esenciales para el Modelado}
+        \begin{itemize}
+            \item Diseño de sistemas que aún no existen (e.g., un nuevo avión).
+            \item Obliga a pensar con claridad sobre la estructura y elementos esenciales.
+            \item Es una herramienta para mejorar la comprensión y el rendimiento del sistema.
+            \item Permite explorar múltiples soluciones de forma económica.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Métodos de Modelado para Sistemas Complejos}
+%------------------------------------------------
+
+\begin{frame}{Modelado de Sistemas Complejos}
+    \begin{block}{El Desafío de la Complejidad}
+    Modelar cada detalle de un sistema complejo (como un avión de combate) es computacionalmente inviable y aumenta la incertidumbre. Es necesario hacer aproximaciones para reducir el modelo a un tamaño razonable.
+    \end{block}
+
+    \begin{alertblock}{Técnicas según la Complejidad}
+    \begin{description}
+        \item [Sistemas menos complejos:] Técnicas de modelado matemático.
+        \item [Sistemas de complejidad media:] Redes Neuronales Artificiales (ANN).
+        \item [Sistemas altamente complejos:] Modelado de sistemas difusos (Lógica Difusa).
+    \end{description}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Enfoques de Modelado según la Complejidad}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.5\textwidth]{Figuras/Cap1/fig1.9.png}
+        \caption{Diferentes enfoques de modelado.}
+        \label{fig:1.9}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+\section{Clasificación de Modelos}
+%------------------------------------------------
+
+\begin{frame}{Clasificación de Modelos}
+
+    \begin{block}{Utilidad de los Modelos}
+    Los modelos son un medio aceptado para estudiar fenómenos complejos a un costo menor y en menos tiempo que experimentar con sistemas reales. Nos informan sobre nuestra ignorancia y mejoran la comprensión del sistema.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Clasificación de Modelos}
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.5\textwidth]{Figuras/Cap1/fig1.10.png}
+        \caption{Representación pictórica de la clasificación de modelos.}
+        \label{fig:1.10}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Modelo Físico vs. Abstracto}
+%------------------------------------------------
+
+\begin{frame}{Modelo Físico vs. Abstracto}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Modelo Físico (Icónico)}
+                \begin{itemize}
+                    \item Son réplicas físicas, a menudo a escala reducida.
+                    \item Fáciles de entender visualmente.
+                    \item \textbf{Ejemplos:}
+                        \begin{itemize}
+                            \item Coches de arcilla en túneles de viento.
+                            \item Cabinas de entrenamiento para pilotos.
+                            \item Maquetas de edificios.
+                        \end{itemize}
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Modelo Abstracto}
+                 \begin{itemize}
+                    \item Representan un sistema usando símbolos y relaciones lógicas o cuantitativas.
+                    \item Son los más comunes en análisis de sistemas e investigación de operaciones.
+                    \item \textbf{Ejemplo:} Un modelo matemático.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Modelo Matemático vs. Descriptivo}
+%------------------------------------------------
+
+\begin{frame}{Modelo Matemático vs. Descriptivo}
+    \begin{block}{Modelo Matemático}
+    Es una subdivisión de los modelos abstractos que utiliza el lenguaje de los símbolos matemáticos para describir un sistema.
+    \end{block}
+    \begin{examples}
+    Un modelo matemático abstracto muy conocido es la relación:
+    \begin{equation*}
+        \text{Distancia} = \text{Aceleración} \times \text{Tiempo} \quad (d = a \cdot t)
+    \end{equation*}
+    La validez de este modelo depende completamente del contexto en el que se aplica.
+    \end{examples}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Modelo Estático vs. Dinámico}
+%------------------------------------------------
+
+\begin{frame}{Modelo Estático vs. Dinámico}
+     \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Modelo Estático}
+                \begin{itemize}
+                    \item Representa un sistema en un \textbf{momento particular}.
+                    \item El tiempo no juega un papel relevante.
+                    \item \textbf{Ejemplo:} Una maqueta arquitectónica para visualizar una planta.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Modelo Dinámico}
+                 \begin{itemize}
+                    \item Representa un sistema a medida que \textbf{evoluciona en el tiempo}.
+                    \item Trata con interacciones que varían temporalmente.
+                    \item \textbf{Ejemplo:} Un modelo de un sistema de cintas transportadoras en una fábrica.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Otros Tipos de Modelos}
+%------------------------------------------------
+
+\begin{frame}{Más Clasificaciones de Modelos}
+
+        \begin{block}{Estado Estacionario vs. Transitorio:}
+        \begin{itemize}
+            \item \textit{Estacionario:} El comportamiento es representativo y similar en cualquier período de tiempo.
+            \item \textit{Transitorio:} La respuesta del sistema cambia con el tiempo (e.g., un sistema en crecimiento).
+        \end{itemize}
+        \end{block}
+     
+        \begin{block}{Abierto vs. de Retroalimentación (Cerrado):}
+        \begin{itemize}
+            \item \textit{Cerrado:} Genera internamente los valores de las variables mediante su interacción. Los sistemas de retroalimentación de información son de este tipo.
+        \end{itemize}
+        \end{block}
+
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Modelos Determinísticos vs. Estocásticos}
+%------------------------------------------------
+
+\begin{frame}{Modelos Determinísticos vs. Estocásticos}
+    \begin{block}{Modelo Determinístico}
+        \begin{itemize}
+            \item No contiene componentes probabilísticos (aleatorios).
+            \item La salida está 'determinada' una vez que se especifican las entradas y relaciones.
+            \item \textbf{Ejemplo:} Un sistema de ecuaciones diferenciales que describe una reacción química.
+        \end{itemize}
+    \end{block}
+    \begin{alertblock}{Modelo Estocástico}
+        \begin{itemize}
+            \item Contiene al menos un componente de entrada aleatorio.
+            \item La salida es en sí misma aleatoria y debe tratarse como una estimación.
+            \item \textbf{Ejemplo:} La mayoría de los sistemas de colas e inventarios.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Modelos Continuos vs. Discretos}
+%------------------------------------------------
+
+\begin{frame}{Modelos Continuos vs. Discretos}
+    \begin{columns}[c]
+        \column{.5\textwidth}
+            La decisión de usar un modelo discreto o continuo depende de los \textbf{objetivos específicos} del estudio.
+            \begin{itemize}
+                \item \textbf{Ejemplo (Flujo de tráfico):}
+                \begin{itemize}
+                    \item \textit{Modelo Discreto:} Si el movimiento de coches individuales es importante.
+                    \item \textit{Modelo Continuo:} Si los coches pueden tratarse 'en conjunto' mediante ecuaciones diferenciales.
+                \end{itemize}
+            \end{itemize}
+        \column{.45\textwidth}
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/Cap1/fig1.11.png}
+                \caption{Funciones (A) Continuas y (B) Discretas.}
+                \label{fig:1.11}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\section{El Rol y el Poder de la Simulación}
+%------------------------------------------------
+
+\begin{frame}{El Rol y el Poder de la Simulación}
+    \begin{block}{Un Laboratorio Virtual}
+    La simulación es una de las herramientas más utilizadas en la investigación de operaciones y la ingeniería. Su poder reside en su capacidad para experimentar con un \textbf{modelo digital del sistema} en lugar de experimentar con el sistema real.
+    \end{block}
+    \begin{alertblock}{¿Por qué usar un laboratorio virtual?}
+    Experimentar en el sistema real podría ser:
+    \begin{itemize}
+        \item Costoso 
+        \item Peligroso 
+        \item Simplemente imposible 
+    \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Aplicaciones Clave en Logística e Ingeniería}
+%------------------------------------------------
+
+\begin{frame}{Aplicaciones Clave en Logística e Ingeniería}
+    \begin{itemize}
+        \item \textbf{Diseño y análisis de sistemas de manufactura:} Determinar el número óptimo de máquinas, tamaño de buffers y analizar el impacto de fallos.
+        \item \textbf{Gestión de la cadena de suministro:} Analizar el Efecto Látigo, optimizar políticas de inventario y evaluar estrategias de distribución.
+        \item \textbf{Diseño de layouts de almacenes:} Optimizar flujos de materiales, determinar cantidad de muelles y planificar asignación de personal.
+        \item \textbf{Sistemas de servicio al cliente:} Determinar el número de servidores (cajeros, agentes) para cumplir con un nivel de servicio.
+        \item \textbf{Planificación de proyectos:} Estimar la probabilidad de completar un proyecto a tiempo y dentro del presupuesto.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Ventajas y Desventajas de la Simulación}
+%------------------------------------------------
+
+\begin{frame}{Ventajas y Desventajas de la Simulación}
+    \frametitle{Fortalezas y Debilidades de la Herramienta}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Ventajas}
+                \begin{itemize}
+                    \item Permite estudiar sistemas complejos sin modelos analíticos.
+                    \item Permite experimentar sin interrumpir el sistema real.
+                    \item Permite comprimir o expandir el tiempo.
+                    \item Ayuda a identificar cuellos de botella.
+                    \item Es una poderosa herramienta de comunicación y visualización.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Desventajas}
+                 \begin{itemize}
+                    \item Construir un buen modelo puede ser largo y costoso.
+                    \item Los resultados son estimaciones estadísticas; se requieren múltiples ejecuciones.
+                    \item Los resultados pueden ser difíciles de interpretar.
+                    \item Es una herramienta de evaluación, no de optimización directa.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\section{Fases del Modelado y de la Simulación}
+%------------------------------------------------
+
+\begin{frame}{El Proceso de Modelado}
+    \frametitle{¿Qué es Modelar?}
+    \begin{block}{Definición}
+        El modelado es el arte/proceso de desarrollar un modelo de sistema. Su propósito es exponer el funcionamiento interno de un sistema y presentarlo en una forma útil para su estudio. En esencia, es el \textbf{proceso de organizar el conocimiento} sobre un sistema dado.
+    \end{block}
+    \begin{alertblock}{Compromiso Clave}
+    Existe un compromiso (\textit{trade-off}) fundamental entre la \textbf{simplicidad} del modelo, su \textbf{precisión} (fidelidad) y el \textbf{tiempo de cómputo} requerido.
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Entradas y Proceso de Modelado}
+    \begin{columns}[c]
+        \column{.5\textwidth}
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/Cap1/fig1.12.png}
+                \caption{Entradas para el desarrollo de un modelo.}
+                \label{fig:1.12}
+            \end{figure}
+        \column{.5\textwidth}
+            \begin{figure}
+                \includegraphics[width=0.7\linewidth]{Figuras/Cap1/fig1.13.png}
+                \caption{Proceso de modelado.}
+                \label{fig:1.13}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Diferentes Modelos para el Mismo Sistema}
+    \frametitle{Ejemplo: Una Aeronave}
+    \begin{columns}[c]
+        \column{.5\textwidth}
+            Para el mismo sistema se pueden desarrollar diferentes modelos según el propósito. Una aeronave puede modelarse como:
+            \begin{enumerate}
+                \item \textbf{Una partícula:} Para estudiar la trayectoria de vuelo y el consumo de combustible.
+
+                \item \textbf{Un sistema de cuerpos rígidos:} Para analizar la estabilidad del vuelo ante perturbaciones.
+
+                \item \textbf{Un sistema de cuerpos deformables:} Para realizar análisis de flameo (\textit{flutter}).
+            \end{enumerate}
+        \column{.45\textwidth}
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/Cap1/fig1.14.png}
+                \caption{Diferentes modelos de aeronave.}
+                \label{fig:1.14}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[allowframebreaks]{Fases Principales de un Proyecto de Simulación}
+    \begin{enumerate}
+        \item \textbf{Formulación del Problema:} Definir claramente el problema, los objetivos y las métricas de desempeño.
+
+        \item \textbf{Investigación y Recopilación de Datos:} Estudiar el sistema real para entender su lógica y recolectar datos para alimentar y validar el modelo.
+
+        \item \textbf{Formulación del Modelo Conceptual:} Crear un 'borrador' abstracto del sistema, identificando componentes, variables y nivel de detalle.
+
+        \item \textbf{Traducción del Modelo a un Programa:} Implementar el modelo conceptual en un software de simulación (e.g., SimEvents).
+
+        \item \textbf{Verificación del Modelo:} ¿Construí el modelo \textit{correctamente} (el programa refleja el modelo conceptual)?
+
+        \item \textbf{Validación del Modelo:} ¿Construí el modelo \textit{correcto} (el modelo es una representación precisa del sistema real)?
+ 
+        \item \textbf{Diseño Experimental:} Planificar los escenarios a simular (duración, réplicas, parámetros).
+
+        \item \textbf{Ejecución y Análisis de Resultados:} Correr las simulaciones y analizar los datos de salida con herramientas estadísticas.
+
+        \item \textbf{Documentación y Presentación:} Documentar el modelo y los resultados, y presentar las conclusiones a los interesados.
+    \end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+
+%------------------------------------------------
+\section{Del Problema del Mundo Real al Modelo Conceptual}
+%------------------------------------------------
+
+\begin{frame}{Del Problema del Mundo Real al Modelo Conceptual}
+    \begin{block}{Un Proceso Creativo y Desafiante}
+    La transición de un problema, a menudo vagamente definido, a un modelo conceptual estructurado es una de las partes más creativas y críticas de un estudio de simulación. Requiere comunicación constante con los expertos del dominio.
+    \end{block}
+
+    \begin{alertblock}{Definiciones Clave del Modelo Conceptual}
+    El modelo conceptual debe definir:
+    \begin{itemize}
+        \item Los \textbf{objetivos} del modelo.
+        \item Las \textbf{entradas} (parámetros controlables) y las \textbf{salidas} (métricas de desempeño).
+        \item Los \textbf{supuestos y simplificaciones}. El arte del modelado reside en saber qué omitir.
+        \item Los \textbf{componentes}, sus atributos y las reglas lógicas que gobiernan su interacción.
+    \end{itemize}
+    \end{alertblock}
+
+    
+\end{frame}
+
+\begin{frame}{Del Problema del Mundo Real al Modelo Conceptual}
+
+\begin{examples}{Piedra Angular del Proyecto}
+    Un buen modelo conceptual es la piedra angular de todo el proyecto. Un error en esta fase inicial se propagará a todas las fases posteriores.
+    \end{examples}
+\end{frame}
+%------------------------------------------------
+\section{Verificación y Validación (V\&V)}
+%------------------------------------------------
+
+\begin{frame}{Verificación y Validación (V\&V)}
+
+    \begin{block}{Proceso Continuo}
+    La V\&V es un proceso que se lleva a cabo durante todo el ciclo de vida del proyecto. Su objetivo es asegurar que el modelo sea creíble y tenga conexión con la realidad.
+    \end{block}
+
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{alertblock}{Verificación}
+                 Se enfoca en la relación entre el modelo conceptual y el programa.
+                 \vspace{1em}
+                 \textbf{Pregunta clave:} ¿Construí el modelo \textit{correctamente}? (Sin errores de programación).
+            \end{alertblock}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Validación}
+                Se enfoca en la relación entre el modelo de simulación y el sistema real.
+                \vspace{1em}
+                \textbf{Pregunta clave:} ¿Construí el modelo \textit{correcto}? (Representa la realidad para nuestros propósitos).
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{El Triángulo del Modelado}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.9\textwidth]{Figuras/Cap1/VtoV.png}
+        \caption{El triángulo del modelado: la relación entre el sistema real, el modelo conceptual y el modelo computacional, ilustrando los dominios de la Validación y la Verificación.}
+        \label{fig:v_y_v}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Técnicas de Verificación y Validación}
+%------------------------------------------------
+
+\begin{frame}{Técnicas de Verificación}
+    \begin{block}{Asegurando que el código sea correcto}
+        \begin{itemize}
+            \item Revisión del código por pares (otros programadores).
+            \item Uso de un depurador (debugger) para seguir la ejecución paso a paso.
+            \item Ejecución del modelo bajo condiciones simplificadas con resultados analíticos conocidos (e.g., comparar con fórmulas de un sistema M/M/1).
+            \item Uso de trazas de eventos para seguir la "vida" de una entidad a través del modelo.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Técnicas de Validación}
+    \begin{alertblock}{Asegurando que el modelo sea el correcto}
+        \begin{itemize}
+            \item \textbf{Validación por Expertos:} Consultar a quienes conocen el sistema real si el comportamiento del modelo es razonable.
+            \item \textbf{Validación con Datos Históricos:} Comparar las salidas del modelo con las salidas reales del sistema en el pasado.
+            \item \textbf{Prueba de Turing:} Si un experto no puede distinguir consistentemente entre los datos de salida del modelo y los del sistema real, el modelo pasa la prueba.
+            \item \textbf{Pruebas de Sensibilidad:} Analizar cómo cambian los resultados del modelo al variar los parámetros de entrada.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\end{document}

@@ -1,0 +1,1151 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass[aspectratio=169,xcolor=dvipsnames]{beamer}
+\usetheme{SimpleDarkBlue}
+
+\usepackage[spanish]{babel}
+\usepackage{hyperref}
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsmath}
+\usepackage{lettrine}
+\setbeamertemplate{caption}[numbered]
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}% Para definir y usar colores (ej. en hipervínculos)
+\usepackage{xurl}
+\usepackage{hyperref}       % Para crear hipervínculos internos y externos
+\hypersetup{
+    colorlinks=true,        % Colorear los enlaces en lugar de usar recuadros
+    linkcolor=blue,     % Color para enlaces internos (índice, referencias cruzadas)
+    filecolor=blue, % Color para enlaces a archivos locales
+    urlcolor=blue,      % Color para URLs
+    citecolor=blue,     % Color para citas bibliográficas
+}
+%----------------------------------------------------------------------------------------
+
+\usepackage{listings}
+\usepackage{xcolor} % Para colores en listings
+ \definecolor{codegreen}{rgb}{0,0.6,0}
+ \definecolor{codegray}{rgb}{0.5,0.5,0.5}
+ \definecolor{codepurple}{rgb}{0.58,0,0.82}
+ \definecolor{backcolour}{rgb}{0.97,0.97,0.99}
+
+\lstdefinestyle{MATLABStyle}{
+  language=Matlab,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{codegreen},
+  stringstyle=\color{violet},
+  numberstyle=\tiny\color{gray},
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  frame=lines, % Añade un marco alrededor del código
+  framerule=0.4pt, % Grosor del marco
+  backgroundcolor=\color{backcolour} % Color de fondo suave
+}
+\lstset{style=MATLABStyle}
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{Modelado y Simulación de Eventos Discretos}
+\subtitle{Materia: Simulación de procesos}
+
+\author{Prof. D.Sc. BARSEKH-ONJI Aboud}
+
+\institute
+{
+    Facultad de Ingeniería \\
+    Universidad Anáhuac México % Your institution for the title page
+}
+\date{\today} % Date, can be changed to a custom date
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+% Poner esto en el preámbulo
+\AtBeginSection[]
+{
+  \begin{frame}{Índice}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\begin{document}
+
+\begin{frame}
+    % Print the title page as the first slide
+    \titlepage
+\end{frame}
+
+%------------------------------------------------
+\section{Introducción}
+%------------------------------------------------
+
+\begin{frame}{Sistemas Continuos vs. Discretos}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Sistemas Continuos}
+                \begin{itemize}
+                    \item Los cambios son predominantemente \textbf{suaves} e ininterrumpidos.
+                    \item \textbf{Ejemplo:} El movimiento de una aeronave.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Sistemas Discretos}
+                 \begin{itemize}
+                    \item Los cambios son predominantemente \textbf{discontinuos} y ocurren en puntos específicos en el tiempo.
+                    \item \textbf{Ejemplo:} Una fábrica donde la finalización de un producto es un evento discreto.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+    \vspace{1em}
+    \begin{block}{Ambigüedad en la Representación}
+    La \textbf{descripción} de un sistema, más que su naturaleza inherente, determina qué tipo de modelo se utilizará. El propósito del modelo y el nivel de detalle son cruciales.
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Sistemas de Eventos Discretos (DES)}
+    \frametitle{Discrete Event Systems (DES)}
+    \begin{block}{Definición}
+        Un \textbf{Sistema de Eventos Discretos (DES)} es un sistema dinámico que evoluciona de acuerdo con la ocurrencia \textbf{asíncrona} de eventos físicos.
+    \end{block}
+    \begin{itemize}
+        \item Su dinámica se caracteriza por la ocurrencia de eventos discretos.
+        \item Requieren control y coordinación para asegurar el flujo ordenado de eventos.
+        \item Ejemplos: sistemas de manufactura automatizados, redes de comunicación, sistemas de software.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Características Clave del Modelado DES}
+    \begin{alertblock}{¿Cómo se diferencia de los modelos tradicionales?}
+        Los modelos de eventos discretos se distinguen por:
+    
+    \begin{itemize}
+        \item \textbf{Paso del tiempo:} Es \textbf{impulsado por eventos} (event-driven), no por pasos de tiempo fijos. El modelo "salta" de un evento al siguiente.
+
+        \item \textbf{Coordinación:} Los componentes son \textbf{asíncronos} y débilmente coordinados, lo que permite una representación más realista.
+
+        \item \textbf{Eficiencia:} La simulación es inherentemente eficiente, ya que concentra el procesamiento solo en los eventos, que son cambios significativos y relativamente raros.
+    \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Uso del Modelado y Simulación DES}
+    \begin{block}{Predicción y Evaluación}
+    El modelado de eventos discretos es un procedimiento matemático para describir un proceso dinámico. La simulación del modelo permite predecir posibles situaciones para evaluar y mejorar el rendimiento del sistema.
+    \end{block}
+
+    \begin{alertblock}{Análisis "What-If" (¿Qué pasaría si...?)}
+        Se utiliza para crear predicciones de los estados del sistema, que pueden modificarse para examinar situaciones hipotéticas.
+        \begin{itemize}
+            \item \textbf{Ejemplo clásico:} Evaluar una línea de espera (cola).
+            \item \textbf{Preguntas a responder:} ¿Cuánto tiempo esperará un cliente en promedio? ¿Cuántos servidores se necesitan para reducir la espera?
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\section{Definiciones}
+%------------------------------------------------
+
+\begin{frame}[allowframebreaks]{Definiciones Clave (Parte 1)}
+
+        \begin{block}{Entidad (\textit{Entity})}
+        Un objeto de interés en el sistema. Su selección depende del propósito y nivel de abstracción del estudio.
+\end{block}
+        \begin{alertblock}{Atributo (\textit{Attribute})}
+        Propiedades que describen a las entidades. Son valores locales que pertenecen a una entidad específica (e.g., tiempo de llegada, color de una pieza).
+\end{alertblock}  
+        \begin{block}{Estado (\textit{State})}
+        Un conjunto de variables que caracteriza completamente al sistema en cualquier momento.
+  \end{block}
+        \begin{alertblock}{Evento (\textit{Event})}
+        Una incidencia instantánea que podría resultar en un cambio de estado. Puede ser:
+            \begin{itemize}
+                \item \textbf{Endógeno:} Generado por el propio sistema.
+                \item \textbf{Exógeno:} Inducido por el entorno del sistema.
+            \end{itemize}
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[allowframebreaks]{Ejemplos de Componentes de Sistemas}
+    \frametitle{Entidades, Atributos y Actividades}
+    \begin{table}
+    \tiny % Hacemos la fuente un poco más pequeña para que quepa mejor
+    \begin{tabular}{p{0.25\textwidth} p{0.2\textwidth} p{0.2\textwidth} p{0.25\textwidth}}
+    \toprule
+    \textbf{Sistema} & \textbf{Entidades} & \textbf{Atributos} & \textbf{Actividades} \\
+    \midrule
+    Mercado & Clientes & Artículos de compra & Pagar en caja \\
+    \addlinespace
+    Sistema telefónico & Mensajes & Longitud & Transmisión \\
+    \addlinespace
+    Banco & Cliente & Estado del saldo & Depositar o retirar \\
+    \addlinespace
+    Tráfico & Automóviles & Velocidad y distancia & Conducir \\
+    \addlinespace
+    Control de calidad & Productos & Calidad & Comprobar \\
+    \addlinespace
+    Sistema de fábrica & Productos & Pedidos pendientes & Llegada de pedidos \\
+    \bottomrule
+    \end{tabular}
+    \caption{Ejemplos para diferentes sistemas.}
+    \label{tab:ejemplos_des}
+    \end{table}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[allowframebreaks]{Definiciones Clave (Parte 2)}
+
+        \begin{block}{Servidor (\textit{Server})}
+        Una entidad que proporciona servicio a entidades dinámicas (e.g., servidores, máquinas). Las entidades pueden tener que esperar en una \textbf{cola} (\textit{queue}) si el recurso está ocupado.
+        \end{block}
+      
+        \begin{alertblock}{Procesamiento de Listas (\textit{List processing})}
+        Las colas son listas de entidades que esperan. Se pueden procesar con diferentes lógicas: FIFO (primero en entrar, primero en salir), LIFO (último en entrar, primero en salir) o por prioridad según un atributo (e.g., tiempo de procesamiento más corto).
+\end{alertblock}   
+        \begin{block}{Actividades y Retrasos (\textit{Activities and delays})}
+            \begin{itemize}
+                \item Una \textbf{actividad} es una duración de tiempo conocida de antemano (e.g., un tiempo de servicio).
+                \item Un \textbf{retraso} es una duración de tiempo indefinida causada por las condiciones del sistema (e.g., el tiempo de espera en una cola).
+            \end{itemize}
+\end{block}  
+        \begin{alertblock}{Actividades Exógenas vs. Endógenas}
+            \begin{itemize}
+                \item \textit{Endógenas:} Ocurren dentro del sistema.
+                \item \textit{Exógenas:} Ocurren en el entorno y afectan al sistema. Un sistema sin actividades exógenas es un sistema \textbf{cerrado}.
+            \end{itemize}
+\end{alertblock}  
+\end{frame}
+
+%------------------------------------------------
+\section{Sistemas de Colas (\textit{Queuing Systems})}
+%------------------------------------------------
+
+\begin{frame}{Sistemas de Colas (\textit{Queuing Systems})}
+    \begin{columns}[c]
+        \column{.5\textwidth}
+            Una aplicación importante de la simulación de eventos discretos es el estudio de la dinámica de las líneas de espera o \textbf{colas}.
+            \vspace{1em}
+            \begin{alertblock}{Razones para estudiar las colas}
+                \begin{itemize}
+                    \item Determinar el uso óptimo de los servidores.
+                    \item Analizar el tiempo de espera de los clientes.
+                    \item Decidir el espacio de espera requerido.
+                    \item Contar el número de clientes atendidos.
+                \end{itemize}
+            \end{alertblock}
+
+        \column{.45\textwidth}
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.1.png}
+                \caption{Sistema de Colas.}
+                \label{fig:sistema_colas}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[allowframebreaks]{Componentes de un Sistema de Colas}
+    \begin{description}
+        \item[Población de Llamada (\textit{Calling Population}):] Es la población de donde provienen los clientes (e.g., personas, máquinas, pedidos). Puede ser finita o infinita.
+
+        \item[Capacidad del Sistema (\textit{System Capacity}):] Es el número máximo de clientes que puede haber en el sistema (en la cola + en servicio). Puede ser limitada o ilimitada.
+
+        \item[Proceso de Llegada (\textit{Arrival Process}):] Caracteriza los tiempos entre llegadas de clientes sucesivos. Puede ser:
+            \begin{itemize}
+                \item \textbf{Programado:} Citas médicas, vuelos programados.
+                \item \textbf{Aleatorio:} Clientes en un banco, pedidos a una fábrica.
+            \end{itemize}
+    \end{description}
+\end{frame}
+
+
+%------------------------------------------------
+
+\begin{frame}{Comportamiento y Rendimiento}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Comportamiento en la Cola}
+                Se refiere a la acción del cliente en la cola:
+                \begin{itemize}
+                    \item \textbf{Balk:} Abandona al ver que la línea es demasiado larga.
+                    \item \textbf{Renege:} Abandona después de un tiempo al ver que la línea avanza muy lento.
+                    \item \textbf{Jockey:} Se mueve de una línea a otra buscando la más corta.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Medidas de Rendimiento}
+                 Indicadores clave del sistema:
+                 \begin{itemize}
+                    \item Tiempo promedio en el sistema.
+                    \item Utilización del servidor.
+                    \item Tiempo de espera por cliente.
+                    \item Número de clientes atendidos.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Tipos de Simulación para Sistemas de Colas}
+    \begin{block}{Simulación Orientada al Tiempo Discreto}
+        \begin{itemize}
+            \item Se refiere a la simulación en intervalos de tiempo \textbf{iguales} y fijos.
+            \item El reloj avanza en incrementos constantes ($\Delta t$).
+            \item En cada paso, se revisa si ha ocurrido un evento.
+        \end{itemize}
+    \end{block}
+    \pause
+    \begin{alertblock}{Simulación Orientada a Eventos Discretos}
+        \begin{itemize}
+            \item Examina \textbf{solo los instantes} en que ocurren los eventos.
+            \item El reloj "salta" de un evento al siguiente.
+            \item Es más eficiente, ya que ignora los períodos de inactividad.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\section{Simulación de Sistemas de Eventos Discretos}
+%------------------------------------------------
+
+\begin{frame}{Simulación: Métodos Numéricos vs. Analíticos}
+    \begin{columns}[t]
+        \column{.48\textwidth}
+            \begin{block}{Métodos Analíticos}
+                \begin{itemize}
+                    \item Emplean el razonamiento deductivo de las matemáticas para \textbf{'resolver'} el modelo.
+                    \item Es un enfoque puramente teórico.
+                    \item \textit{Ejemplo:} Usar cálculo diferencial para encontrar el costo mínimo en un modelo de inventario.
+                \end{itemize}
+            \end{block}
+
+        \column{.48\textwidth}
+            \begin{alertblock}{Métodos Numéricos (Simulación)}
+                 \begin{itemize}
+                    \item Emplean procedimientos computacionales para analizar el modelo.
+                    \item Los modelos se \textbf{'ejecutan'} en lugar de resolverse.
+                    \item Se genera una historia artificial del sistema para estimar su rendimiento.
+                \end{itemize}
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Anatomía de un Modelo de Simulación de Cola}
+    \frametitle{Ejemplo: Cliente en un Banco}
+    \begin{examples}{Un ejercicio común para aprender a construir simulaciones de eventos discretos es modelar una cola simple.}
+    \end{examples}
+
+    Para el sistema de un cliente que llega a un banco para ser atendido por un cajero, podemos identificar:
+    \begin{itemize}
+        \item \textbf{Entidades:} La cola de clientes y los cajeros.
+        \pause
+        \item \textbf{Eventos:} La llegada del cliente y la partida del cliente.
+        \pause
+        \item \textbf{Estados del Sistema:} El número de clientes en la cola (0, 1, 2, ...) y el estado del cajero (ocupado o inactivo).
+        \pause
+        \item \textbf{Variables Aleatorias Clave:} El tiempo entre llegadas de los clientes y el tiempo de servicio del cajero.
+    \end{itemize}
+\end{frame}
+%------------------------------------------------
+\section{Componentes de la simulación de sistemas de eventos discretos}
+%------------------------------------------------
+
+\begin{frame}{Componentes del Motor de Simulación DES}
+    
+    \begin{block}{El Motor de Simulación}
+    Para gestionar la dinámica donde el tiempo 'salta' de un evento al siguiente, se requiere un motor de simulación con varios componentes fundamentales que trabajan en conjunto para procesar eventos en orden cronológico.
+    \end{block}
+   
+\end{frame}
+
+\begin{frame}{Componentes del Motor de Simulación DES}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.23\textwidth]{Figuras/Cap8/fig18.2.png}
+        \caption{Diagrama de flujo de una simulación de eventos discretos.}
+        \label{fig:flowchart_des}
+    \end{figure}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}[allowframebreaks]{Elementos Esenciales del Motor DES}
+        \begin{block}{Reloj (Clock)}
+        Lleva el registro del tiempo de simulación actual. En DES, el tiempo 'salta' de un evento al siguiente, avanzando hasta la hora de inicio del próximo evento en la lista.
+        \end{block}
+       \begin{block}{Lista de Eventos (Events list)}
+       Mantiene una lista de eventos pendientes, ordenada cronológicamente. Es el corazón del motor, ya que dicta la secuencia de la simulación.
+       \end{block}
+       \begin{block}{Generadores de Números Aleatorios}
+       Se utilizan para generar variables aleatorias (e.g., tiempos de servicio, tiempos entre llegadas) a partir de distribuciones de probabilidad. El uso de semillas permite que el comportamiento aleatorio sea repetible.
+       \end{block}
+       \begin{block}{Estadísticas (Statistics)}
+       Realiza el seguimiento de las métricas de rendimiento del sistema que son de interés para el estudio (e.g., tiempo promedio en cola, utilización del servidor).
+       \end{block}
+        \begin{block}{Condición de Finalización (Ending condition)}
+        Determina cuándo terminará la simulación. Puede ser un tiempo de simulación fijo, un número de eventos procesados o cuando una métrica alcanza un valor específico.
+        \end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Ejemplo: Retiro en un Cajero Automático (ATM)}
+%------------------------------------------------
+
+\begin{frame}{Ejemplo: Simulación de un Retiro en un ATM}
+
+    \begin{itemize}
+        \item \textbf{Estados del Sistema:}
+            \begin{itemize}
+                \item $Q(t)$: Número de clientes en la cola.
+                \item $S(t)$: Estado del servidor (0=inactivo, 1=ocupado).
+            \end{itemize}
+        \item \textbf{Entidades:} El cliente y el servidor.
+        \item \textbf{Eventos:}
+            \begin{itemize}
+                \item \textbf{A:} Llegada (Arrival).
+                \item \textbf{D:} Partida (Departure).
+                \item \textbf{E:} Evento de detención de la simulación.
+            \end{itemize}
+        \item \textbf{Actividades:} El tiempo entre llegadas y el tiempo de servicio.
+        \item \textbf{Retraso (Delay):} El tiempo que un cliente pasa esperando en la cola.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Ciclo de Vida de un Cliente en un ATM}
+     \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.9\textwidth]{Figuras/Cap8/fig18.3.png}
+        \caption{Ciclo de vida de un cliente en un cajero automático.}
+        \label{fig:lifecycle_atm}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[fragile]{Lógica de los Eventos}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{Figuras/Cap8/algo1.png}
+        \label{fig:enter-label}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Lógica de los Eventos}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{Figuras/Cap8/algo2.png}
+        \label{fig:enter-label}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Ejecución de la Simulación del ATM}
+    \frametitle{Datos de Entrada y Resultados}
+    \begin{block}{Tabla de Entrada}
+        \begin{table}[H]
+        \centering
+        \caption{Tiempo entre llegadas y tiempo de servicio de los clientes.}
+        \label{tab:atm_input}
+        \begin{tabular}{lccccc}
+        \toprule
+        \textbf{Tiempo entre llegadas} & 0 & 5 & 3 & 1 & 1 \\
+        \textbf{Tiempo de servicio}     & 3 & 2 & 1 & 2 & 1 \\
+        \bottomrule
+        \end{tabular}
+        \end{table}
+    \end{block}
+
+\end{frame}
+
+\begin{frame}{Ejecución de la Simulación del ATM}
+    \frametitle{Datos de Entrada y Resultados}
+
+    \begin{alertblock}{Tabla de Resultados (Traza)}
+        \begin{table}[H]
+        \centering
+        \caption{Resultados de la simulación para un mostrador de cajero automático.}
+        \label{tab:atm_results}
+        \tiny
+        \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Descripción} & \textbf{Reloj} & \textbf{Q(t)} & \textbf{S(t)} & \textbf{BMQ} \\
+        \midrule
+        1ra Llegada (Ta=0, Ts=3) & 0 & 0 & 1 & 0 \\
+        1ra Partida & 3 & 0 & 0 & 3 \\
+        2da Llegada (Ta=5, Ts=2) & 5 & 0 & 1 & 3 \\
+        2da Partida & 7 & 0 & 0 & 5 \\
+        3ra Llegada (Ta=8, Ts=1) & 8 & 0 & 1 & 5 \\
+        3ra Partida & 9 & 0 & 1 & 6 \\
+        4ta Llegada (Ta=9, Ts=2) & 9 & 0 & 1 & 6 \\
+        5ta Llegada (Ta=10, Ts=1)& 10 & 1 & 1 & 8 \\
+        4ta Partida & 11 & 0 & 1 & 8 \\
+        5ta Partida & 12 & 0 & 0 & 9 \\
+        \bottomrule
+        \end{tabular}
+        \end{table}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\section{Modelado de Datos de Entrada y Distribuciones}
+%------------------------------------------------
+
+\begin{frame}{Modelado de Datos de Entrada}
+    \frametitle{La Base de un Modelo Creíble}
+    \begin{block}{Un Compromiso de Tiempo y Recursos}
+    La recopilación y el análisis de datos de entrada es una de las tareas principales y más críticas en un proyecto de simulación.
+    \end{block}
+    
+    \begin{alertblock}{Principio GIGO (Garbage In, Garbage Out)}
+    Datos de entrada incorrectos o defectuosos conducen a resultados de simulación erróneos y pueden llevar a tomar decisiones equivocadas.
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Procedimiento para el Modelado de Datos de Entrada}
+    \begin{enumerate}
+        \item \textbf{Recolección de datos:} Recopilar datos del sistema real. Si no es posible, se puede recurrir al conocimiento de expertos para generar datos representativos.
+        \pause
+        \item \textbf{Identificar la distribución de los datos:} Se crea un histograma o una distribución de frecuencias para visualizar la forma y tendencia de los datos.
+        \pause
+        \item \textbf{Seleccionar la familia de distribución y sus parámetros:} Se elige una distribución teórica (e.g., Exponencial, Normal) que parezca ajustarse a la forma de los datos y se estiman sus parámetros (e.g., media, desviación estándar).
+        \pause
+        \item \textbf{Verificar la bondad del ajuste:} Se utilizan pruebas estadísticas (e.g., Chi-cuadrado) para determinar objetivamente qué tan bien la distribución seleccionada representa los datos reales.
+    \end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\section{Familias de Distribuciones para Datos de Entrada}
+%------------------------------------------------
+
+\begin{frame}{Selección de Distribuciones de Probabilidad}
+    \begin{block}{Un Paso Crítico}
+    La selección de una distribución de probabilidad adecuada es un paso que determina la validez del modelo. Cada distribución tiene características únicas y es apropiada para modelar diferentes tipos de procesos aleatorios.
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Distribuciones de Variables Discretas}
+%------------------------------------------------
+
+\begin{frame}{Distribuciones Discretas: Binomial y Poisson}
+    \frametitle{Para variables que toman valores enteros}
+    \begin{columns}[t]
+    \column{0.5\textwidth}
+        \begin{alertblock}{Distribución Binomial}
+            Modela el número de éxitos $x$ en $n$ ensayos independientes.
+            \begin{itemize}
+                \item \textbf{Uso:} Artículos defectuosos en un lote; clientes que compran.
+                \item \textbf{PMF:} $P(X=x) = \binom{n}{x} p^x (1-p)^{n-x}$
+            \end{itemize}
+        \end{alertblock}
+    \column{0.5\textwidth}
+        \begin{alertblock}{Distribución de Poisson}
+            Modela el número de eventos en un intervalo fijo de tiempo o espacio.
+            \begin{itemize}
+                \item \textbf{Uso:} Llegadas por hora; fallas por día.
+                \item \textbf{PMF:} $P(X=x) = \frac{e^{-\lambda} \lambda^x}{x!}$
+            \end{itemize}
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Distribuciones Discretas: Binomial Negativa y Uniforme}
+    \frametitle{Para variables que toman valores enteros}
+     \begin{columns}[t]
+    \column{0.5\textwidth}
+        \begin{alertblock}{Distribución Binomial Negativa}
+            Modela el número de ensayos $x$ para observar $k$ éxitos.
+            \begin{itemize}
+                \item \textbf{Uso:} Ítems a inspeccionar para encontrar $k$ defectuosos.
+                \item \textbf{PMF:} $P(X=x) = \binom{x-1}{k-1} p^k (1-p)^{x-k}$
+            \end{itemize}
+        \end{alertblock}
+    \column{0.5\textwidth}
+        \begin{alertblock}{Distribución Discreta Uniforme}
+            Modela una situación donde todos los $n$ resultados son igualmente probables.
+            \begin{itemize}
+                \item \textbf{Uso:} Lanzamiento de un dado; selección al azar.
+                \item \textbf{PMF:} $P(X=x) = \frac{1}{n}$
+            \end{itemize}
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+
+%------------------------------------------------
+\subsection*{Distribuciones de Variables Continuas}
+%------------------------------------------------
+
+\begin{frame}{Distribuciones Continuas: Normal y Lognormal}
+    \frametitle{Para variables que toman cualquier valor en un rango}
+    \begin{columns}[t]
+    \column{0.5\textwidth}
+        \begin{block}{Distribución Normal (Gaussiana)}
+            La famosa "campana", simétrica alrededor de la media $\mu$.
+            \begin{itemize}
+                \item \textbf{Uso:} Tiempos de proceso, errores de medición, dimensiones.
+                \item \textbf{PDF:} $f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$
+            \end{itemize}
+        \end{block}
+    \column{0.5\textwidth}
+        \begin{block}{Distribución Lognormal}
+            Si $\ln(X)$ se distribuye normal. Tiene sesgo a la derecha.
+            \begin{itemize}
+                \item \textbf{Uso:} Duración de tareas, tiempos de reparación.
+                \item \textbf{PDF:} $f(x) = \frac{1}{x\sigma\sqrt{2\pi}} e^{-\frac{(\ln x - \mu)^2}{2\sigma^2}}$
+            \end{itemize}
+        \end{block}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Distribuciones Continuas: Exponencial y Gamma}
+     \frametitle{Para variables que toman cualquier valor en un rango}
+    \begin{columns}[t]
+    \column{0.5\textwidth}
+        \begin{block}{Distribución Exponencial}
+            Modela el tiempo entre eventos de un proceso de Poisson. No tiene "memoria".
+            \begin{itemize}
+                \item \textbf{Uso:} Tiempo entre llegadas, vida de componentes sin desgaste.
+                \item \textbf{PDF:} $f(x) = \lambda e^{-\lambda x}$
+            \end{itemize}
+        \end{block}
+    \column{0.5\textwidth}
+        \begin{block}{Distribución Gamma}
+            Muy flexible, con sesgo a la derecha. La Exponencial es un caso especial.
+            \begin{itemize}
+                \item \textbf{Uso:} Tiempos de espera, plazos de entrega.
+                \item \textbf{PDF:} $f(x) = \frac{1}{\beta^\alpha \Gamma(\alpha)} x^{\alpha-1} e^{-x/\beta}$
+            \end{itemize}
+        \end{block}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Distribuciones Continuas: Erlang y Weibull}
+     \frametitle{Para variables que toman cualquier valor en un rango}
+    \begin{columns}[t]
+    \column{0.5\textwidth}
+        \begin{block}{Distribución de Erlang}
+            Modela el tiempo total para que ocurran $k$ eventos exponenciales.
+            \begin{itemize}
+                \item \textbf{Uso:} Tiempo de un proceso con $k$ fases secuenciales.
+                \item \textbf{PDF:} $f(x) = \frac{\lambda^k x^{k-1} e^{-\lambda x}}{(k-1)!}$
+            \end{itemize}
+        \end{block}
+    \column{0.5\textwidth}
+        \begin{block}{Distribución de Weibull}
+            Clave en análisis de fiabilidad. Modela tasas de fallo decrecientes, constantes o crecientes.
+            \begin{itemize}
+                \item \textbf{Uso:} Tiempo hasta el fallo de componentes.
+                \item \textbf{PDF:} $f(x) = \frac{\alpha}{\beta} \left(\frac{x}{\beta}\right)^{\alpha-1} e^{-(x/\beta)^\alpha}$
+            \end{itemize}
+        \end{block}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Distribuciones Continuas: Beta y Triangular}
+     \frametitle{Para variables que toman cualquier valor en un rango}
+    \begin{columns}[t]
+    \column{0.5\textwidth}
+        \begin{block}{Distribución Beta}
+            Versátil, definida en [0, 1]. Puede adoptar muchas formas.
+            \begin{itemize}
+                \item \textbf{Uso:} Modelar proporciones o porcentajes.
+                \item \textbf{PDF:} $f(x) = \frac{x^{\alpha-1}(1-x)^{\beta-1}}{B(\alpha, \beta)}$
+            \end{itemize}
+        \end{block}
+    \column{0.5\textwidth}
+        \begin{block}{Distribución Triangular}
+            Útil cuando solo se conocen el mínimo ($a$), máximo ($b$) y más probable ($c$).
+            \begin{itemize}
+                \item \textbf{Uso:} Duración de actividades, opiniones de expertos.
+            \end{itemize}
+        \end{block}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Distribución Empírica}
+     \frametitle{¿Y si ninguna distribución teórica se ajusta?}
+     \begin{alertblock}{Distribución Empírica}
+        No es una distribución teórica. Se construye directamente a partir de los datos históricos observados. Se puede representar como un histograma o una CDF escalonada.
+        \begin{itemize}
+            \item \textbf{Uso:} Se utiliza cuando ninguna de las distribuciones estándar proporciona un ajuste adecuado, pero se dispone de una cantidad suficiente de datos históricos.
+        \end{itemize}
+     \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\section{Generación de Números Aleatorios}
+%------------------------------------------------
+
+\begin{frame}{Generación de Números Aleatorios}
+    \begin{block}{La Base de la Estocasticidad}
+    Los números aleatorios son fundamentales para simular sistemas de eventos discretos. Permiten modelar la incertidumbre y la variabilidad inherentes a los sistemas del mundo real.
+    \end{block}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Distribución Uniforme}
+%------------------------------------------------
+
+\begin{frame}{Distribución Uniforme y el Método Congruencial Lineal}
+    \begin{columns}[c]
+        \column{0.45\textwidth}
+            Una secuencia de números en $[a, b]$ donde cada número tiene la misma probabilidad de ocurrir.
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.4.png}
+                \caption{Densidad de probabilidad de una distribución uniforme.}
+                \label{fig:dist_uniforme}
+            \end{figure}
+        \column{0.5\textwidth}
+            \begin{alertblock}{Método Congruencial Lineal}
+            El método numérico más común para generar enteros aleatorios uniformes se basa en:
+             \begin{equation}
+                u_{k+1} = (\alpha u_k + \gamma) \pmod \beta
+                \label{eq:lcm}
+            \end{equation}
+            Donde $\alpha$ (multiplicador), $\gamma$ (incremento) y $\beta$ (módulo) son enteros predefinidos.
+            \end{alertblock}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Distribución Gaussiana (Normal)}
+%------------------------------------------------
+
+\begin{frame}{Generación de Números con Distribución Gaussiana}
+    \begin{columns}[c]
+        \column{0.45\textwidth}
+            Es la distribución no uniforme más utilizada, caracterizada por su forma de campana centrada en la media $\mu$.
+            \begin{figure}
+                \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.5.png}
+                \caption{Densidad de probabilidad de una distribución Gaussiana.}
+                \label{fig:dist_gaussiana}
+            \end{figure}
+        \column{0.5\textwidth}
+             \begin{block}{Método de Box-Muller}
+            Permite transformar un par de números uniformes ($u_1, u_2$) en un par de números normales estándar ($x_1, x_2$):
+            \begin{align*}
+                x_1 &= \sqrt{-2\ln u_1} \cos(2\pi u_2) \\
+                x_2 &= \sqrt{-2\ln u_1} \sin(2\pi u_2)
+            \end{align*}
+            \end{block}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection*{Generación de Números Aleatorios en MATLAB}
+%------------------------------------------------
+
+\begin{frame}[fragile]{MATLAB: La Función \texttt{rand}}
+    \frametitle{Generación de Números Uniformes}
+    \begin{block}{Función \texttt{rand}}
+    Genera números aleatorios distribuidos uniformemente en el intervalo (0, 1).
+    \end{block}
+\begin{lstlisting}[language=MATLAB, style=MATLABStyle]
+% Un solo numero entre 0 y 1
+num = rand;
+
+% Un vector fila de 1x5
+vec = rand(1, 5);
+
+% Para generar en un intervalo [a, b], ej: [10, 50]
+a = 10;
+b = 50;
+num_escalado = a + (b-a) * rand;
+\end{lstlisting}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[fragile]{MATLAB: La Función \texttt{randn}}
+    \frametitle{Generación de Números Normales}
+    \begin{block}{Función \texttt{randn}}
+    Genera números aleatorios de la distribución normal estándar ($\mu=0, \sigma=1$).
+    \end{block}
+\begin{lstlisting}[language=MATLAB, style=MATLABStyle]
+% Una matriz de 3x3 de N(0,1)
+matriz_normal = randn(3, 3);
+
+% Para generar de N(mu, sigma), ej: N(15, 2.5)
+media = 15;
+desv_est = 2.5;
+datos = media + desv_est * randn(1, 1000);
+histogram(datos); % Visualizar
+\end{lstlisting}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[fragile]{MATLAB: La Función \texttt{randi}}
+    \frametitle{Generación de Enteros Aleatorios}
+    \begin{block}{Función \texttt{randi}}
+    Genera números enteros distribuidos uniformemente en un rango.
+    \end{block}
+\begin{lstlisting}[language=MATLAB, style=MATLABStyle]
+% Un entero entre 1 y 10 (simula un dado)
+dado = randi(10);
+
+% Matriz 4x4 de enteros entre 50 y 100
+rango = [50, 100];
+matriz_enteros = randi(rango, 4, 4);
+\end{lstlisting}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}[fragile]{MATLAB: Reproducibilidad con \texttt{rng}}
+    \frametitle{Control del Generador Aleatorio}
+    \begin{alertblock}{Función \texttt{rng}}
+    Permite controlar la semilla del generador para poder reproducir exactamente la misma secuencia de números aleatorios, lo cual es crucial para depurar y validar modelos.
+    \end{alertblock}
+\begin{lstlisting}[language=MATLAB, style=MATLABStyle]
+% Establecer la semilla a un valor especifico
+rng(0);
+secuencia1 = rand(1, 3)
+
+% Restablecer la semilla al mismo valor
+rng(0);
+secuencia2 = rand(1, 3)
+% >> secuencia2 será idéntica a secuencia1
+\end{lstlisting}
+\end{frame}
+
+%------------------------------------------------
+\section{Simulación de eventos discretos con SimEvents en MATLAB-Simulink}
+%------------------------------------------------
+
+\begin{frame}{Introducción a SimEvents}
+    \begin{block}{¿Qué es SimEvents?}
+    SimEvents es una extensión de Simulink que permite el modelado y la simulación de sistemas de eventos discretos. Es la herramienta ideal para diseñar y analizar sistemas cuya dinámica está gobernada por eventos asíncronos, como la llegada de clientes, la transmisión de paquetes de datos o el fallo de una máquina.
+    \end{block}
+    
+    \begin{alertblock}{Componentes Principales}
+    La biblioteca de SimEvents proporciona un conjunto de bloques predefinidos que representan componentes comunes como generadores de entidades, colas, servidores y conmutadores.
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Patrones de Diseño en SimEvents}
+    \frametitle{Plantillas para Escenarios Comunes}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figuras/Cap8/fig8.6.png}
+        \caption{Patrones de Diseño Comunes en SimEvents.}
+        \label{fig:simevents_patterns}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Creación de un Modelo simple de Eventos Discretos}
+%------------------------------------------------
+
+\begin{frame}{Ejemplo: Creación de un Modelo D/D/1}
+    \begin{block}{Escenario}
+   Se creará un modelo de un sistema de colas simple donde camiones (entidades) llegan a una gasolinera para llenar sus tanques. Este sistema se conoce como **D/D/1**, lo que indica una tasa de llegada determinista, una tasa de servicio determinista y un único servidor.
+    \end{block}
+    
+    \begin{alertblock}{Pasos Básicos de Construcción}
+        \begin{enumerate}
+            \item Abrir un nuevo modelo en Simulink.
+            \item Abrir la biblioteca de SimEvents (comando \texttt{simevents}).
+            \item Arrastrar los bloques necesarios al modelo.
+        \end{enumerate}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Modelo D/D/1: Bloques y Conexiones}
+     \begin{columns}[c]
+        \column{0.45\textwidth}
+            \begin{block}{Bloques Utilizados}
+                \begin{itemize}
+                    \item \textbf{Entity Generator:} Modela la llegada de los tanques.
+                    \item \textbf{Entity Queue:} Modela la espera de los tanques.
+                    \item \textbf{Entity Server:} Modela el proceso de llenado.
+                    \item \textbf{Entity Terminator:} Modela la partida de los tanques.
+                    \item \textbf{Scope:} Visualiza las señales de salida.
+                \end{itemize}
+            \end{block}
+        \column{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=0.9\linewidth]{Figuras/Cap8/fig8.7.png}
+                \caption{Bloques básicos para el modelo de colas.}
+                \label{fig:simevents_bloques}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Modelo D/D/1: Configuración y Resultados}
+    \begin{columns}[c]
+        \column{0.5\textwidth}
+            \begin{block}{Configuración Clave}
+                \begin{itemize}
+                   \item En \textbf{Entity Generator}, el \textbf{Period} se deja en \texttt{1} (un tanque llega cada segundo).
+                    \item En \textbf{Entity Server}, el \textbf{Service time} se deja en \texttt{1.0} (el servidor tarda un segundo en llenar el tanque).
+                    \item Se conecta la salida de estadísticas 'd' (entidades que han partido) del servidor al Scope.
+                \end{itemize}
+            \end{block}
+             \begin{figure}
+                \centering
+                \includegraphics[width=0.9\linewidth]{Figuras/Cap8/fig8.8.png}
+                \caption{Modelo de colas D/D/1 simple en SimEvents.}
+                \label{fig:simevents_dd1_model}
+            \end{figure}
+        \column{0.45\textwidth}
+             \begin{figure}
+                \centering
+                \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.9.png}
+                \caption{Resultados de la simulación del modelo D/D/1.}
+                \label{fig:simevents_dd1_results}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Exploración de Estadísticas y Visualización}
+%------------------------------------------------
+
+\begin{frame}{Visualización de Estadísticas}
+    \begin{block}{¿Por qué visualizar estadísticas?}
+    El propósito principal de una simulación es comprender el sistema para informar decisiones. Los datos estadísticos (tasas de producción, tiempos de espera, utilización) son clave para interpretar el comportamiento del modelo.
+    \end{block}
+    
+    \begin{alertblock}{¿Cómo acceder a las estadísticas?}
+    Muchos bloques de SimEvents tienen una pestaña de \textbf{Estadísticas}. Al seleccionar una casilla, se crea un nuevo puerto de salida en el bloque para esa señal estadística.
+    \end{alertblock}
+    
+
+\end{frame}
+
+
+\begin{frame}{Visualización de Estadísticas}
+    
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.7\linewidth]{Figuras/Cap8/fig8.10.png}
+        \caption{Pestaña de Estadísticas del bloque Entity Queue.}
+        \label{fig:stats_dialog}
+    \end{figure}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}{Análisis de Escenarios: Tasa de Llegada vs. Tasa de Servicio}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{Figuras/Cap8/fig8.12.png}
+    \caption{Modelo modificado para visualizar estadísticas de espera y utilización.}
+    \label{fig:dd1_stats_model}
+\end{figure}
+
+\begin{columns}[c]
+\column{0.5\textwidth}
+    \begin{block}{Si Llegadas > Servicio}
+    (Ej: Periodo de llegada = 0.3s)
+    \begin{itemize}
+        \item La utilización del servidor es del 100%[cite: 365].
+        \item El tiempo de espera promedio en la cola aumenta constantemente.
+    \end{itemize}
+    \end{block}
+\column{0.5\textwidth}
+    \begin{alertblock}{Si Llegadas < Servicio}
+    (Ej: Periodo de llegada = 1.1s)
+    \begin{itemize}
+        \item La utilización del servidor puede disminuir al tener tiempos inactivos.
+        \item El tiempo de espera en la cola es cero.
+    \end{itemize}
+    \end{alertblock}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Gestión de Entidades Mediante Acciones de Eventos}
+%------------------------------------------------
+
+\begin{frame}[fragile]{Acciones de Eventos}
+    \begin{block}{¿Qué son las Acciones de Eventos?}
+    SimEvents permite crear acciones personalizadas cuando ocurre un evento.Estas acciones, escritas en código de MATLAB, permiten cambiar los atributos de las entidades de forma dinámica.
+    \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Acciones de Eventos}
+
+    \begin{alertblock}{Ejemplo: Llenado de Tanques}
+    Se modela una gasolinera donde los tanques llegan con un nivel de gasolina aleatorio y se llenan con una cantidad fija.
+    \begin{itemize}
+        \item \textbf{Acción "Generate":} Se asigna un nivel de gasolina inicial aleatorio a cada tanque que llega.
+       \item \textbf{Acción "Service complete":} Se incrementa el nivel de gasolina del tanque al completar el servicio.
+    \end{itemize}
+    \end{alertblock}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{Figuras/Cap8/fig8.18.png}
+        \caption{Modelo que utiliza acciones de eventos para gestionar atributos}
+        \label{fig:event_action_model}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Activación de Componentes de Simulink}
+%------------------------------------------------
+
+\begin{frame}{Integración con Simulink Functions}
+    \begin{block}{¿Qué son las Simulink Functions?}
+    Se pueden usar bloques de \textbf{Simulink Function} para obtener atributos de las entidades de SimEvents, pasarlos a componentes de Simulink para su procesamiento y luego devolverlos al modelo de eventos discretos.
+    \end{block}
+
+    \begin{alertblock}{Aplicaciones Típicas}
+        \begin{itemize}
+            \item \textbf{Timestamping:} Registrar el tiempo de generación y de servicio para calcular la duración total de una entidad en el sistema.
+            \item \textbf{Paso de Atributos:} Enviar el valor de un atributo a un subsistema de Simulink para realizar cálculos complejos.
+            \item \textbf{Importar Datos:} Usar datos de una hoja de cálculo para definir parámetros del modelo, como los tiempos entre llegadas.
+            \item \textbf{Notificación de Eventos:} Crear un evento para notificar a un bloque de enrutamiento (switch) cuando se complete un proceso].
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+%------------------------------------------------
+\section{Activación de Componentes de Simulink con Eventos Discretos}
+%------------------------------------------------
+
+\begin{frame}{Integración de SimEvents con Simulink}
+    \begin{block}{Combinando lo Mejor de Dos Mundos}
+        Se pueden usar bloques de \textbf{Simulink Function} para crear una poderosa sinergia entre el mundo de los eventos discretos y el mundo del tiempo continuo.
+    \end{block}
+    
+    \begin{alertblock}{Casos de Uso Principales}
+        \begin{itemize}
+            \item Estampar el tiempo de las entidades (\textit{Timestamping}).
+            \item Pasar atributos de entidad a componentes de Simulink para procesamiento.
+            \item Crear eventos de notificación para controlar el flujo (enrutamiento).
+            \item Importar datos de fuentes externas como hojas de cálculo.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Estampado de Tiempo de Entidades (Timestamping)}
+%------------------------------------------------
+
+\begin{frame}[fragile]{Ejemplo: Timestamping}
+   
+    Este modelo utiliza una \textbf{Simulink Function} para registrar el tiempo en el que una entidad es generada y el tiempo en que completa su servicio, permitiendo calcular la duración total que pasó en el sistema.
+    
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.7\textwidth]{Figuras/Cap8/fig8.20.png}
+        \caption{Modelo para estampar el tiempo de las entidades.}
+        \label{fig:timestamp_model}
+    \end{figure}
+    
+   
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Timestamping}
+    
+    \begin{itemize}
+        \item \textbf{Acción "Generate" del Generador:} Llama a la función para registrar el \texttt{TimeStampGeneration}.
+        \item \textbf{Acción "Service complete" del Servidor:} Llama a la función para registrar el \texttt{TimeStampServiceComplete} y calcula el \texttt{TotalTime}.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Otros Patrones de Integración}
+%------------------------------------------------
+
+\begin{frame}{Otros Patrones de Integración con Simulink}
+\begin{columns}[t]
+\column{0.5\textwidth}
+    \begin{block}{Pasar Atributos}
+    Se puede pasar el valor de un atributo a un componente de Simulink (como un bloque Gain) para realizar cálculos.
+        \begin{figure}
+        \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.21.png}
+        \caption{Modelo para pasar atributos.}
+        \end{figure}
+    \end{block}
+
+\column{0.5\textwidth}
+    \begin{alertblock}{Importar Datos}
+    Se pueden usar datos de una hoja de cálculo para definir parámetros, como los tiempos entre llegadas de entidades.
+        \begin{figure}
+        \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.22.png}
+        \caption{Modelo para importar datos.}
+        \end{figure}
+    \end{alertblock}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Patrones Avanzados de Integración}
+
+
+    \begin{block}{Ensamblaje de Entidades}
+    Es posible tomar atributos de diferentes tipos de entidades y combinarlos para crear una nueva entidad ensamblada.
+        \begin{figure}
+        \includegraphics[width=0.4\linewidth]{Figuras/Cap8/fig8.23.png}
+        \caption{Ensamblaje de entidades.}
+        \end{figure}
+    \end{block}
+
+\end{frame}
+
+\begin{frame}{Patrones Avanzados de Integración}
+
+
+    \begin{alertblock}{Enrutamiento por Notificación}
+    Una Simulink Function puede generar un evento que notifica a un bloque de enrutamiento (\textit{switch}) para dirigir las entidades según una lógica de control de calidad.
+        \begin{figure}
+        \includegraphics[width=0.6\linewidth]{Figuras/Cap8/fig8.24.png}
+        \caption{Enrutamiento por notificación.}
+        \end{figure}
+    \end{alertblock}
+
+\end{frame}
+\end{document}

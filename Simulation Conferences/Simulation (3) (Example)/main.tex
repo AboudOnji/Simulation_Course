@@ -1,0 +1,192 @@
+\documentclass{beamer}
+\usepackage{ragged2e}
+\usepackage{times}
+\usepackage{array}
+\usepackage{amsmath}  % Paquete principal para ecuaciones avanzadas
+\usepackage{amssymb}  % Símbolos matemáticos adicionales
+\usepackage{amsfonts} % Fuentes matemáticas adicionales
+\usepackage{mathtools}
+\usepackage{booktabs} % Para formato APA en tablas
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+%\usecolortheme{dolphin}%crane, beaver,dolphin,wolverine,seagull,fly,albatross
+\setbeamertemplate{caption}[numbered]
+\usepackage[english]{babel}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{changepage}
+\usepackage{hyperref}
+
+
+\captionsetup{
+    font=footnotesize, % Tamaño de la letra para las captions
+    labelfont=bf,      % Hace "Figura X" en negrita
+    labelsep=colon     % Cambia el separador después de "Figura X"
+}
+\usepackage[style=apa, backend=biber]{biblatex} % Configuración para APA o el estilo deseado
+\addbibresource{sample.bib} % Archivo .bib
+
+\justifying
+
+% Tema para la presentación
+\usetheme{cambridge} %  "Madrid"  "Berlin", "CambridgeUS","Warsaw" etc.
+\setbeamertemplate{caption}[numbered]
+\addtolength{\topskip}{-1cm} % Reduce el espacio superior
+\usefonttheme{professionalfonts}
+% Personalizar el footline
+\setbeamertemplate{footline}{%
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.8\paperwidth,ht=2.25ex,dp=1ex,leftskip=1em]{author in head/foot}%
+      \usebeamerfont{author in head/foot}BARSEKH-ONJI Aboud, ORCID: 0009-0004-5440-8092
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.2\paperwidth,ht=2.25ex,dp=1ex,rightskip=1em]{page number in head/foot}%
+      \usebeamerfont{ page number in head/foot}\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}%
+  }%
+}
+% Información del título
+\institute{\textbf{Universidad Anáhuac México, Facultad de Ingeniería}}
+\title{\textbf {{Example: Modeling of train system}}}
+\author{\textbf{BARSEKH-ONJI Aboud (DSc.)}}
+\date \today
+
+\begin{document}
+
+% Página de título
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Tabla de contenido
+\begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents
+\end{frame}
+
+% Inicio de la presentación
+\section{Problem}
+
+\subsection{System Characteristics}
+\begin{frame}{System Characteristics}
+    \justifying
+    In this example, we will consider a toy train consisting of an engine and a car, as shown in the figure \ref{fig:1}. Assuming that the train travels only in one direction, we want to apply control to the train so that it has a smooth start-up and stop, and a constant-speed ride. The mass of the engine and the car will be represented by \textbf{M1} and \textbf{M2}, respectively. The two are held together by a spring, which has the stiffness coefficient of \textbf{k}. \textbf{F} represents the force applied by the engine, and the Greek letter \textbf{µ} represents the coefficient of rolling friction.
+\end{frame}
+
+\begin{frame}{System Characteristics}
+    \justifying
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figs/train.png}
+        \caption{Train System}
+        \label{fig:1}
+    \end{figure}
+\end{frame}
+
+\section{Modeling using Free body diagram}
+\begin{frame}{Modeling using Free body diagram}
+    \justifying
+    Real systems are usually quite complex and exact analysis is often impossible. We shall make \textbf{approximations} and reduce the system components to idealized versions whose behaviors are similar to the real components.
+\end{frame}
+
+\begin{frame}{Modeling using Free body diagram}
+    \begin{block}{}
+        \justifying
+        From Newton’s law, we know that the sum of the forces acting on a mass equals mass times its acceleration as shown in Figure \ref{fig:2}. In this case, the forces acting on M1 are the spring, the friction, and the force applied by the engine. The forces acting on M2 are the spring and the friction.
+        
+        In the vertical direction, the gravitational force is canceled by the normal force applied by the ground, so that there will be no acceleration in the vertical direction. Where:
+    \end{block}
+    \begin{equation}
+        B_1=\mu gM_1 \text{  and  } B_2=\mu gM_2
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Modeling using Free body diagram}
+   \begin{figure}
+       \centering
+       \includegraphics[width=\linewidth]{figs/system2.png}
+       \caption{Free body diagram}
+       \label{fig:2}
+   \end{figure}
+\end{frame}
+
+\begin{frame}{Modeling using Free body diagram}
+   \begin{figure}
+       \centering
+       \includegraphics[width=\linewidth]{figs/systemmath.png}
+       \caption{Mathematical System}
+       \label{fig:3}
+   \end{figure}
+\end{frame}
+
+\begin{frame}{Modeling using Free body diagram}
+   \begin{figure}
+       \centering
+       \includegraphics[width=0.7\linewidth]{figs/systemmath.png}
+       \caption{Mathematical system}
+       \label{fig:3}
+   \end{figure}
+   \begin{equation}
+    M_1 \ddot{X}_1 = F - k_1(X_1 - X_2) - gM_1 \mu \dot{X}_1
+\end{equation}
+
+\begin{equation}
+    M_2 \ddot{X}_2 = -k_2(X_2 - X_1) - gM_2 \mu \dot{X}_2
+\end{equation}
+\end{frame}
+
+\begin{frame}{Modeling using Free body diagram}
+\begin{figure}
+       \centering
+       \includegraphics[width=0.7\linewidth]{figs/systemmath.png}
+       \caption{Mathematical system}
+       \label{fig:3}
+   \end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/ec.png}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Remember: State Variables and equations}
+    \justifying
+    The variable $U(t)$ is controllable at all time instants $t > t_0$. The input $U(t)$ is taken from the input space. The output variable $Z(t)$ is observable at all time instants $t > t_0$, but there is no direct control on the output variables. $Z(t)$ is taken from the universe of output $Z$.
+
+\textbf{State equation}
+\[
+\dot{X}(t) = A X(t) + B U(t) 
+\]
+
+\textbf{Output equation}
+\[
+Z(t) = C X(t) + D U(t)
+\]
+\end{frame}
+\section{Modeling using state space system}
+
+\begin{frame}{Modeling using state space system}
+
+ \begin{figure}
+     \centering
+     \includegraphics[width=0.5\linewidth]{figs/ec1.png}
+     
+ \end{figure}
+\end{frame}
+\begin{frame}{Modeling using state space system}
+
+\begin{figure}
+     \centering
+     \includegraphics[width=0.7\linewidth]{figs/ec2.png}
+     
+ \end{figure}
+\end{frame}
+
+
+\begin{frame}{Modeling using state space system}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figs/State.png}
+\end{figure}
+\end{frame}
+
+
+\end{document}

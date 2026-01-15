@@ -1,0 +1,332 @@
+\documentclass{beamer}
+\usepackage{ragged2e}
+\usepackage{times}
+\usepackage{array}
+\usepackage{amsmath}  % Paquete principal para ecuaciones avanzadas
+\usepackage{amssymb}  % Símbolos matemáticos adicionales
+\usepackage{amsfonts} % Fuentes matemáticas adicionales
+\usepackage{mathtools}
+\usepackage{booktabs} % Para formato APA en tablas
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+%\usecolortheme{dolphin}%crane, beaver,dolphin,wolverine,seagull,fly,albatross
+\setbeamertemplate{caption}[numbered]
+\usepackage[english]{babel}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{changepage}
+
+\captionsetup{
+    font=footnotesize, % Tamaño de la letra para las captions
+    labelfont=bf,      % Hace "Figura X" en negrita
+    labelsep=colon     % Cambia el separador después de "Figura X"
+}
+\usepackage[style=apa, backend=biber]{biblatex} % Configuración para APA o el estilo deseado
+\addbibresource{sample.bib} % Archivo .bib
+
+
+\justifying
+
+% Tema para la presentación
+\usetheme{Berkeley} %  "Madrid"  "Berlin", "CambridgeUS","Warsaw" etc.
+\setbeamertemplate{caption}[numbered]
+\addtolength{\topskip}{-1cm} % Reduce el espacio superior
+\usefonttheme{professionalfonts}
+% Personalizar el footline
+\setbeamertemplate{footline}{%
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.8\paperwidth,ht=2.25ex,dp=1ex,leftskip=1em]{author in head/foot}%
+      \usebeamerfont{author in head/foot}BARSEKH-ONJI Aboud, ORCID: 0009-0004-5440-8092
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.2\paperwidth,ht=2.25ex,dp=1ex,rightskip=1em]{page number in head/foot}%
+      \usebeamerfont{ page number in head/foot}\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}%
+  }%
+}
+% Información del título
+\institute{\textbf{Universidad Anáhuac México}\\ {Facultad de Ingeniería}}
+\title{\textbf {{Introduction to Systems}}}
+\author{\textbf{Prof. DSc. BARSEKH-ONJI Aboud}}
+\date \today
+
+
+\begin{document}
+
+\begin{frame}{}
+     \maketitle
+    \textbf{Modeling and Simulation}
+\end{frame}
+\justifying
+
+% Tabla de contenidos
+\begin{frame}{Contents}
+\footnotesize{
+    \tableofcontents}
+\end{frame}
+
+% Secciones y diapositivas
+
+\section{Introduction}
+\begin{frame}{\textbf{Introduction}}
+\begin{block}{The term \textit{System}}
+    \justifying
+       The term system is derived from the Greek word \textit{systema}, which means an organized relationship among functioning units or components. It is used to describe almost any orderly arrangement of ideas or construct.
+    \end{block}
+    \begin{block}{}
+    \justifying
+        According to the Webster International Dictionary, a system is an \textbf{aggregation or assemblage of objects united by some form of regular interaction or interdependence}; a group of diverse units so combined by nature or art as to form an integral; whole and to function, operate, or move in unison and often in obedience to some form of control. ' \end{block}   
+\end{frame}
+\begin{frame}{\textbf{Introduction}}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{img/Systemascollection.png}
+    \caption{System as collection of interconnected components}
+    \label{fig:system collection}
+\end{figure}
+\end{frame}
+\begin{frame}{\textbf{Introduction}}
+\begin{block}{Some examples of the systems}
+    \justifying
+    \begin{itemize}
+        \item Biological / medical systems.
+        \item Socioeconomic systems.
+        \item Communication and information systems.
+        \item Planning systems.
+        \item Solar systems.
+        \item Manufacturing systems.
+        \item Transportation systems.
+        \item Physical systems (electrical, mechanical, .. etc.).
+        \item Management systems.
+    \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{\textbf{Introduction}}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{img/Hierarchically.png}
+        \caption{Hierarchically nested set of systems.}
+        \label{fig:enter-label}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{\textbf{Introduction}}
+\begin{block}{Attributes of systems}
+    \justifying
+    A system is characterized by the following attributes:
+\begin{itemize}
+        \item System boundary.
+        \item System components and their interactions.
+        \item Environment.
+    \end{itemize}
+    \end{block}
+\end{frame}
+    
+\subsection{System Boundary}
+\begin{frame}{\textbf{System Boundary}}
+    \begin{block}{}
+    \justifying
+        To study a given system, it is necessary to determine what comprises (falls inside and what falls outside) a system. For this a demarcation is required to differentiate entities from the environment. Such a partition is called a system boundary.  \end{block}
+\end{frame}
+
+\begin{frame}{\textbf{System Boundary}}
+    \begin{block}{Some points about the system boundary:}
+    \justifying
+        \begin{itemize}
+            \item It is a partitioning line between the environment and the system.
+            \item System is inside the boundary and environment is outside the system.
+            \item A real or imaginary boundary separates the system from the rest of the universe.
+            \item System exchanges input–output from its environment.
+            \item This boundary might be material boundary or immaterial boundary.
+            \item System boundary may be crisp (clearly defined) or fuzzy (ill defined).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\subsection{System components and their interactions}
+\begin{frame}{\textbf{System components and their interactions}}
+    \begin{block}{Some points about systems components:}
+    \justifying
+        \begin{itemize}
+            \item It is static or dynamically changing with time, input, or state of the system.
+            \item Interaction may be constrained or nonconstrained type.
+            \item The component interaction may be unidirectional or bidirectional.
+            \item Interaction strength may be 0, 1, or between 0 and 1.
+        \end{itemize}
+    \end{block}
+\end{frame}
+\subsection{Environment}
+\begin{frame}{\textbf{Environment}}
+    \begin{block}{Example}
+     \justifying
+        When we model a city as a pollution production system, regardless of which chimney emitted a particular plume of smoke, it is sufficient to know the total amount of fuel that enters the city to estimate the total amount of carbon dioxide and other gases produced. The “\textbf{black box}” view of the city will be much simpler and easier to use for the calculation of overall pollution levels than the more detailed “\textbf{white box}” view, where we trace the movement of every fuel tank to every particular building in the city.
+    \end{block}
+\end{frame}
+
+\section{Need of System Modeling and Simulation}
+\begin{frame}{\textbf{Need of System Modeling and Simulation}}
+    \begin{block}{}
+        \justifying
+        Models are used to mimic the behavior of systems under different operating conditions. This may also be done with the help of system experimentation. But, sometimes it is inappropriate or impossible to do experiments on real systems due to the following reasons.
+    \end{block}
+\end{frame}
+
+\begin{frame}{\textbf{Need of System Modeling and Simulation}}
+
+\begin{block}{}
+ \justifying
+        \textit{\textbf{Too expensive}}: Experimenting with a real system is an extremely costly affair. For example, the physical experimentation of a complex system like the satellite system is quite expensive and time consuming.
+    \end{block}
+    \begin{block}{}
+     \justifying
+        \textit{\textbf{Risky}}: Risk involved in experimentation is another factor. In some systems there is a risk of damaging the system, or a risk of life. For example, training a person for operating the nuclear plant in a dangerous situation would be inappropriate and life threatening.
+    \end{block}
+\end{frame}
+
+
+
+
+\section{Classification of Systems}
+\subsection{According to the time frame}
+\subsection{According to the Complexity of the System}
+\begin{frame}{\textbf{Classification of Systems}}
+    \begin{block}{According to the time frame}
+        \begin{itemize}
+            \item Discrete.
+            \item Continuous.
+            \item Hybrid.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{According to the Complexity of the System}
+        \begin{itemize}
+            \item Physical Systems.
+            \item Conceptual Systems.
+            \item Esoteric Systems.
+        \end{itemize}
+    \end{block}
+\end{frame}
+\begin{frame}{\textbf{Classification of Systems}}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{img/ClassificationSystems.png}
+        \caption{Classification of system based on complexity.}
+        \label{fig:enter-label}
+    \end{figure}
+\end{frame}
+
+\subsection{According to the Interactions}
+\begin{frame}{\textbf{Classification of Systems}}
+    \begin{block}{According to the Interactions}
+    \begin{itemize}
+        \item \textit{Independent}—If the events have no effect upon one another, then the system is classified as independent.
+        \item \textit{Cascaded}—If the effects of the events are unilateral (that is, part A affects part B, B affects C, C affects D, and not vice versa), the system is classified as cascaded.
+        \item \textit{Coupled}—If the events mutually affect each other, the system is classified as coupled.
+    \end{itemize}
+    \end{block}
+\end{frame}
+\subsection{According to the Nature and type components}
+\begin{frame}{\textbf{Classification of Systems}}
+    \begin{block}{According to the Nature and type components}
+    \begin{itemize}
+        \item Static or dynamic components.
+        \item Linear or nonlinear components.
+        \item Time-invariant or time-variant components.
+        \item Deterministic or stochastic components.
+        \item Lumped parametric component or distributed parametric component.
+        \item Continuous-time and discrete-time systems.
+    \end{itemize}
+    \end{block}
+\end{frame}
+\subsection{According to the uncertainties involved}
+\begin{frame}{\textbf{Classification of Systems}}
+    \begin{block}{According to the uncertainties involved}
+    \begin{itemize}
+        \item \textit{Deterministic} — No uncertainty in any variables, for example, model of pendulum.
+        \item \textit{Stochastic} — Some variables are random, for example, airplane in light with random wind gusts, mineral-processing plant with random grade ore, and phone network with random arrival times and call lengths.
+        \item \textit{Fuzzy systems} — The variables in such type of systems are fuzzy in nature. The fuzzy variables are quantified with linguistic terms.
+    \end{itemize}
+    \end{block}
+\end{frame}
+
+\section{Linear vs. nonlinear systems}
+\begin{frame}{\textbf{Linear vs. nonlinear systems}}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.6\linewidth]{img/linear.png}
+        \label{fig:enter-label}
+    \end{figure}
+    \begin{block}{Superposition Theorem}
+        \begin{multline}
+            \textit{IF }e_1(t) \to \omega_1(t) \space \textit{ AND } \space  e_2(t) \to \omega_2(t) \space \\ \textit{ THEN } \space  e_1(t)+e_2(t) \to \omega_1(t)+\omega_2(t)
+        \end{multline}
+    \end{block}
+    
+\end{frame}
+
+\begin{frame}{\textbf{Linear vs. nonlinear systems}}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.6\linewidth]{img/linear.png}
+        \label{fig:enter-label}
+    \end{figure}
+    
+    \begin{block}{Homogeneity}
+        \begin{equation}
+            \Sigma_{k=1}^n = ne_1(t) \to \Sigma_{k=1}^n \omega_k(t)=n\omega_1(t)
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\section{Continuous-Time and Discrete-Time Systems}
+\begin{frame}{\textbf{Continuous-Time and Discrete-Time Systems}}
+    \begin{block}{}
+     Systems whose inputs and outputs are defined over a continuous range of time (i.e., continuous-time signals) are continuous-time systems. On the other hand, the systems whose inputs and outputs are signals defined only at discrete instants of time $t_0,t_1,t_2,\dots,t_k$ are called discrete systems. The digital computer is a familiar example of this type of systems.   
+    \end{block}
+\end{frame}
+
+\begin{frame}{\textbf{Continuous-Time and Discrete-Time Systems}}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{img/ContinuousDiscrete.png}
+        \caption{Continuous and Discrete Systems}
+        \label{fig:enter-label}
+    \end{figure}
+\end{frame}
+\section{Classification of Models}
+\begin{frame}{\textbf{Classification of Models}}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.6\linewidth]{img/ClassificationModels.png}
+        \caption{Classification of Models}
+        \label{fig:enter-label}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{\textbf{Classification of Models}}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{img/ModelChar.png}
+        \caption{Classification of Models}
+        \label{fig:enter-label}
+    \end{figure}
+\end{frame}
+
+
+\section{Modeling process}
+\begin{frame}{\textbf{Modeling process}}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{img/ModelingProcess.png}
+        \caption{Modeling process}
+        \label{fig:enter-label}
+    \end{figure}
+\end{frame}
+\begin{frame}[allowframebreaks]{\textbf{Bibliography}}
+    \justifying
+    \footnotesize
+    \setbeamertemplate{bibliography item}{}
+    \nocite{*} 
+    \printbibliography
+\end{frame}
+\end{document}
+

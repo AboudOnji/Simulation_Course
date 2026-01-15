@@ -1,0 +1,197 @@
+\documentclass{beamer}
+\usetheme{Berkeley}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usecolortheme{dolphin}
+
+%--- Información de la Presentación ---
+\title{Modelado de Sistemas Lógicos con Stateflow \\ Ejemplo: Ciclo de Lavadora Automática}
+\author{Prof. D.Sc. BARSEKH-ONJI Aboud \inst{1}}
+\date{\today}
+\institute[Institución]{%
+  \inst{1}%
+  Facultad de Ingeniería \\ % Ajusta el nombre si es necesario
+  Universidad Anáhuac México 
+}
+
+%--- Inicio del Documento ---
+\begin{document}
+
+%--- Diapositiva de Título ---
+\begin{frame}
+  \titlepage
+\end{frame}
+
+ \begin{frame}{Tabla de Contenido}
+  \tableofcontents
+\end{frame}
+%--- Tabla de Contenido (Opcional) ---
+% \begin{frame}{Tabla de Contenido}
+%   \tableofcontents
+% \end{frame}
+
+%===============================================================================
+% Sección 1: Introducción a Stateflow (Repaso)
+%===============================================================================
+\section{Stateflow: Modelado de Lógica}
+
+\begin{frame}{Recordando Stateflow}
+  \begin{itemize}
+    \item Stateflow es una herramienta para modelar sistemas lógicos y reactivos usando diagramas de estados finitos.
+    \item Componentes clave:
+    \begin{itemize}
+        \item \textbf{Estados:} Modos de operación (\texttt{Estado}).
+        \item \textbf{Transiciones:} Cambios entre estados ($\rightarrow$).
+        \item \textbf{Eventos/Condiciones:} Disparadores (\texttt{[condicion]}, \texttt{evento}).
+        \item \textbf{Acciones:} Código asociado (\texttt{entry:}, \texttt{during:}, \texttt{exit:}, \texttt{\{accion\}}).
+        \item \textbf{Lógica Temporal:} Tiempo (\texttt{after(N, unit)}).
+    \end{itemize}
+    \item Se integra con Simulink.
+  \end{itemize}
+\end{frame}
+
+%===============================================================================
+% Sección 2: El Ejemplo del Ciclo de Lavadora
+%===============================================================================
+\section{Nuestro Ejemplo: Ciclo de Lavadora}
+
+\begin{frame}{Sistema a Modelar: Ciclo Básico}
+  \begin{itemize}
+    \item Modelaremos un ciclo de lavadora simple.
+    \item Fases (estados): Inactivo, Lavando, Enjuagando, Centrifugando, Terminado.
+    \item La transición depende del tiempo y una señal de inicio.
+    \item Queremos saber la fase actual.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Estados del Ciclo de Lavadora}
+  Los estados principales son:
+  \begin{itemize}
+    \item \texttt{Idle}
+    \item \texttt{Washing}
+    \item \texttt{Rinsing}
+    \item \texttt{Spinning}
+    \item \texttt{Done}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Diagrama de Transiciones (Conceptual)}
+  Secuencia de estados y transiciones:
+  \begin{center}
+  (Inicio) $\rightarrow$ \texttt{Idle} $\xrightarrow{\text{inicio/tiempo}}$ \texttt{Washing} $\xrightarrow{\text{tiempo}}$ \texttt{Rinsing} $\xrightarrow{\text{tiempo}}$ \texttt{Spinning} $\xrightarrow{\text{tiempo}}$ \texttt{Done} $\xrightarrow{\text{tiempo}}$ \texttt{Idle}
+  \end{center}
+\end{frame}
+
+%===============================================================================
+% Sección 3: Construyendo el Modelo en Simulink y Stateflow
+%===============================================================================
+\section{Construcción del Modelo}
+
+\begin{frame}{Proceso Paso a Paso en Simulink/Stateflow}
+  \begin{enumerate}
+    \item Abre Simulink, crea un modelo nuevo.
+    \item Añade un bloque \texttt{Chart} (librería Stateflow).
+    \item Haz doble clic en el bloque \texttt{Chart} para abrir el editor de Stateflow.
+    \item \textbf{Añadir Estados:} Crea los 5 estados: \texttt{Idle}, \texttt{Washing}, \texttt{Rinsing}, \texttt{Spinning}, \texttt{Done}.
+    \item \textbf{Transición por Defecto:} Añade una transición por defecto a \texttt{Idle}.
+    \item \textbf{Añadir Transiciones Secuenciales:} Dibuja las flechas entre los estados en orden.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Definiendo Entradas, Salidas y Datos}
+  \begin{itemize}
+    \item En el editor de Stateflow, define:
+    \begin{itemize}
+        \item Una **entrada**: \texttt{StartSignal} (boolean/double).
+        \item Cinco **salidas**: \texttt{is\_Idle}, \texttt{is\_Washing}, \texttt{is\_Rinsing}, \texttt{is\_Spinning}, \texttt{is\_Done} (boolean/double).
+        \item Tres **constantes locales**: \texttt{T\_Washing = 20;}, \texttt{T\_Rinsing = 15;}, \texttt{T\_Spinning = 30;} (double).
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Configurando Transiciones}
+  Haz doble clic en cada flecha y escribe la etiqueta:
+  \begin{itemize}
+    \item \texttt{Idle} $\rightarrow$ \texttt{Washing}: \\
+    \texttt{[StartSignal == 1] after(2, sec)}
+    \item \texttt{Washing} $\rightarrow$ \texttt{Rinsing}: \\
+    \texttt{after(T\_Washing, sec)}
+    \item \texttt{Rinsing} $\rightarrow$ \texttt{Spinning}: \\
+    \texttt{after(T\_Rinsing, sec)}
+    \item \texttt{Spinning} $\rightarrow$ \texttt{Done}: \\
+    \texttt{after(T\_Spinning, sec)}
+    \item \texttt{Done} $\rightarrow$ \texttt{Idle}: \\
+    \texttt{after(5, sec)}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Añadiendo Acciones `entry`}
+  Haz doble clic en cada estado y añade la acción \texttt{entry:}.
+  \begin{itemize}
+    \item **Estado Idle:** \\ \texttt{entry: is\_Idle = 1; is\_Washing = 0; is\_Rinsing = 0; is\_Spinning = 0; is\_Done = 0;}
+    \item **Estado Washing:** \\ \texttt{entry: is\_Idle = 0; is\_Washing = 1; is\_Rinsing = 0; is\_Spinning = 0; is\_Done = 0;}
+    \item **Estado Rinsing:** \\ \texttt{entry: is\_Idle = 0; is\_Washing = 0; is\_Rinsing = 1; is\_Spinning = 0; is\_Done = 0;}
+    \item **Estado Spinning:** \\ \texttt{entry: is\_Idle = 0; is\_Washing = 0; is\_Rinsing = 0; is\_Spinning = 1; is\_Done = 0;}
+    \item **Estado Done:** \\ \texttt{entry: is\_Idle = 0; is\_Washing = 0; is\_Rinsing = 0; is\_Spinning = 0; is\_Done = 1;}
+  \end{itemize}
+\end{frame}
+
+%===============================================================================
+% Sección 4: Simulación y Visualización
+%===============================================================================
+\section{Simulación y Visualización}
+
+\begin{frame}{Conectando y Simulando en Simulink}
+  \begin{enumerate}
+    \item Cierra el editor de Stateflow.
+    \item Añade un bloque \texttt{Step} y conéctalo a la entrada \texttt{StartSignal}. Configúralo para un cambio de 0 a 1.
+    \item Añade un bloque \texttt{Scope} (5 entradas). Conecta las 5 salidas del Stateflow al Scope.
+    \item Configura el tiempo de simulación (ej. 100 segundos).
+    \item Ejecuta la simulación.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Visualizando los Resultados en el Scope}
+  \begin{itemize}
+    \item Abre el Scope. Verás 5 gráficas (una por cada estado).
+    \item Cada gráfica mostrará cuándo el estado correspondiente está activo (valor 1).
+    \item Observa la secuencia y duración de cada fase del ciclo.
+  \end{itemize}
+\end{frame}
+
+%===============================================================================
+% Sección 5: Conclusiones y Extensiones
+%===============================================================================
+\section{Conclusiones y Extensiones}
+
+\begin{frame}{Conclusiones}
+  \begin{itemize}
+    \item Stateflow es útil para modelar lógica secuencial (máquinas de estados).
+    \item Permite definir estados, transiciones y acciones.
+    \item La lógica temporal (\texttt{after}) es clave para sistemas con temporizaciones.
+    \item Integrado en Simulink, facilita la simulación.
+    \item El ejemplo de la lavadora muestra un ciclo simple basado en tiempo y una señal de inicio.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Posibles Extensiones del Modelo}
+  Se puede añadir complejidad:
+  \begin{itemize}
+    \item Entradas como Pausa, Cancelar.
+    \item Estados adicionales (Llenado, Drenado).
+    \item Transiciones basadas en sensores simulados (nivel de agua).
+    \item Controlar actuadores simulados (bombas, motor) con acciones \texttt{entry} o \texttt{during}.
+  \end{itemize}
+\end{frame}
+
+%===============================================================================
+% Sección 6: Preguntas
+%===============================================================================
+\section{Preguntas}
+
+
+
+%--- Fin del Documento ---
+\end{document}

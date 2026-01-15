@@ -1,0 +1,202 @@
+\documentclass{beamer}
+\usepackage{ragged2e}
+\usepackage{times}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usepackage[spanish]{babel}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{changepage}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+\tikzstyle{block} = [rectangle, draw, text centered, minimum height=2em]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+\justifying
+
+\usetheme{cambridge}
+\usefonttheme{professionalfonts}
+
+\setbeamertemplate{footline}{%
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.8\paperwidth,ht=2.25ex,dp=1ex,leftskip=1em]{author in head/foot}%
+      \usebeamerfont{author in head/foot}BARSEKH-ONJI Aboud, ORCID: 0009-0004-5440-8092
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.2\paperwidth,ht=2.25ex,dp=1ex,rightskip=1em]{page number in head/foot}%
+      \usebeamerfont{page number in head/foot}\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}%
+  }%
+}
+
+\institute{\textbf{Universidad Anáhuac México, Facultad de Ingeniería}}
+\title{\textbf{Discrete Events Simulation (Examples)}}
+\author{\textbf{BARSEKH-ONJI Aboud (DSc.)}}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{Tabla de Contenidos}
+    \tableofcontents
+\end{frame}
+
+\section{Ejemplo 1}
+\subsection{Descripción del Sistema}
+\begin{frame}{Sistema de Atención al Cliente en un Banco}
+Este modelo simula un banco donde los clientes llegan, esperan en una cola, son atendidos por un cajero y luego salen del sistema. Usa bloques de \textbf{SimEvents} y una función de \textbf{Simulink} para registrar los tiempos de espera de los clientes.
+\end{frame}
+\subsection{Diagrama del Modelo}
+\begin{frame}{Diagrama del Modelo de Atención Bancaria}
+\justifying
+\vspace{-0.3cm}
+Este diagrama representa el flujo de entidades en el sistema bancario simulado. Los bloques corresponden a componentes de \textbf{SimEvents} conectados para modelar el proceso desde la llegada hasta la salida del cliente.
+
+\vspace{0.5cm}
+\centering
+\begin{tikzpicture}[node distance=0.8cm and 0.8cm, auto]
+    \node[block] (gen) {\footnotesize Entity Generator};
+    \node[block, right=of gen] (queue) {\footnotesize Entity Queue};
+    \node[block, right=of queue] (server) {\footnotesize Entity Server};
+    \node[block, right=of server] (term) {\footnotesize Entity Terminator};
+    \node[block, below=of server] (func) {\footnotesize Simulink Function};
+
+    \draw[arrow] (gen) -- (queue);
+    \draw[arrow] (queue) -- (server);
+    \draw[arrow] (server) -- (term);
+    \draw[arrow] (server) -- (func);
+\end{tikzpicture}
+\end{frame}
+
+\subsection{Componentes del Modelo}
+\begin{frame}{Componentes del Modelo}
+\begin{itemize}
+    \item \textbf{Entity Generator:} Genera clientes con interarribo aleatorio.
+    \item \textbf{Entity Queue:} Cola de espera con disciplina FIFO.
+    \item \textbf{Entity Server:} Cajero con tiempo de servicio aleatorio.
+    \item \textbf{Entity Terminator:} Clientes salen del sistema tras ser atendidos.
+    \item \textbf{Simulink Function:} Registra tiempo de espera por cliente.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Entity Generator}
+\begin{itemize}
+    \item Fuente de tiempo: \texttt{MATLAB action}
+    \item Código para tiempo entre llegadas:
+\end{itemize}
+\begin{block}{Código}
+\texttt{dt = rand(1,1);}
+\end{block}
+\end{frame}
+
+\begin{frame}{Entity Queue y Server}
+\textbf{Entity Queue:}
+\begin{itemize}
+    \item Capacidad: ilimitada o fija.
+    \item Disciplina: FIFO.
+\end{itemize}
+\vspace{0.3cm}
+\textbf{Entity Server:}
+\begin{itemize}
+    \item Tiempo de servicio: \texttt{exprnd(1)}
+    \item Acción de salida: \texttt{logTime();}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Simulink Function: logWaitTime}
+Función llamada desde el servidor tras atender al cliente. Registra el tiempo de espera en una variable del workspace.
+\end{frame}
+
+
+
+
+\section{Ejemplo 2}
+\subsection{Descripción del Sistema}
+\begin{frame}{Descripción del Sistema}
+\justifying
+Este modelo simula el proceso de inflado de llantas en una línea de producción. Cada llanta se infla inicialmente y luego se inspecciona su presión. Si la presión está dentro del rango aceptable (30-34 psi), se aprueba. Si no, se envía a una estación de ajuste para corregir la presión.
+\end{frame}
+
+\subsection{Bloques Principales}
+\begin{frame}{Componentes del Modelo}
+\begin{itemize}
+    \item \textbf{Entity Generator}: Genera llantas con presión inicial aleatoria (28–36 psi).
+    \item \textbf{Entity Server (Inflado)}: Simula el proceso inicial de inflado.
+    \item \textbf{Entity Server (Inspección)}: Revisa si la presión está en rango.
+    \item \textbf{Simulink Function}: Evalúa si la llanta aprueba.
+    \item \textbf{Switch}: Direcciona según atributo `Aprobada`.
+    \item \textbf{Entity Server (Ajuste)}: Corrige presión fuera de rango.
+    \item \textbf{Entity Terminator}: Sale del sistema.
+\end{itemize}
+\end{frame}
+
+\subsection{Configuración de Bloques}
+\begin{frame}[fragile]{Entity Generator}
+\justifying
+\textbf{Tiempo entre llegadas:} Exponencial con media de 5 s.\\
+\textbf{Acciones de creación:}
+\begin{block}{Código}
+\texttt{entity.Presion = 28 + (36-28)*rand();}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Entity Server (Inflado)}
+\textbf{Tiempo de servicio:} 10 segundos\\
+\textbf{Acciones de salida:}
+\begin{block}{Código}
+\texttt{entity.Presion = entity.Presion + 2 + (4-2)*rand();}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Entity Server (Inspección)}
+\textbf{Tiempo de servicio:} 5 segundos\\
+\textbf{Acciones de salida:}
+\begin{block}{Código}
+\texttt{entity.Aprobada = EvaluarPresion(entity.Presion);}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Simulink Function: EvaluarPresion}
+\begin{block}{Código}
+\begin{verbatim}
+function aprobada = EvaluarPresion(presion)
+    if presion >= 30 && presion <= 34
+        aprobada = 1;
+    else
+        aprobada = 2;
+    end
+end
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Entity Server (Ajuste de Presión)}
+\textbf{Tiempo de servicio:} 8 segundos\\
+\textbf{Acciones de salida:}
+\begin{block}{Código}
+\texttt{entity.Presion = 30 + (34-30)*rand();}
+\end{block}
+\end{frame}
+
+
+
+\subsection{Notas Finales}
+\begin{frame}{Notas y Expansiones Posibles}
+\begin{itemize}
+\justifying
+    \item Las llantas tienen atributos personalizados (`Presion`, `Aprobada`).
+    \item Se pueden analizar métricas como tiempos promedio y tasa de rechazo.
+    \item Se puede extender a varios infladores, inspecciones paralelas o estadísticas.
+\end{itemize}
+\end{frame}
+
+\end{document}
