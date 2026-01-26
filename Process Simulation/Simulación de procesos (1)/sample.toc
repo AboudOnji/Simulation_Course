@@ -1,0 +1,18 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Introducción a la Teoría de Sistemas}{2}{0}{1}
+\beamer@sectionintoc {2}{Clasificación de Sistemas}{10}{0}{2}
+\beamer@subsectionintoc {2}{1}{Según el marco temporal}{12}{0}{2}
+\beamer@subsectionintoc {2}{2}{Según la complejidad}{13}{0}{2}
+\beamer@subsectionintoc {2}{3}{Según la incertidumbre}{15}{0}{2}
+\beamer@subsectionintoc {2}{4}{Según la varianza en el tiempo}{20}{0}{2}
+\beamer@subsectionintoc {2}{5}{Sistemas Lineales y No Lineales}{21}{0}{2}
+\beamer@subsectionintoc {2}{6}{Sistemas Variables vs. Invariantes en el Tiempo}{26}{0}{2}
+\beamer@sectionintoc {3}{La Filosofía de Sistemas}{28}{0}{3}
+\beamer@subsectionintoc {3}{1}{El Método de la Ciencia}{32}{0}{3}
+\beamer@subsectionintoc {3}{2}{Problemas de la Ciencia y el Surgimiento del Sistema}{34}{0}{3}
+\beamer@sectionintoc {4}{Modelado de Sistemas}{35}{0}{4}
+\beamer@sectionintoc {5}{Clasificación de Modelos}{43}{0}{5}
+\beamer@sectionintoc {6}{El Rol y el Poder de la Simulación}{52}{0}{6}
+\beamer@sectionintoc {7}{Fases del Modelado y de la Simulación}{56}{0}{7}
+\beamer@sectionintoc {8}{Del Problema del Mundo Real al Modelo Conceptual}{62}{0}{8}
+\beamer@sectionintoc {9}{Verificación y Validación (V\&V)}{65}{0}{9}
