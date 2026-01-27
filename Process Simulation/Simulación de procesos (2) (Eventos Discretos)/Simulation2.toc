@@ -1,0 +1,18 @@
+\babel@toc {english}{}\relax 
+\beamer@sectionintoc {1}{Introducción}{2}{0}{1}
+\beamer@sectionintoc {2}{Definiciones}{9}{0}{2}
+\beamer@sectionintoc {3}{Sistemas de Colas (\textit {Queuing Systems})}{16}{0}{3}
+\beamer@sectionintoc {4}{Simulación de Sistemas de Eventos Discretos}{22}{0}{4}
+\beamer@sectionintoc {5}{Componentes de la simulación de sistemas de eventos discretos}{28}{0}{5}
+\beamer@subsectionintoc {5}{1}{Ejemplo: Retiro en un Cajero Automático (ATM)}{34}{0}{5}
+\beamer@sectionintoc {6}{Modelado de Datos de Entrada y Distribuciones}{40}{0}{6}
+\beamer@sectionintoc {7}{Familias de Distribuciones para Datos de Entrada}{46}{0}{7}
+\beamer@sectionintoc {8}{Generación de Números Aleatorios}{55}{0}{8}
+\beamer@sectionintoc {9}{Simulación de eventos discretos con SimEvents en MATLAB-Simulink}{63}{0}{9}
+\beamer@subsectionintoc {9}{1}{Creación de un Modelo simple de Eventos Discretos}{66}{0}{9}
+\beamer@subsectionintoc {9}{2}{Exploración de Estadísticas y Visualización}{69}{0}{9}
+\beamer@subsectionintoc {9}{3}{Gestión de Entidades Mediante Acciones de Eventos}{72}{0}{9}
+\beamer@subsectionintoc {9}{4}{Activación de Componentes de Simulink}{74}{0}{9}
+\beamer@sectionintoc {10}{Activación de Componentes de Simulink con Eventos Discretos}{76}{0}{10}
+\beamer@subsectionintoc {10}{1}{Estampado de Tiempo de Entidades (Timestamping)}{78}{0}{10}
+\beamer@subsectionintoc {10}{2}{Otros Patrones de Integración}{80}{0}{10}

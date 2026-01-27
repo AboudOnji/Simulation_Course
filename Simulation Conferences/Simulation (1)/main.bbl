@@ -1,0 +1,147 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{apa/apasortcite//global/global}
+    \entry{Chaturvedi2010}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=7e4def584afd7c30d3db791010348806}{%
+           family={Chaturvedi},
+           familyi={C\bibinitperiod},
+           given={Devendra\bibnamedelima K.},
+           giveni={D\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{7e4def584afd7c30d3db791010348806}
+      \strng{fullhash}{7e4def584afd7c30d3db791010348806}
+      \strng{bibnamehash}{7e4def584afd7c30d3db791010348806}
+      \strng{authorbibnamehash}{7e4def584afd7c30d3db791010348806}
+      \strng{authornamehash}{7e4def584afd7c30d3db791010348806}
+      \strng{authorfullhash}{7e4def584afd7c30d3db791010348806}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Modeling and Simulation of Systems Using MATLAB and Simulink}
+      \field{year}{2010}
+      \true{nocite}
+      \keyw{()}
+    \endentry
+    \entry{Dingyu2014}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=59f616ea7c42f5b4e2f64013f4c5ae56}{%
+           family={Dingyu},
+           familyi={D\bibinitperiod},
+           given={Xue},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=cb890c3b36d20eaec3c63696d2e99266}{%
+           family={YangQuan},
+           familyi={Y\bibinitperiod},
+           given={Chen},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{75d969cfa8c875343a58639cd96737e7}
+      \strng{fullhash}{75d969cfa8c875343a58639cd96737e7}
+      \strng{bibnamehash}{75d969cfa8c875343a58639cd96737e7}
+      \strng{authorbibnamehash}{75d969cfa8c875343a58639cd96737e7}
+      \strng{authornamehash}{75d969cfa8c875343a58639cd96737e7}
+      \strng{authorfullhash}{75d969cfa8c875343a58639cd96737e7}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-1-118-64792-9}
+      \field{title}{SYSTEM SIMULATION TECHNIQUES WITH MATLAB AND SIMULINK}
+      \field{year}{2014}
+      \true{nocite}
+    \endentry
+  \enddatalist
+  \datalist[entry]{apa/global//global/global}
+    \entry{Chaturvedi2010}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=7e4def584afd7c30d3db791010348806}{%
+           family={Chaturvedi},
+           familyi={C\bibinitperiod},
+           given={Devendra\bibnamedelima K.},
+           giveni={D\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{7e4def584afd7c30d3db791010348806}
+      \strng{fullhash}{7e4def584afd7c30d3db791010348806}
+      \strng{bibnamehash}{7e4def584afd7c30d3db791010348806}
+      \strng{authorbibnamehash}{7e4def584afd7c30d3db791010348806}
+      \strng{authornamehash}{7e4def584afd7c30d3db791010348806}
+      \strng{authorfullhash}{7e4def584afd7c30d3db791010348806}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Modeling and Simulation of Systems Using MATLAB and Simulink}
+      \field{year}{2010}
+      \true{nocite}
+      \keyw{()}
+    \endentry
+    \entry{Dingyu2014}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=59f616ea7c42f5b4e2f64013f4c5ae56}{%
+           family={Dingyu},
+           familyi={D\bibinitperiod},
+           given={Xue},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=cb890c3b36d20eaec3c63696d2e99266}{%
+           family={YangQuan},
+           familyi={Y\bibinitperiod},
+           given={Chen},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{75d969cfa8c875343a58639cd96737e7}
+      \strng{fullhash}{75d969cfa8c875343a58639cd96737e7}
+      \strng{bibnamehash}{75d969cfa8c875343a58639cd96737e7}
+      \strng{authorbibnamehash}{75d969cfa8c875343a58639cd96737e7}
+      \strng{authornamehash}{75d969cfa8c875343a58639cd96737e7}
+      \strng{authorfullhash}{75d969cfa8c875343a58639cd96737e7}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-1-118-64792-9}
+      \field{title}{SYSTEM SIMULATION TECHNIQUES WITH MATLAB AND SIMULINK}
+      \field{year}{2014}
+      \true{nocite}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

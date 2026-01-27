@@ -1,0 +1,24 @@
+\frametitle{Paso 1: Actualizar Enumeración y Variables}
+\begin{columns}[t]
+        \column{0.5\textwidth}
+            \begin{alertblock}{Nuevos Estados}
+            Añadimos estados para la cancelación y el ciclo de devolución a \texttt{OrdenStatus.m}.
+            \begin{lstlisting}
+    % ... (estados anteriores)
+    Cancelada(8)
+    Devolucion_Solicitada(9)
+    Paquete_Recibido_Dev(10)
+    Reembolso_Procesado(11)
+            \end{lstlisting}
+            \end{alertblock}
+        \column{0.5\textwidth}
+            \begin{block}{Nuevas Variables}
+            Añadimos nuevas variables de \textbf{entrada} y \textbf{salida} al \textit{chart} para gestionar los nuevos procesos.
+                \begin{itemize}
+                    \item \texttt{solicitud\_cancelar}
+                    \item \texttt{solicitud\_devolver}
+                    \item \texttt{paquete\_devuelto}
+                    \item \texttt{estado\_devolucion}
+                \end{itemize}
+            \end{block}
+    \end{columns}

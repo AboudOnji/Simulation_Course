@@ -1,0 +1,6 @@
+\frametitle{Ejemplo: Timestamping}
+
+    \begin{itemize}
+        \item Acción 'Generate' del Generador: Llama a la función para registrar el \texttt{TimeStampGeneration}.
+        \item Acción 'Service complete' del Servidor: Llama a la función para registrar el \texttt{TimeStampServiceComplete} y calcula el \texttt{TotalTime}.
+    \end{itemize}

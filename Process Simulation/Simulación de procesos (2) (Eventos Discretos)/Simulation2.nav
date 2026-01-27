@@ -1,0 +1,209 @@
+\headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
+\headcommand {\beamer@framepages {1}{1}}
+\headcommand {\beamer@sectionpages {1}{1}}
+\headcommand {\beamer@subsectionpages {1}{1}}
+\headcommand {\sectionentry {1}{Introducción}{2}{Introducción}{0}}
+\headcommand {\slideentry {1}{0}{1}{2/2}{}{0}}
+\headcommand {\beamer@framepages {2}{2}}
+\headcommand {\slideentry {1}{0}{2}{3/3}{}{0}}
+\headcommand {\beamer@framepages {3}{3}}
+\headcommand {\slideentry {1}{0}{3}{4/4}{}{0}}
+\headcommand {\beamer@framepages {4}{4}}
+\headcommand {\slideentry {1}{0}{4}{5/5}{}{0}}
+\headcommand {\beamer@framepages {5}{5}}
+\headcommand {\slideentry {1}{0}{5}{6/6}{}{0}}
+\headcommand {\beamer@framepages {6}{6}}
+\headcommand {\slideentry {1}{0}{6}{7/7}{}{0}}
+\headcommand {\beamer@framepages {7}{7}}
+\headcommand {\slideentry {1}{0}{7}{8/8}{}{0}}
+\headcommand {\beamer@framepages {8}{8}}
+\headcommand {\beamer@sectionpages {2}{8}}
+\headcommand {\beamer@subsectionpages {2}{8}}
+\headcommand {\sectionentry {2}{Definiciones}{9}{Definiciones}{0}}
+\headcommand {\slideentry {2}{0}{1}{9/9}{}{0}}
+\headcommand {\beamer@framepages {9}{9}}
+\headcommand {\slideentry {2}{0}{2}{10/10}{}{0}}
+\headcommand {\beamer@framepages {10}{10}}
+\headcommand {\slideentry {2}{0}{2}{10/11}{}{0}}
+\headcommand {\beamer@framepages {10}{11}}
+\headcommand {\slideentry {2}{0}{3}{12/12}{}{0}}
+\headcommand {\beamer@framepages {12}{12}}
+\headcommand {\slideentry {2}{0}{4}{13/13}{}{0}}
+\headcommand {\beamer@framepages {13}{13}}
+\headcommand {\slideentry {2}{0}{4}{13/14}{}{0}}
+\headcommand {\beamer@framepages {13}{14}}
+\headcommand {\slideentry {2}{0}{4}{13/15}{}{0}}
+\headcommand {\beamer@framepages {13}{15}}
+\headcommand {\beamer@sectionpages {9}{15}}
+\headcommand {\beamer@subsectionpages {9}{15}}
+\headcommand {\sectionentry {3}{Sistemas de Colas (\textit {Queuing Systems})}{16}{Sistemas de Colas (\textit {Queuing Systems})}{0}}
+\headcommand {\slideentry {3}{0}{1}{16/16}{}{0}}
+\headcommand {\beamer@framepages {16}{16}}
+\headcommand {\slideentry {3}{0}{2}{17/17}{}{0}}
+\headcommand {\beamer@framepages {17}{17}}
+\headcommand {\slideentry {3}{0}{3}{18/18}{}{0}}
+\headcommand {\beamer@framepages {18}{18}}
+\headcommand {\slideentry {3}{0}{4}{19/19}{}{0}}
+\headcommand {\beamer@framepages {19}{19}}
+\headcommand {\slideentry {3}{0}{5}{20/21}{}{0}}
+\headcommand {\beamer@framepages {20}{21}}
+\headcommand {\beamer@sectionpages {16}{21}}
+\headcommand {\beamer@subsectionpages {16}{21}}
+\headcommand {\sectionentry {4}{Simulación de Sistemas de Eventos Discretos}{22}{Simulación de Sistemas de Eventos Discretos}{0}}
+\headcommand {\slideentry {4}{0}{1}{22/22}{}{0}}
+\headcommand {\beamer@framepages {22}{22}}
+\headcommand {\slideentry {4}{0}{2}{23/23}{}{0}}
+\headcommand {\beamer@framepages {23}{23}}
+\headcommand {\slideentry {4}{0}{3}{24/27}{}{0}}
+\headcommand {\beamer@framepages {24}{27}}
+\headcommand {\beamer@sectionpages {22}{27}}
+\headcommand {\beamer@subsectionpages {22}{27}}
+\headcommand {\sectionentry {5}{Componentes de la simulación de sistemas de eventos discretos}{28}{Componentes de la simulación de sistemas de eventos discretos}{0}}
+\headcommand {\slideentry {5}{0}{1}{28/28}{}{0}}
+\headcommand {\beamer@framepages {28}{28}}
+\headcommand {\slideentry {5}{0}{2}{29/29}{}{0}}
+\headcommand {\beamer@framepages {29}{29}}
+\headcommand {\slideentry {5}{0}{3}{30/30}{}{0}}
+\headcommand {\beamer@framepages {30}{30}}
+\headcommand {\slideentry {5}{0}{4}{31/31}{}{0}}
+\headcommand {\beamer@framepages {31}{31}}
+\headcommand {\slideentry {5}{0}{4}{31/32}{}{0}}
+\headcommand {\beamer@framepages {31}{32}}
+\headcommand {\slideentry {5}{0}{4}{31/33}{}{0}}
+\headcommand {\beamer@framepages {31}{33}}
+\headcommand {\beamer@subsectionpages {28}{33}}
+\headcommand {\beamer@subsectionentry {0}{5}{1}{34}{Ejemplo: Retiro en un Cajero Automático (ATM)}}
+\headcommand {\slideentry {5}{1}{1}{34/34}{Ejemplo: Retiro en un Cajero Automático (ATM)}{0}}
+\headcommand {\beamer@framepages {34}{34}}
+\headcommand {\slideentry {5}{1}{2}{35/35}{Ejemplo: Retiro en un Cajero Automático (ATM)}{0}}
+\headcommand {\beamer@framepages {35}{35}}
+\headcommand {\slideentry {5}{1}{3}{36/36}{Ejemplo: Retiro en un Cajero Automático (ATM)}{0}}
+\headcommand {\beamer@framepages {36}{36}}
+\headcommand {\slideentry {5}{1}{4}{37/37}{Ejemplo: Retiro en un Cajero Automático (ATM)}{0}}
+\headcommand {\beamer@framepages {37}{37}}
+\headcommand {\slideentry {5}{1}{5}{38/38}{Ejemplo: Retiro en un Cajero Automático (ATM)}{0}}
+\headcommand {\beamer@framepages {38}{38}}
+\headcommand {\slideentry {5}{1}{6}{39/39}{Ejemplo: Retiro en un Cajero Automático (ATM)}{0}}
+\headcommand {\beamer@framepages {39}{39}}
+\headcommand {\beamer@sectionpages {28}{39}}
+\headcommand {\beamer@subsectionpages {34}{39}}
+\headcommand {\sectionentry {6}{Modelado de Datos de Entrada y Distribuciones}{40}{Modelado de Datos de Entrada y Distribuciones}{0}}
+\headcommand {\slideentry {6}{0}{1}{40/40}{}{0}}
+\headcommand {\beamer@framepages {40}{40}}
+\headcommand {\slideentry {6}{0}{2}{41/41}{}{0}}
+\headcommand {\beamer@framepages {41}{41}}
+\headcommand {\slideentry {6}{0}{3}{42/45}{}{0}}
+\headcommand {\beamer@framepages {42}{45}}
+\headcommand {\beamer@sectionpages {40}{45}}
+\headcommand {\beamer@subsectionpages {40}{45}}
+\headcommand {\sectionentry {7}{Familias de Distribuciones para Datos de Entrada}{46}{Familias de Distribuciones para Datos de Entrada}{0}}
+\headcommand {\slideentry {7}{0}{1}{46/46}{}{0}}
+\headcommand {\beamer@framepages {46}{46}}
+\headcommand {\slideentry {7}{0}{2}{47/47}{}{0}}
+\headcommand {\beamer@framepages {47}{47}}
+\headcommand {\beamer@subsectionpages {46}{47}}
+\headcommand {\beamer@subsectionentry {0}{7}{1}{48}{Distribuciones de Variables Discretas}}
+\headcommand {\slideentry {7}{1}{1}{48/48}{Distribuciones de Variables Discretas}{0}}
+\headcommand {\beamer@framepages {48}{48}}
+\headcommand {\slideentry {7}{1}{2}{49/49}{Distribuciones de Variables Discretas}{0}}
+\headcommand {\beamer@framepages {49}{49}}
+\headcommand {\beamer@subsectionpages {48}{49}}
+\headcommand {\beamer@subsectionentry {0}{7}{2}{50}{Distribuciones de Variables Continuas}}
+\headcommand {\slideentry {7}{2}{1}{50/50}{Distribuciones de Variables Continuas}{0}}
+\headcommand {\beamer@framepages {50}{50}}
+\headcommand {\slideentry {7}{2}{2}{51/51}{Distribuciones de Variables Continuas}{0}}
+\headcommand {\beamer@framepages {51}{51}}
+\headcommand {\slideentry {7}{2}{3}{52/52}{Distribuciones de Variables Continuas}{0}}
+\headcommand {\beamer@framepages {52}{52}}
+\headcommand {\slideentry {7}{2}{4}{53/53}{Distribuciones de Variables Continuas}{0}}
+\headcommand {\beamer@framepages {53}{53}}
+\headcommand {\slideentry {7}{2}{5}{54/54}{Distribuciones de Variables Continuas}{0}}
+\headcommand {\beamer@framepages {54}{54}}
+\headcommand {\beamer@sectionpages {46}{54}}
+\headcommand {\beamer@subsectionpages {50}{54}}
+\headcommand {\sectionentry {8}{Generación de Números Aleatorios}{55}{Generación de Números Aleatorios}{0}}
+\headcommand {\slideentry {8}{0}{1}{55/55}{}{0}}
+\headcommand {\beamer@framepages {55}{55}}
+\headcommand {\slideentry {8}{0}{2}{56/56}{}{0}}
+\headcommand {\beamer@framepages {56}{56}}
+\headcommand {\beamer@subsectionpages {55}{56}}
+\headcommand {\beamer@subsectionentry {0}{8}{1}{57}{Distribución Uniforme}}
+\headcommand {\slideentry {8}{1}{1}{57/57}{Distribución Uniforme}{0}}
+\headcommand {\beamer@framepages {57}{57}}
+\headcommand {\beamer@subsectionpages {57}{57}}
+\headcommand {\beamer@subsectionentry {0}{8}{2}{58}{Distribución Gaussiana (Normal)}}
+\headcommand {\slideentry {8}{2}{1}{58/58}{Distribución Gaussiana (Normal)}{0}}
+\headcommand {\beamer@framepages {58}{58}}
+\headcommand {\beamer@subsectionpages {58}{58}}
+\headcommand {\beamer@subsectionentry {0}{8}{3}{59}{Generación de Números Aleatorios en MATLAB}}
+\headcommand {\slideentry {8}{3}{1}{59/59}{Generación de Números Aleatorios en MATLAB}{0}}
+\headcommand {\beamer@framepages {59}{59}}
+\headcommand {\slideentry {8}{3}{2}{60/60}{Generación de Números Aleatorios en MATLAB}{0}}
+\headcommand {\beamer@framepages {60}{60}}
+\headcommand {\slideentry {8}{3}{3}{61/61}{Generación de Números Aleatorios en MATLAB}{0}}
+\headcommand {\beamer@framepages {61}{61}}
+\headcommand {\slideentry {8}{3}{4}{62/62}{Generación de Números Aleatorios en MATLAB}{0}}
+\headcommand {\beamer@framepages {62}{62}}
+\headcommand {\beamer@sectionpages {55}{62}}
+\headcommand {\beamer@subsectionpages {59}{62}}
+\headcommand {\sectionentry {9}{Simulación de eventos discretos con SimEvents en MATLAB-Simulink}{63}{Simulación de eventos discretos con SimEvents en MATLAB-Simulink}{0}}
+\headcommand {\slideentry {9}{0}{1}{63/63}{}{0}}
+\headcommand {\beamer@framepages {63}{63}}
+\headcommand {\slideentry {9}{0}{2}{64/64}{}{0}}
+\headcommand {\beamer@framepages {64}{64}}
+\headcommand {\slideentry {9}{0}{3}{65/65}{}{0}}
+\headcommand {\beamer@framepages {65}{65}}
+\headcommand {\beamer@subsectionpages {63}{65}}
+\headcommand {\beamer@subsectionentry {0}{9}{1}{66}{Creación de un Modelo simple de Eventos Discretos}}
+\headcommand {\slideentry {9}{1}{1}{66/66}{Creación de un Modelo simple de Eventos Discretos}{0}}
+\headcommand {\beamer@framepages {66}{66}}
+\headcommand {\slideentry {9}{1}{2}{67/67}{Creación de un Modelo simple de Eventos Discretos}{0}}
+\headcommand {\beamer@framepages {67}{67}}
+\headcommand {\slideentry {9}{1}{3}{68/68}{Creación de un Modelo simple de Eventos Discretos}{0}}
+\headcommand {\beamer@framepages {68}{68}}
+\headcommand {\beamer@subsectionpages {66}{68}}
+\headcommand {\beamer@subsectionentry {0}{9}{2}{69}{Exploración de Estadísticas y Visualización}}
+\headcommand {\slideentry {9}{2}{1}{69/69}{Exploración de Estadísticas y Visualización}{0}}
+\headcommand {\beamer@framepages {69}{69}}
+\headcommand {\slideentry {9}{2}{2}{70/70}{Exploración de Estadísticas y Visualización}{0}}
+\headcommand {\beamer@framepages {70}{70}}
+\headcommand {\slideentry {9}{2}{3}{71/71}{Exploración de Estadísticas y Visualización}{0}}
+\headcommand {\beamer@framepages {71}{71}}
+\headcommand {\beamer@subsectionpages {69}{71}}
+\headcommand {\beamer@subsectionentry {0}{9}{3}{72}{Gestión de Entidades Mediante Acciones de Eventos}}
+\headcommand {\slideentry {9}{3}{1}{72/72}{Gestión de Entidades Mediante Acciones de Eventos}{0}}
+\headcommand {\beamer@framepages {72}{72}}
+\headcommand {\slideentry {9}{3}{2}{73/73}{Gestión de Entidades Mediante Acciones de Eventos}{0}}
+\headcommand {\beamer@framepages {73}{73}}
+\headcommand {\beamer@subsectionpages {72}{73}}
+\headcommand {\beamer@subsectionentry {0}{9}{4}{74}{Activación de Componentes de Simulink}}
+\headcommand {\slideentry {9}{4}{1}{74/74}{Activación de Componentes de Simulink}{0}}
+\headcommand {\beamer@framepages {74}{74}}
+\headcommand {\slideentry {9}{4}{2}{75/75}{Activación de Componentes de Simulink}{0}}
+\headcommand {\beamer@framepages {75}{75}}
+\headcommand {\beamer@sectionpages {63}{75}}
+\headcommand {\beamer@subsectionpages {74}{75}}
+\headcommand {\sectionentry {10}{Activación de Componentes de Simulink con Eventos Discretos}{76}{Activación de Componentes de Simulink con Eventos Discretos}{0}}
+\headcommand {\slideentry {10}{0}{1}{76/76}{}{0}}
+\headcommand {\beamer@framepages {76}{76}}
+\headcommand {\slideentry {10}{0}{2}{77/77}{}{0}}
+\headcommand {\beamer@framepages {77}{77}}
+\headcommand {\beamer@subsectionpages {76}{77}}
+\headcommand {\beamer@subsectionentry {0}{10}{1}{78}{Estampado de Tiempo de Entidades (Timestamping)}}
+\headcommand {\slideentry {10}{1}{1}{78/78}{Estampado de Tiempo de Entidades (Timestamping)}{0}}
+\headcommand {\beamer@framepages {78}{78}}
+\headcommand {\slideentry {10}{1}{2}{79/79}{Estampado de Tiempo de Entidades (Timestamping)}{0}}
+\headcommand {\beamer@framepages {79}{79}}
+\headcommand {\beamer@subsectionpages {78}{79}}
+\headcommand {\beamer@subsectionentry {0}{10}{2}{80}{Otros Patrones de Integración}}
+\headcommand {\slideentry {10}{2}{1}{80/80}{Otros Patrones de Integración}{0}}
+\headcommand {\beamer@framepages {80}{80}}
+\headcommand {\slideentry {10}{2}{2}{81/81}{Otros Patrones de Integración}{0}}
+\headcommand {\beamer@framepages {81}{81}}
+\headcommand {\slideentry {10}{2}{3}{82/82}{Otros Patrones de Integración}{0}}
+\headcommand {\beamer@framepages {82}{82}}
+\headcommand {\beamer@partpages {1}{82}}
+\headcommand {\beamer@subsectionpages {80}{82}}
+\headcommand {\beamer@sectionpages {76}{82}}
+\headcommand {\beamer@documentpages {82}}
+\headcommand {\gdef \inserttotalframenumber {75}}

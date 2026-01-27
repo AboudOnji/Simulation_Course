@@ -1,65 +1,53 @@
-%----------------------------------------------------------------------------------------
-%	PACKAGES AND THEMES
-%----------------------------------------------------------------------------------------
-
 \documentclass[aspectratio=169,xcolor=dvipsnames]{beamer}
-\usetheme{SimpleDarkBlue}
+\usetheme{Berlin}
 
-\usepackage[spanish]{babel}
+\usepackage[english]{babel}
 \usepackage{hyperref}
-\usepackage{graphicx} % Allows including images
-\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{graphicx}
+\usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{lettrine}
 \setbeamertemplate{caption}[numbered]
-\usepackage[dvipsnames,svgnames,x11names]{xcolor}% Para definir y usar colores (ej. en hipervínculos)
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}
 \usepackage{xurl}
-\usepackage{hyperref}       % Para crear hipervínculos internos y externos
-\hypersetup{
-    colorlinks=true,        % Colorear los enlaces en lugar de usar recuadros
-    linkcolor=blue,     % Color para enlaces internos (índice, referencias cruzadas)
-    filecolor=blue, % Color para enlaces a archivos locales
-    urlcolor=blue,      % Color para URLs
-    citecolor=blue,     % Color para citas bibliográficas
-}
-%----------------------------------------------------------------------------------------
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{adjustbox}
 
+\hypersetup{
+    colorlinks=true,
+    linkcolor=cyan,
+    filecolor=blue,
+    urlcolor=blue,
+    citecolor=blue,
+}
+
+%----------------------------------------------------------------------------------------
+%	CODE LISTINGS SETTINGS
+%----------------------------------------------------------------------------------------
 \usepackage{listings}
-\usepackage{xcolor} % Para colores en listings
- \definecolor{codegreen}{rgb}{0,0.6,0}
- \definecolor{codegray}{rgb}{0.5,0.5,0.5}
- \definecolor{codepurple}{rgb}{0.58,0,0.82}
- \definecolor{backcolour}{rgb}{0.97,0.97,0.99}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.99}
+\definecolor{codegreen}{rgb}{0,0.6,0}
 
 \lstdefinestyle{MATLABStyle}{
   language=Matlab,
-  basicstyle=\ttfamily\footnotesize,
+  basicstyle=\ttfamily\scriptsize,
   keywordstyle=\color{blue}\bfseries,
   commentstyle=\color{codegreen},
   stringstyle=\color{violet},
-  numberstyle=\tiny\color{gray},
-  breakatwhitespace=false,
   breaklines=true,
-  captionpos=b,
-  keepspaces=true,
   numbers=left,
   numbersep=5pt,
-  showspaces=false,
-  showstringspaces=false,
-  showtabs=false,
-  tabsize=2,
-  frame=lines, % Añade un marco alrededor del código
-  framerule=0.4pt, % Grosor del marco
-  backgroundcolor=\color{backcolour} % Color de fondo suave
+  frame=lines,
+  backgroundcolor=\color{backcolour}
 }
 \lstset{style=MATLABStyle}
-%	TITLE PAGE
-%----------------------------------------------------------------------------------------
 
 \title{Modelado y Simulación de Eventos Discretos}
 \subtitle{Materia: Simulación de procesos}
 
-\author{Prof. D.Sc. BARSEKH-ONJI Aboud}
+\author{Prof. Dr. BARSEKH-ONJI Aboud}
 
 \institute
 {
@@ -74,14 +62,14 @@
 % Poner esto en el preámbulo
 \AtBeginSection[]
 {
-  \begin{frame}{Índice}
+  \begin{frame}{Agenda}
     \tableofcontents[currentsection]
   \end{frame}
 }
+
 \begin{document}
 
 \begin{frame}
-    % Print the title page as the first slide
     \titlepage
 \end{frame}
 
@@ -107,13 +95,11 @@
                 \end{itemize}
             \end{alertblock}
     \end{columns}
-    \vspace{1em}
-    \begin{block}{Ambigüedad en la Representación}
-    La \textbf{descripción} de un sistema, más que su naturaleza inherente, determina qué tipo de modelo se utilizará. El propósito del modelo y el nivel de detalle son cruciales.
-    \end{block}
 \end{frame}
 
-%------------------------------------------------
+\begin{frame}{Ambigüedad en la Representación}
+    La \textbf{descripción} de un sistema, más que su naturaleza inherente, determina qué tipo de modelo se utilizará. El propósito del modelo y el nivel de detalle son cruciales.
+\end{frame}
 
 \begin{frame}{Sistemas de Eventos Discretos (DES)}
     \frametitle{Discrete Event Systems (DES)}
@@ -149,7 +135,9 @@
     \begin{block}{Predicción y Evaluación}
     El modelado de eventos discretos es un procedimiento matemático para describir un proceso dinámico. La simulación del modelo permite predecir posibles situaciones para evaluar y mejorar el rendimiento del sistema.
     \end{block}
+\end{frame}
 
+\begin{frame}{Uso del Modelado y Simulación DES}    
     \begin{alertblock}{Análisis "What-If" (¿Qué pasaría si...?)}
         Se utiliza para crear predicciones de los estados del sistema, que pueden modificarse para examinar situaciones hipotéticas.
         \begin{itemize}
@@ -184,6 +172,7 @@
 \end{frame}
 
 %------------------------------------------------
+%------------------------------------------------
 
 \begin{frame}[allowframebreaks]{Ejemplos de Componentes de Sistemas}
     \frametitle{Entidades, Atributos y Actividades}
@@ -211,6 +200,7 @@
     \end{table}
 \end{frame}
 
+
 %------------------------------------------------
 
 \begin{frame}[allowframebreaks]{Definiciones Clave (Parte 2)}
@@ -236,6 +226,7 @@
 \end{alertblock}  
 \end{frame}
 
+
 %------------------------------------------------
 \section{Sistemas de Colas (\textit{Queuing Systems})}
 %------------------------------------------------
@@ -244,7 +235,6 @@
     \begin{columns}[c]
         \column{.5\textwidth}
             Una aplicación importante de la simulación de eventos discretos es el estudio de la dinámica de las líneas de espera o \textbf{colas}.
-            \vspace{1em}
             \begin{alertblock}{Razones para estudiar las colas}
                 \begin{itemize}
                     \item Determinar el uso óptimo de los servidores.
@@ -256,9 +246,9 @@
 
         \column{.45\textwidth}
             \begin{figure}
+
                 \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.1.png}
                 \caption{Sistema de Colas.}
-                \label{fig:sistema_colas}
             \end{figure}
     \end{columns}
 \end{frame}
@@ -284,7 +274,7 @@
 
 \begin{frame}{Comportamiento y Rendimiento}
     \begin{columns}[t]
-        \column{.48\textwidth}
+        \column{.55\textwidth}
             \begin{block}{Comportamiento en la Cola}
                 Se refiere a la acción del cliente en la cola:
                 \begin{itemize}
@@ -294,7 +284,7 @@
                 \end{itemize}
             \end{block}
 
-        \column{.48\textwidth}
+        \column{.45\textwidth}
             \begin{alertblock}{Medidas de Rendimiento}
                  Indicadores clave del sistema:
                  \begin{itemize}
@@ -387,9 +377,8 @@
     
     \begin{figure}[h!]
         \centering
-        \includegraphics[width=0.23\textwidth]{Figuras/Cap8/fig18.2.png}
+        \includegraphics[width=0.20\textwidth]{Figuras/Cap8/fig18.2.png}
         \caption{Diagrama de flujo de una simulación de eventos discretos.}
-        \label{fig:flowchart_des}
     \end{figure}
 \end{frame}
 %------------------------------------------------
@@ -411,6 +400,8 @@
         Determina cuándo terminará la simulación. Puede ser un tiempo de simulación fijo, un número de eventos procesados o cuando una métrica alcanza un valor específico.
         \end{block}
 \end{frame}
+
+%------------------------------------------------
 
 %------------------------------------------------
 \subsection{Ejemplo: Retiro en un Cajero Automático (ATM)}
@@ -443,7 +434,6 @@
         \centering
         \includegraphics[width=0.9\textwidth]{Figuras/Cap8/fig18.3.png}
         \caption{Ciclo de vida de un cliente en un cajero automático.}
-        \label{fig:lifecycle_atm}
     \end{figure}
 \end{frame}
 
@@ -453,7 +443,6 @@
     \begin{figure}
         \centering
         \includegraphics[width=0.8\linewidth]{Figuras/Cap8/algo1.png}
-        \label{fig:enter-label}
     \end{figure}
 \end{frame}
 
@@ -461,7 +450,6 @@
     \begin{figure}
         \centering
         \includegraphics[width=0.8\linewidth]{Figuras/Cap8/algo2.png}
-        \label{fig:enter-label}
     \end{figure}
 \end{frame}
 
@@ -513,6 +501,7 @@
         \end{table}
     \end{alertblock}
 \end{frame}
+
 
 %------------------------------------------------
 \section{Modelado de Datos de Entrada y Distribuciones}
@@ -632,6 +621,7 @@
 
 %------------------------------------------------
 
+
 \begin{frame}{Distribuciones Continuas: Exponencial y Gamma}
      \frametitle{Para variables que toman cualquier valor en un rango}
     \begin{columns}[t]
@@ -714,6 +704,7 @@
 \end{frame}
 
 %------------------------------------------------
+
 \section{Generación de Números Aleatorios}
 %------------------------------------------------
 
@@ -732,9 +723,8 @@
         \column{0.45\textwidth}
             Una secuencia de números en $[a, b]$ donde cada número tiene la misma probabilidad de ocurrir.
             \begin{figure}
-                \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.4.png}
+                \includegraphics[width=0.9\linewidth]{Figuras/Cap8/fig8.4.png}
                 \caption{Densidad de probabilidad de una distribución uniforme.}
-                \label{fig:dist_uniforme}
             \end{figure}
         \column{0.5\textwidth}
             \begin{alertblock}{Método Congruencial Lineal}
@@ -757,9 +747,8 @@
         \column{0.45\textwidth}
             Es la distribución no uniforme más utilizada, caracterizada por su forma de campana centrada en la media $\mu$.
             \begin{figure}
-                \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.5.png}
+                \includegraphics[width=0.9\linewidth]{Figuras/Cap8/fig8.5.png}
                 \caption{Densidad de probabilidad de una distribución Gaussiana.}
-                \label{fig:dist_gaussiana}
             \end{figure}
         \column{0.5\textwidth}
              \begin{block}{Método de Box-Muller}
@@ -832,7 +821,6 @@ matriz_enteros = randi(rango, 4, 4);
 \end{frame}
 
 %------------------------------------------------
-
 \begin{frame}[fragile]{MATLAB: Reproducibilidad con \texttt{rng}}
     \frametitle{Control del Generador Aleatorio}
     \begin{alertblock}{Función \texttt{rng}}
@@ -846,9 +834,10 @@ secuencia1 = rand(1, 3)
 % Restablecer la semilla al mismo valor
 rng(0);
 secuencia2 = rand(1, 3)
-% >> secuencia2 será idéntica a secuencia1
+% secuencia2 sera identica a secuencia1
 \end{lstlisting}
 \end{frame}
+
 
 %------------------------------------------------
 \section{Simulación de eventos discretos con SimEvents en MATLAB-Simulink}
@@ -870,11 +859,11 @@ secuencia2 = rand(1, 3)
     \frametitle{Plantillas para Escenarios Comunes}
     \begin{figure}
         \centering
-        \includegraphics[width=0.8\textwidth]{Figuras/Cap8/fig8.6.png}
+        \includegraphics[width=0.7\textwidth]{Figuras/Cap8/fig8.6.png}
         \caption{Patrones de Diseño Comunes en SimEvents.}
-        \label{fig:simevents_patterns}
     \end{figure}
 \end{frame}
+
 
 %------------------------------------------------
 \subsection{Creación de un Modelo simple de Eventos Discretos}
@@ -913,7 +902,6 @@ secuencia2 = rand(1, 3)
                 \centering
                 \includegraphics[width=0.9\linewidth]{Figuras/Cap8/fig8.7.png}
                 \caption{Bloques básicos para el modelo de colas.}
-                \label{fig:simevents_bloques}
             \end{figure}
     \end{columns}
 \end{frame}
@@ -934,14 +922,12 @@ secuencia2 = rand(1, 3)
                 \centering
                 \includegraphics[width=0.9\linewidth]{Figuras/Cap8/fig8.8.png}
                 \caption{Modelo de colas D/D/1 simple en SimEvents.}
-                \label{fig:simevents_dd1_model}
             \end{figure}
         \column{0.45\textwidth}
              \begin{figure}
                 \centering
                 \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.9.png}
                 \caption{Resultados de la simulación del modelo D/D/1.}
-                \label{fig:simevents_dd1_results}
             \end{figure}
     \end{columns}
 \end{frame}
@@ -969,7 +955,6 @@ secuencia2 = rand(1, 3)
         \centering
         \includegraphics[width=0.7\linewidth]{Figuras/Cap8/fig8.10.png}
         \caption{Pestaña de Estadísticas del bloque Entity Queue.}
-        \label{fig:stats_dialog}
     \end{figure}
 \end{frame}
 %------------------------------------------------
@@ -979,7 +964,6 @@ secuencia2 = rand(1, 3)
     \centering
     \includegraphics[width=0.5\textwidth]{Figuras/Cap8/fig8.12.png}
     \caption{Modelo modificado para visualizar estadísticas de espera y utilización.}
-    \label{fig:dd1_stats_model}
 \end{figure}
 
 \begin{columns}[c]
@@ -1026,7 +1010,6 @@ secuencia2 = rand(1, 3)
         \centering
         \includegraphics[width=0.8\linewidth]{Figuras/Cap8/fig8.18.png}
         \caption{Modelo que utiliza acciones de eventos para gestionar atributos}
-        \label{fig:event_action_model}
     \end{figure}
 \end{frame}
 
@@ -1038,6 +1021,9 @@ secuencia2 = rand(1, 3)
     \begin{block}{¿Qué son las Simulink Functions?}
     Se pueden usar bloques de \textbf{Simulink Function} para obtener atributos de las entidades de SimEvents, pasarlos a componentes de Simulink para su procesamiento y luego devolverlos al modelo de eventos discretos.
     \end{block}
+\end{frame}
+
+\begin{frame}{Integración con Simulink Functions}
 
     \begin{alertblock}{Aplicaciones Típicas}
         \begin{itemize}
@@ -1079,19 +1065,17 @@ secuencia2 = rand(1, 3)
     
     \begin{figure}
         \centering
-        \includegraphics[width=0.7\textwidth]{Figuras/Cap8/fig8.20.png}
+        \includegraphics[width=0.6\textwidth]{Figuras/Cap8/fig8.20.png}
         \caption{Modelo para estampar el tiempo de las entidades.}
-        \label{fig:timestamp_model}
     \end{figure}
-    
-   
-\end{frame}
+    \end{frame}
+
 
 \begin{frame}[fragile]{Ejemplo: Timestamping}
     
     \begin{itemize}
-        \item \textbf{Acción "Generate" del Generador:} Llama a la función para registrar el \texttt{TimeStampGeneration}.
-        \item \textbf{Acción "Service complete" del Servidor:} Llama a la función para registrar el \texttt{TimeStampServiceComplete} y calcula el \texttt{TotalTime}.
+        \item Acción 'Generate' del Generador: Llama a la función para registrar el \texttt{TimeStampGeneration}.
+        \item Acción 'Service complete' del Servidor: Llama a la función para registrar el \texttt{TimeStampServiceComplete} y calcula el \texttt{TotalTime}.
     \end{itemize}
 \end{frame}
 
@@ -1105,7 +1089,7 @@ secuencia2 = rand(1, 3)
     \begin{block}{Pasar Atributos}
     Se puede pasar el valor de un atributo a un componente de Simulink (como un bloque Gain) para realizar cálculos.
         \begin{figure}
-        \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.21.png}
+        \includegraphics[width=0.8\linewidth]{Figuras/Cap8/fig8.21.png}
         \caption{Modelo para pasar atributos.}
         \end{figure}
     \end{block}
@@ -1114,7 +1098,7 @@ secuencia2 = rand(1, 3)
     \begin{alertblock}{Importar Datos}
     Se pueden usar datos de una hoja de cálculo para definir parámetros, como los tiempos entre llegadas de entidades.
         \begin{figure}
-        \includegraphics[width=\linewidth]{Figuras/Cap8/fig8.22.png}
+        \includegraphics[width=0.8\linewidth]{Figuras/Cap8/fig8.22.png}
         \caption{Modelo para importar datos.}
         \end{figure}
     \end{alertblock}
@@ -1122,6 +1106,7 @@ secuencia2 = rand(1, 3)
 \end{frame}
 
 %------------------------------------------------
+
 
 \begin{frame}{Patrones Avanzados de Integración}
 

@@ -1,0 +1,13 @@
+\babel@toc {english}{}\relax 
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@subsectionintoc {1}{1}{What is Mathematical Modeling}{3}{0}{1}
+\beamer@subsectionintoc {1}{2}{Real Systems vs. Mathematical Modeling}{4}{0}{1}
+\beamer@subsectionintoc {1}{3}{Laplace Transformation \& Differential equations}{5}{0}{1}
+\beamer@sectionintoc {2}{State-Space Modeling}{6}{0}{2}
+\beamer@subsectionintoc {2}{1}{What is State-Space System?}{6}{0}{2}
+\beamer@subsectionintoc {2}{2}{State Variables and equations}{7}{0}{2}
+\beamer@sectionintoc {3}{Examples}{9}{0}{3}
+\beamer@subsectionintoc {3}{1}{Moving car simple model}{9}{0}{3}
+\beamer@subsectionintoc {3}{2}{Simple mechanical translational system}{10}{0}{3}
+\beamer@subsectionintoc {3}{3}{Van Der Pol equation}{12}{0}{3}
+\beamer@sectionintoc {4}{Activity}{13}{0}{4}

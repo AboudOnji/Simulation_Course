@@ -1,0 +1,12 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Introducción a los Sistemas Reactivos y las Máquinas de Estados}{2}{0}{1}
+\beamer@sectionintoc {2}{Stateflow: Evolución de las Máquinas de Estados}{6}{0}{2}
+\beamer@sectionintoc {3}{El Formalismo Visual de los Statecharts de Harel}{10}{0}{3}
+\beamer@subsectionintoc {3}{1}{Profundidad: Jerarquía, Agrupamiento y Refinamiento}{12}{0}{3}
+\beamer@sectionintoc {4}{Componentes Fundamentales de un Diagrama de Stateflow}{16}{0}{4}
+\beamer@sectionintoc {5}{Ejemplo de Aplicación: El Ciclo de Vida de una Orden de Compra}{20}{0}{5}
+\beamer@subsectionintoc {5}{1}{Contexto y Relevancia en B2C y B2B}{22}{0}{5}
+\beamer@subsectionintoc {5}{2}{¿Por qué modelar este proceso con Stateflow?}{23}{0}{5}
+\beamer@subsectionintoc {5}{3}{Fase 1: Modelo Básico del Ciclo de Vida de la Orden}{24}{0}{5}
+\beamer@subsectionintoc {5}{4}{Fase 2: Introducción de Excepciones y Decisiones}{32}{0}{5}
+\beamer@subsectionintoc {5}{5}{Fase 3: Modelado de Procesos Paralelos y Jerarquía}{38}{0}{5}
