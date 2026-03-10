@@ -1,0 +1,819 @@
+\documentclass[aspectratio=169,xcolor=dvipsnames]{beamer}
+\usetheme{Berlin}
+
+\usepackage[spanish]{babel}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{lettrine}
+\setbeamertemplate{caption}[numbered]
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}
+\usepackage{xurl}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{adjustbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, shapes.geometric, positioning, calc}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=cyan,
+    filecolor=blue,
+    urlcolor=blue,
+    citecolor=blue,
+}
+
+%----------------------------------------------------------------------------------------
+%   CODE LISTINGS SETTINGS
+%----------------------------------------------------------------------------------------
+\usepackage{listings}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.99}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+
+\lstdefinestyle{MATLABStyle}{
+  language=Matlab,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{codegreen},
+  stringstyle=\color{violet},
+  breaklines=true,
+  numbers=left,
+  numbersep=5pt,
+  frame=lines,
+  backgroundcolor=\color{backcolour}
+}
+\lstset{style=MATLABStyle}
+
+%----------------------------------------------------------------------------------------
+%   TIKZ STYLES FOR BLOCK DIAGRAMS
+%----------------------------------------------------------------------------------------
+\tikzset{
+  block/.style = {draw, rectangle, minimum height=1.2em, minimum width=2.5em,
+                  fill=blue!10, thick},
+  sum/.style   = {draw, circle, minimum size=1.2em, thick, fill=yellow!20},
+  arrow/.style = {-{Stealth[length=2mm]}, thick},
+}
+
+%----------------------------------------------------------------------------------------
+%   TITLE CONFIGURATION
+%----------------------------------------------------------------------------------------
+\title{\'Algebra de Bloques y Representaci\'on en Espacio de Estado}
+\subtitle{Simulaci\'on de Sistemas Din\'amicos}
+\author{Prof. D.Sc. BARSEKH-ONJI Aboud}
+\institute{
+    Facultad de Ingenier\'ia \\
+    Universidad An\'ahuac M\'exico
+}
+\date{\today}
+
+%----------------------------------------------------------------------------------------
+%   AUTO AGENDA AT EACH SECTION
+%----------------------------------------------------------------------------------------
+\AtBeginSection[]{
+  \begin{frame}{Agenda}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Agenda General}
+    \tableofcontents
+\end{frame}
+
+%================================================
+\section{Repaso: Funci\'on de Transferencia}
+%================================================
+
+\begin{frame}{?`Qu\'e hemos visto hasta ahora?}
+    \begin{block}{Contexto de la clase}
+        En sesiones anteriores simulamos sistemas din\'amicos usando tres enfoques en MATLAB:
+    \end{block}
+    \vspace{0.4em}
+    \begin{columns}
+        \column{0.33\textwidth}
+        \centering
+        \textbf{Enfoque 1}\\[0.4em]
+        Ecuaciones diferenciales\\
+        \texttt{ode45}, \texttt{ode23}
+        \column{0.33\textwidth}
+        \centering
+        \textbf{Enfoque 2}\\[0.4em]
+        Diagramas de bloques\\
+        Simulink
+        \column{0.33\textwidth}
+        \centering
+        \textbf{Enfoque 3}\\[0.4em]
+        \textit{Transfer Function}\\
+        \texttt{tf()}, \texttt{step()}, \texttt{lsim()}
+    \end{columns}
+    \vspace{0.5em}
+    \begin{alertblock}{Lo que falta hoy}
+        Aprender a \textbf{manipular} diagramas de bloques mediante \'algebra de bloques, y representar sistemas en \textbf{Espacio de Estado}.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{La Funci\'on de Transferencia --- Recordatorio}
+    Para un sistema LTI con entrada $U(s)$ y salida $Y(s)$:
+    \begin{equation}
+        G(s) = \frac{Y(s)}{U(s)} = \frac{b_m s^m + \cdots + b_1 s + b_0}{a_n s^n + \cdots + a_1 s + a_0}
+    \end{equation}
+    \begin{itemize}
+        \item \textbf{Condiciones iniciales:} se asumen cero (Transformada de Laplace unilateral)
+        \item \textbf{LTI:} Sistema Lineal e Invariante en el Tiempo
+        \item \textbf{Orden del sistema:} determinado por el grado $n$ del denominador
+        \item \textbf{Polos:} ra\'ices del denominador $\Rightarrow$ definen la estabilidad
+        \item \textbf{Ceros:} ra\'ices del numerador $\Rightarrow$ afectan la respuesta transitoria
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Bloque Fundamental}
+    Un bloque en un diagrama de control representa una \textbf{funci\'on de transferencia}:
+    \vspace{0.6em}
+    \begin{center}
+    \begin{tikzpicture}
+        \node[block, minimum width=3cm, minimum height=1.2cm] (G) {$G(s)$};
+        \draw[arrow] (G.west) ++(-1.5,0) node[left]{$U(s)$} -- (G.west);
+        \draw[arrow] (G.east) -- ++(1.5,0) node[right]{$Y(s)$};
+        \node[below=0.2cm of G] {\footnotesize \textit{Sistema / Planta / Controlador}};
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.4em}
+    \begin{exampleblock}{Relaci\'on algebraica}
+        $Y(s) = G(s) \cdot U(s)$ \quad $\Longleftrightarrow$ \quad $G(s) = \dfrac{Y(s)}{U(s)}$
+    \end{exampleblock}
+\end{frame}
+
+%================================================
+\section{\'Algebra de Bloques: Reglas Fundamentales}
+%================================================
+
+\begin{frame}{Regla 1 --- Conexi\'on en Serie (Cascada)}
+    Cuando la salida de un bloque es la entrada del siguiente:
+    \vspace{0.4em}
+    \begin{center}
+    \begin{tikzpicture}
+        \node[block] (G1) {$G_1(s)$};
+        \node[block, right=1.8cm of G1] (G2) {$G_2(s)$};
+        \draw[arrow] (G1.west) ++(-1.2,0) node[left]{$U(s)$} -- (G1.west);
+        \draw[arrow] (G1.east) -- node[above]{\footnotesize $X(s)$} (G2.west);
+        \draw[arrow] (G2.east) -- ++(1.2,0) node[right]{$Y(s)$};
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.3em}
+    \begin{equation}
+        G_{eq}(s) = G_1(s) \cdot G_2(s)
+    \end{equation}
+    \begin{block}{Demostraci\'on}
+        $X(s) = G_1(s)\,U(s)$ \quad y \quad $Y(s) = G_2(s)\,X(s)$\\[0.3em]
+        $\therefore \quad Y(s) = G_2(s)\cdot G_1(s)\,U(s)$
+    \end{block}
+
+\end{frame}
+\begin{frame}{Regla 1 --- Conexi\'on en Serie (Cascada)}
+
+    \begin{alertblock}{Cuidado}
+        Para sistemas SISO: $G_1 G_2 = G_2 G_1$. En sistemas MIMO (matriciales) esto no es v\'alido en general.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Regla 2 --- Conexi\'on en Paralelo}
+    Cuando la misma entrada alimenta dos bloques y sus salidas se suman:
+    \vspace{0.3em}
+    \begin{center}
+    \begin{tikzpicture}[node distance=1cm]
+        \node[sum] (S) {};
+        \node[block, above left=0.9cm and 1.8cm of S] (G1) {$G_1(s)$};
+        \node[block, below left=0.9cm and 1.8cm of S] (G2) {$G_2(s)$};
+        \coordinate[left=3cm of S] (entry);
+        \draw[arrow] (entry) node[left]{$U(s)$} -- ++(0.9,0) coordinate(split);
+        \draw[arrow] (split) |- (G1.west);
+        \draw[arrow] (split) |- (G2.west);
+        \draw[arrow] (G1.east) -| (S.north) node[pos=0.85,right]{\footnotesize$+$};
+        \draw[arrow] (G2.east) -| (S.south) node[pos=0.85,right]{\footnotesize$+$};
+        \draw[arrow] (S.east) -- ++(1.2,0) node[right]{$Y(s)$};
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.2em}
+    \begin{equation}
+        G_{eq}(s) = G_1(s) + G_2(s)
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Regla 3 --- Retroalimentaci\'on (Lazo Cerrado)}
+    La configuraci\'on m\'as importante en control autom\'atico:
+    \vspace{0.3em}
+    \begin{center}
+    \begin{tikzpicture}[node distance=0.8cm]
+        \node[sum] (S) {};
+        \node[block, right=1.2cm of S] (G) {$G(s)$};
+        \node[block, below=0.9cm of G] (H) {$H(s)$};
+        \draw[arrow] (S.west) ++(-1.2,0) node[left]{$R(s)$} -- node[above]{\footnotesize$+$} (S.west);
+        \draw[arrow] (S.east) -- node[above]{\footnotesize$E(s)$} (G.west);
+        \draw[arrow] (G.east) -- ++(1.8,0) node[right]{$Y(s)$} coordinate(out);
+        \draw[arrow] (out)+(-0.4,0) |- (H.east);
+        \draw[arrow] (H.west) -| (S.south) node[pos=0.9,right]{\footnotesize$-$};
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.2em}
+    \begin{equation}
+        \boxed{T(s) = \frac{G(s)}{1 + G(s)\,H(s)}}
+    \end{equation}
+    \begin{itemize}
+        \item \textbf{$G(s)$}: lazo directo (\textit{forward path})
+        \item \textbf{$H(s)$}: retroalimentaci\'on; si $H(s)=1$ (unitaria): $T(s) = \dfrac{G(s)}{1+G(s)}$
+        \item \textbf{Lazo abierto}: $L(s) = G(s)\,H(s)$
+        \item Signo $+$ en retroalimentaci\'on positiva: $T(s) = \dfrac{G(s)}{1 - G(s)\,H(s)}$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Regla 4 --- Nodo de Suma y Punto de Ramificaci\'on}
+    \begin{columns}
+        \column{0.48\textwidth}
+        \begin{block}{Nodo de suma (Comparador)}
+            \begin{center}
+            \begin{tikzpicture}
+                \node[sum] (S) {};
+                \draw[arrow] (S.west) ++(-1,0) node[left]{$A$} -- node[above]{\footnotesize$+$} (S.west);
+                \draw[arrow] (S.south) ++(0,-0.7) node[below]{$B$} -- node[right]{\footnotesize$-$} (S.south);
+                \draw[arrow] (S.east) -- ++(1,0) node[right]{$C=A-B$};
+            \end{tikzpicture}
+            \end{center}
+            Suma algebraica de se\~nales. Los signos se indican expl\'icitamente sobre cada flecha.
+        \end{block}
+        \column{0.48\textwidth}
+        \begin{block}{Punto de ramificaci\'on (\textit{Branch point})}
+            \begin{center}
+            \begin{tikzpicture}
+                \coordinate (bp) at (0,0);
+                \fill (bp) circle (2.5pt);
+                \draw[arrow] (bp) ++(-1.2,0) node[left]{$X(s)$} -- (bp);
+                \draw[arrow] (bp) -- ++(1.2,0) node[right]{$X(s)$};
+                \draw[arrow] (bp) -- ++(0,-1.0) node[below]{$X(s)$};
+            \end{tikzpicture}
+            \end{center}
+            La misma se\~nal se distribuye sin p\'erdida a m\'ultiples destinos.
+        \end{block}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Reglas de Movimiento de Bloques}
+    A veces es necesario mover bloques para simplificar el diagrama:
+    \vspace{0.3em}
+    \begin{table}
+        \centering
+        \begin{tabular}{lll}
+            \toprule
+            \textbf{Movimiento} & \textbf{Original} & \textbf{Equivalente} \\
+            \midrule
+            Mover $G$ antes de nodo suma & $G$ antes, suma despu\'es & Agregar $1/G$ en la rama \\
+            Mover $G$ despu\'es de nodo suma & Suma antes, $G$ despu\'es & Agregar $G$ en la rama \\
+            Mover $G$ antes de ramificaci\'on & $G$ antes, rama despu\'es & Agregar $1/G$ en la nueva rama \\
+            Mover $G$ despu\'es de ramificaci\'on & Rama antes, $G$ despu\'es & Agregar $G$ en la nueva rama \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Reglas de Movimiento de Bloques}  
+    \begin{alertblock}{Principio clave}
+        Al mover un bloque, siempre se deben \textbf{compensar} las modificaciones para mantener la equivalencia matem\'atica. El objetivo es transformar el diagrama a formas reconocibles (serie, paralelo, lazo cerrado).
+    \end{alertblock}
+\end{frame}
+
+%================================================
+\section{Ejemplos de Reducci\'on de Diagramas}
+%================================================
+
+\begin{frame}{Ejemplo 1 --- Sistema de Primer Orden en Lazo Cerrado}
+    \begin{exampleblock}{Problema}
+        Hallar $T(s) = Y(s)/R(s)$: \quad $G(s) = \dfrac{10}{s+2}$, \quad $H(s) = 1$ (retroalimentaci\'on unitaria)
+    \end{exampleblock}
+    \vspace{0.4em}
+    \textbf{Soluci\'on:} Aplicando la f\'ormula de lazo cerrado:
+    \begin{align}
+        T(s) &= \frac{G(s)}{1 + G(s) H(s)} = \frac{\dfrac{10}{s+2}}{1 + \dfrac{10}{s+2}} \notag \\[0.6em]
+             &= \frac{\dfrac{10}{s+2}}{\dfrac{s+12}{s+2}} = \frac{10}{s+12}
+    \end{align}
+    \begin{block}{Interpretaci\'on f\'isica}
+        El polo en lazo abierto estaba en $s=-2$. Con retroalimentaci\'on unitaria de ganancia 10, el polo se movi\'o a $s=-12$. El sistema es \textbf{6 veces m\'as r\'apido} y la constante de tiempo pasa de $\tau=0.5\,$s a $\tau=0.083\,$s.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Ejemplo 2 --- Bloques en Serie con Retroalimentaci\'on}
+    \begin{exampleblock}{Datos}
+        $G_1(s) = \dfrac{1}{s}$, \quad $G_2(s) = \dfrac{5}{s+1}$, \quad $H(s) = 2$
+    \end{exampleblock}
+    \vspace{0.2em}
+    \textbf{Paso 1:} Reducir la cascada (lazo directo):
+    \begin{equation}
+        G(s) = G_1(s)\cdot G_2(s) = \frac{1}{s} \cdot \frac{5}{s+1} = \frac{5}{s(s+1)}
+    \end{equation}
+    \textbf{Paso 2:} Aplicar f\'ormula de retroalimentaci\'on:
+    \begin{equation}
+        T(s) = \frac{G(s)}{1+G(s)H(s)} = \frac{\dfrac{5}{s(s+1)}}{1 + \dfrac{10}{s(s+1)}} = \frac{5}{s^2+s+10}
+    \end{equation}
+    \begin{alertblock}{An\'alisis din\'amico}
+        $s^2+s+10 = 0 \Rightarrow \omega_n = \sqrt{10} \approx 3.16\,\text{rad/s}$, \quad $\zeta = \dfrac{1}{2\omega_n} \approx 0.158$ (subamortiguado).
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Ejemplo 3 --- Sistema con Dos Lazos Anidados}
+    \begin{exampleblock}{Datos}
+        $G_c = 10$, $G_1 = \dfrac{1}{s}$, $G_2 = \dfrac{1}{s+5}$, $H_1 = 1$, $H_2 = 1$
+    \end{exampleblock}
+    \vspace{0.2em}
+    \begin{center}
+    \begin{tikzpicture}[scale=0.85, transform shape]
+        \node[sum] (S1) {};
+        \node[block, right=0.7cm of S1] (Gc) {$G_c$};
+        \node[sum, right=0.7cm of Gc] (S2) {};
+        \node[block, right=0.7cm of S2] (G1) {$G_1$};
+        \node[block, right=0.7cm of G1] (G2) {$G_2$};
+        \node[block, below=0.5cm of G1] (H1) {$H_1$};
+        \node[block, below=0.9cm of Gc] (H2) {$H_2$};
+        \draw[arrow] (S1.west) ++(-0.7,0) node[left]{$R$} -- node[above]{\tiny$+$} (S1);
+        \draw[arrow] (S1) -- (Gc);
+        \draw[arrow] (Gc) -- node[above]{\tiny$+$} (S2);
+        \draw[arrow] (S2) -- (G1);
+        \draw[arrow] (G1) -- (G2);
+        \draw[arrow] (G2.east) -- ++(0.8,0) node[right]{$Y$} coordinate(out);
+        \draw[arrow] (out)+(-0.2,0) |- (H1.east);
+        \draw[arrow] (H1.west) -| (S2.south) node[pos=0.9,right]{\tiny$-$};
+        \draw[arrow] (out)+(-0.2,0) -- ++(0,-1.5) -| (H2.east);
+        \draw[arrow] (H2.west) -| (S1.south) node[pos=0.9,right]{\tiny$-$};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+\begin{frame}{Ejemplo 3 --- Sistema con Dos Lazos Anidados}
+    \textbf{Paso 1:} Lazo interno ($G_1$, $H_1=1$):
+    \begin{equation}
+        G_{int}(s) = \frac{G_1}{1+G_1 H_1} = \frac{1/s}{1+1/s} = \frac{1}{s+1}
+    \end{equation}
+    \textbf{Paso 2:} Lazo externo --- $G_{ext} = G_c \cdot G_{int} \cdot G_2 = \dfrac{10}{(s+1)(s+5)}$:
+    \begin{equation}
+        T(s) = \frac{G_{ext}}{1+G_{ext}\cdot H_2} = \frac{10}{s^2+6s+15}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Ejemplo 4 --- Paralelo con Retroalimentaci\'on}
+    \begin{exampleblock}{Datos}
+        $G_1(s) = \dfrac{2}{s+1}$, \quad $G_2(s) = \dfrac{3}{s+3}$, \quad $H(s) = 0.5$
+    \end{exampleblock}
+    \vspace{0.2em}
+    \textbf{Paso 1:} Reducci\'on del paralelo:
+    \begin{equation}
+        G(s) = G_1(s) + G_2(s) = \frac{2(s+3)+3(s+1)}{(s+1)(s+3)} = \frac{5s+9}{(s+1)(s+3)}
+    \end{equation}
+    \textbf{Paso 2:} Lazo cerrado:
+    \begin{equation}
+        T(s) = \frac{G(s)}{1+G(s)H(s)} = \frac{5s+9}{(s+1)(s+3)+0.5(5s+9)} = \frac{5s+9}{s^2+6.5s+7.5}
+    \end{equation}
+\end{frame}
+\begin{frame}{Ejemplo 4 --- Paralelo con Retroalimentaci\'on}
+    \begin{block}{Verificaci\'on}
+        El grado del denominador (2) es igual al orden del sistema original. \checkmark\\
+        Para validar: \texttt{T = feedback(parallel(G1,G2), 0.5)} en MATLAB.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Verificaci\'on en MATLAB --- \'Algebra de Bloques}
+    \begin{columns}
+        \column{0.55\textwidth}
+\begin{lstlisting}[language=Matlab, style=MATLABStyle]
+%% Ejemplo 2: Serie + Retroalimentacion
+G1 = tf(1, [1 0]);    % 1/s
+G2 = tf(5, [1 1]);    % 5/(s+1)
+H  = tf(2, 1);        % ganancia H=2
+
+% Lazo directo (cascada)
+G  = series(G1, G2);
+
+% Lazo cerrado
+T  = feedback(G, H);
+
+disp('Funcion de transferencia:')
+T
+
+% Respuesta al escalon
+figure;
+step(T);
+title('Ejemplo 2 - Respuesta al Escalon');
+grid on;
+
+%% Ejemplo 4: Paralelo
+G1p = tf(2, [1 1]);
+G2p = tf(3, [1 3]);
+Gp  = parallel(G1p, G2p);
+Tp  = feedback(Gp, 0.5);
+figure; step(Tp); grid on;
+title('Ejemplo 4 - Paralelo');
+\end{lstlisting}
+        \column{0.42\textwidth}
+        \begin{block}{Funciones de MATLAB}
+            \begin{itemize}
+                \item \texttt{series(G1,G2)}: cascada $G_1 G_2$
+                \item \texttt{parallel(G1,G2)}: paralelo $G_1+G_2$
+                \item \texttt{feedback(G,H)}: lazo cerrado $-H$
+                \item \texttt{feedback(G,H,+1)}: lazo cerrado $+H$
+                \item \texttt{step()}: respuesta al escal\'on
+                \item \texttt{pzmap()}: polos y ceros
+                \item \texttt{pole()}: obtener polos
+            \end{itemize}
+        \end{block}
+    \end{columns}
+\end{frame}
+
+%================================================
+\section{Introducci\'on al Espacio de Estado}
+%================================================
+
+\begin{frame}{Limitaciones de la Funci\'on de Transferencia}
+    \begin{columns}
+        \column{0.48\textwidth}
+        \begin{alertblock}{Desventajas de $G(s)$}
+            \begin{itemize}
+                \item Solo aplica a sistemas \textbf{LTI}
+                \item Dif\'icil para sistemas \textbf{MIMO}
+                \item No captura \textbf{estados internos}
+                \item Condiciones iniciales limitadas a cero
+                \item No permite dise\~no de control \'optimo directo
+            \end{itemize}
+        \end{alertblock}
+        \column{0.48\textwidth}
+        \begin{block}{Ventajas del Espacio de Estado}
+            \begin{itemize}
+                \item Maneja naturalmente sistemas \textbf{MIMO}
+                \item Permite analizar \textbf{controlabilidad} y \textbf{observabilidad}
+                \item Representa la din\'amica \textbf{interna} completa
+                \item Permite condiciones iniciales no cero
+                \item Base del control moderno (LQR, filtro de Kalman)
+            \end{itemize}
+        \end{block}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Variables de Estado --- Concepto}
+    \begin{block}{Definici\'on}
+        Las \textbf{variables de estado} son el conjunto m\'inimo de variables $x_1(t), x_2(t), \ldots, x_n(t)$ que, junto con la entrada $u(t)$ para $t \geq t_0$, determinan completamente el comportamiento futuro del sistema.
+    \end{block}
+ 
+    \begin{columns}
+        \column{0.48\textwidth}
+        \textbf{Ejemplos de variables de estado:}
+        \begin{itemize}
+            \item \textbf{Mec\'anico:} posici\'on y velocidad $(q, \dot{q})$
+            \item \textbf{El\'ectrico:} voltaje en $C$, corriente en $L$
+            \item \textbf{T\'ermico:} temperaturas de los nodos
+            \item \textbf{Matem\'atico:} la variable y sus derivadas
+        \end{itemize}
+        \column{0.48\textwidth}
+        \begin{exampleblock}{Idea clave}
+            \[
+                \underbrace{\mathbf{x}(t_0)}_{\text{estado inicial}} + \underbrace{u(t)}_{\text{entrada}} \Rightarrow \underbrace{y(t)}_{\text{salida}}
+            \]
+            El estado en $t_0$ m\'as la entrada futura determinan completamente la salida futura.
+        \end{exampleblock}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Representaci\'on General en Espacio de Estado}
+    La forma est\'andar de un sistema en espacio de estado es:
+    \begin{equation}
+        \dot{\mathbf{x}}(t) = A\,\mathbf{x}(t) + B\,\mathbf{u}(t) \qquad \text{(ecuaci\'on de estado)}
+    \end{equation}
+    \begin{equation}
+        \mathbf{y}(t) = C\,\mathbf{x}(t) + D\,\mathbf{u}(t) \qquad \text{(ecuaci\'on de salida)}
+    \end{equation}
+    \vspace{0.3em}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \begin{itemize}
+            \item $\mathbf{x}(t) \in \mathbb{R}^n$: \textbf{vector de estado}
+            \item $\mathbf{u}(t) \in \mathbb{R}^m$: \textbf{vector de entrada}
+            \item $\mathbf{y}(t) \in \mathbb{R}^p$: \textbf{vector de salida}
+        \end{itemize}
+        \column{0.5\textwidth}
+        \begin{itemize}
+            \item $A \in \mathbb{R}^{n\times n}$: \textbf{matriz de sistema}
+            \item $B \in \mathbb{R}^{n\times m}$: \textbf{matriz de entrada}
+            \item $C \in \mathbb{R}^{p\times n}$: \textbf{matriz de salida}
+            \item $D \in \mathbb{R}^{p\times m}$: \textbf{transmisi\'on directa}
+        \end{itemize}
+    \end{columns}
+\end{frame}
+\begin{frame}{Representaci\'on General en Espacio de Estado}    
+    \begin{alertblock}{Nota}
+        Para la mayor\'ia de sistemas f\'isicos $D = 0$ (no hay transmisi\'on directa de entrada a salida).
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{De Ecuaci\'on Diferencial a Espacio de Estado}
+    \begin{exampleblock}{Procedimiento sistem\'atico}
+        Dada: $\quad y^{(n)} + a_{n-1}y^{(n-1)} + \cdots + a_1\dot{y} + a_0 y = b_0 u$
+    \end{exampleblock}
+    \vspace{0.3em}
+    \textbf{Paso 1 --- Definir variables de estado:}
+    \begin{equation}
+        x_1 = y, \quad x_2 = \dot{y}, \quad x_3 = \ddot{y}, \quad \ldots, \quad x_n = y^{(n-1)}
+    \end{equation}
+    \textbf{Paso 2 --- Ecuaciones de estado:}
+    \[
+        \dot{x}_1 = x_2, \quad \dot{x}_2 = x_3, \quad \ldots, \quad \dot{x}_n = -a_0 x_1 - a_1 x_2 - \cdots - a_{n-1} x_n + b_0 u
+    \]
+    \textbf{Paso 3 --- Ecuaci\'on de salida:} $\quad y = x_1$
+\end{frame}
+\begin{frame}{De Ecuaci\'on Diferencial a Espacio de Estado}
+    \begin{block}{Resultado: Forma Can\'onica Controlable}
+        La \'ultima ecuaci\'on $\dot{x}_n$ concentra todos los coeficientes del denominador de $G(s)$. Esta forma se llama \textbf{can\'onica controlable} o \textit{forma compa\~nera}.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Forma Can\'onica Controlable}
+    Para una EDO de orden $n$, la forma can\'onica controlable es:
+    \begin{equation}
+        A = \begin{bmatrix}
+            0 & 1 & 0 & \cdots & 0 \\
+            0 & 0 & 1 & \cdots & 0 \\
+            \vdots & & & \ddots & \vdots \\
+            0 & 0 & 0 & \cdots & 1 \\
+            -a_0 & -a_1 & -a_2 & \cdots & -a_{n-1}
+        \end{bmatrix}, \quad
+        B = \begin{bmatrix} 0 \\ 0 \\ \vdots \\ 0 \\ 1 \end{bmatrix}
+    \end{equation}
+    \begin{equation}
+        C = \begin{bmatrix} b_0 & b_1 & \cdots & b_{n-1} \end{bmatrix}, \quad D = [0]
+    \end{equation}
+\end{frame}
+\begin{frame}{Forma Can\'onica Controlable}
+
+    \begin{exampleblock}{Propiedad importante}
+        Los \textbf{eigenvalores} de la matriz $A$ son los \textbf{polos} del sistema, es decir, las ra\'ices del polinomio caracter\'istico $\det(sI - A)$.
+    \end{exampleblock}
+\end{frame}
+
+%================================================
+\section{Ejemplos en Espacio de Estado}
+%================================================
+
+\begin{frame}{Ejemplo 5 --- Sistema de Segundo Orden}
+    \begin{exampleblock}{Problema}
+        Convertir a espacio de estado: $\quad \ddot{y} + 3\dot{y} + 2y = u$
+    \end{exampleblock}
+    \vspace{0.3em}
+    \textbf{Variables de estado:} $x_1 = y$, $x_2 = \dot{y}$
+    \vspace{0.3em}
+    \textbf{Forma matricial:}
+    \begin{equation}
+        \underbrace{\begin{bmatrix} \dot{x}_1 \\ \dot{x}_2 \end{bmatrix}}_{\dot{\mathbf{x}}}
+        =
+        \underbrace{\begin{bmatrix} 0 & 1 \\ -2 & -3 \end{bmatrix}}_{A}
+        \underbrace{\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}}_{\mathbf{x}}
+        +
+        \underbrace{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}_{B} u, \qquad
+        y = \underbrace{\begin{bmatrix} 1 & 0 \end{bmatrix}}_{C} \mathbf{x}
+    \end{equation}
+\end{frame}
+\begin{frame}{Ejemplo 5 --- Sistema de Segundo Orden}
+    \begin{block}{Verificaci\'on: $G(s)$ desde Espacio de Estado}
+        \[
+            G(s) = C(sI-A)^{-1}B = \begin{bmatrix}1&0\end{bmatrix}
+            \begin{bmatrix}s+3 & 1 \\ -2 & s\end{bmatrix}^{-1} \frac{1}{s^2+3s+2}
+            \begin{bmatrix}0\\1\end{bmatrix} = \frac{1}{s^2+3s+2} \checkmark
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}{Ejemplo 6 --- Sistema de Tercer Orden}
+    \begin{exampleblock}{Problema}
+        $\dddot{y} + 6\ddot{y} + 11\dot{y} + 6y = 2u$
+    \end{exampleblock}
+    \vspace{0.2em}
+    \textbf{Variables:} $x_1 = y$, $x_2 = \dot{y}$, $x_3 = \ddot{y}$
+    \begin{equation}
+        A = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ -6 & -11 & -6 \end{bmatrix}, \quad
+        B = \begin{bmatrix} 0 \\ 0 \\ 2 \end{bmatrix}, \quad
+        C = \begin{bmatrix} 1 & 0 & 0 \end{bmatrix}, \quad D = [0]
+    \end{equation}
+\end{frame}
+\begin{frame}{Ejemplo 6 --- Sistema de Tercer Orden}
+    \begin{block}{Eigenvalores de $A$ (polos del sistema)}
+        \[
+            \det(\lambda I - A) = \lambda^3 + 6\lambda^2 + 11\lambda + 6 = (\lambda+1)(\lambda+2)(\lambda+3) = 0
+        \]
+        $\lambda_1 = -1$, \; $\lambda_2 = -2$, \; $\lambda_3 = -3$ \quad $\Rightarrow$ \textbf{sistema estable} (todos en semiplano izquierdo).
+    \end{block}
+\end{frame}
+
+\begin{frame}{Ejemplo 7 --- Circuito RLC en Espacio de Estado}
+    \begin{columns}
+        \column{0.45\textwidth}
+        \begin{exampleblock}{Sistema el\'ectrico}
+            Circuito RLC serie con $R=1\,\Omega$, $L=1\,H$, $C=0.5\,F$.\\[0.5em]
+            Ecuaci\'on de malla:
+            \[
+                L\ddot{i} + R\dot{i} + \frac{i}{C} = \dot{u}
+            \]
+            En t\'erminos de $v_C$:
+            \[
+                \ddot{v}_C + \dot{v}_C + 2v_C = 2u
+            \]
+        \end{exampleblock}
+        \column{0.52\textwidth}
+        \textbf{Variables de estado f\'isicas:}
+        \begin{itemize}
+            \item $x_1 = v_C$ (voltaje en capacitor)
+            \item $x_2 = i_L = C\dot{v}_C$ (corriente en inductor)
+        \end{itemize}
+        \vspace{0.3em}
+        \begin{equation}
+            A = \begin{bmatrix} 0 & 2 \\ -0.5 & -1 \end{bmatrix}, \quad
+            B = \begin{bmatrix} 0 \\ 1 \end{bmatrix}
+        \end{equation}
+        \begin{equation}
+            C = \begin{bmatrix} 1 & 0 \end{bmatrix}, \quad D = [0]
+        \end{equation}
+        \vspace{0.2em}
+        \textit{Las variables de estado tienen \textbf{significado f\'isico} directo.}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Espacio de Estado en MATLAB}
+    \begin{columns}
+        \column{0.55\textwidth}
+\begin{lstlisting}[language=Matlab, style=MATLABStyle]
+%% Ejemplo 5 - Sistema 2do orden
+A = [0  1; -2 -3];
+B = [0; 1];
+C = [1  0];
+D = 0;
+
+% Crear sistema en espacio de estado
+sys_ss = ss(A, B, C, D);
+
+% Convertir a funcion de transferencia
+sys_tf = tf(sys_ss);
+disp('G(s):'); sys_tf
+
+% Respuesta al escalon
+figure; step(sys_ss); grid on;
+title('Respuesta al Escalon (EE)');
+
+% Eigenvalores = Polos
+disp('Eigenvalores:'); eig(A)
+disp('Polos:'); pole(sys_ss)
+\end{lstlisting}
+        \column{0.42\textwidth}
+\begin{lstlisting}[language=Matlab, style=MATLABStyle]
+%% Desde TF hacia EE
+G = tf(1, [1 3 2]);
+sys2 = ss(G);  % conversion
+sys2.A
+sys2.B
+sys2.C
+sys2.D
+
+%% Simulacion con CI no cero
+x0 = [1; 0];      % condicion inicial
+t  = 0:0.01:10;
+u  = zeros(size(t));
+[y, tout, x] = lsim(sys2, u, t, x0);
+figure;
+plot(tout, y, 'b', ...
+     tout, x(:,1), 'r--');
+legend('y(t)', 'x_1(t)');
+xlabel('t (s)');
+title('Respuesta libre con CI');
+\end{lstlisting}
+    \end{columns}
+\end{frame}
+
+%================================================
+\section{S\'intesis y Conexi\'on entre Representaciones}
+%================================================
+
+\begin{frame}{Relaci\'on entre EE y Funci\'on de Transferencia}
+    La funci\'on de transferencia se obtiene a partir de las matrices del EE:
+    \begin{equation}
+        \boxed{G(s) = C\,(sI - A)^{-1}\,B + D}
+    \end{equation}
+    \vspace{0.3em}
+    \begin{columns}
+        \column{0.48\textwidth}
+        \begin{block}{De $G(s)$ a Espacio de Estado}
+            \begin{enumerate}
+                \item Identificar coeficientes del numerador y denominador
+                \item Aplicar forma can\'onica controlable (u observable)
+                \item Construir matrices $A, B, C, D$
+                \item En MATLAB: \texttt{ss(G)}
+            \end{enumerate}
+        \end{block}
+        \column{0.48\textwidth}
+        \begin{block}{De Espacio de Estado a $G(s)$}
+            \begin{enumerate}
+                \item Calcular $(sI-A)^{-1}$ via adjunta/determinante
+                \item Multiplicar $C \cdot (sI-A)^{-1} \cdot B$
+                \item Sumar $D$ si hay transmisi\'on directa
+                \item En MATLAB: \texttt{tf(sys\_ss)}
+            \end{enumerate}
+        \end{block}
+    \end{columns}
+    \vspace{0.3em}
+    \begin{alertblock}{Importante: No unicidad}
+        La representaci\'on en EE \textbf{no es \'unica}. Existen infinitas representaciones para la misma $G(s)$, pero todas comparten los mismos eigenvalores (polos).
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Tabla Comparativa de Representaciones}
+    \begin{table}
+        \centering
+        \begin{tabular}{lccc}
+            \toprule
+            \textbf{Caracter\'istica} & \textbf{EDO} & \textbf{$G(s)$} & \textbf{$(A,B,C,D)$} \\
+            \midrule
+            Sistemas SISO          & \checkmark & \checkmark & \checkmark \\
+            Sistemas MIMO          & Complejo   & Matricial  & \checkmark \\
+            No lineales            & \checkmark & $\times$   & Parcial    \\
+            Condiciones iniciales  & \checkmark & $\times$   & \checkmark \\
+            An\'alisis de estabilidad & Moderado & F\'acil   & \checkmark \\
+            Controlabilidad/Observ. & $\times$  & Limitado   & \checkmark \\
+            Dise\~no de control    & Dif\'icil  & Cl\'asico  & Moderno    \\
+            MATLAB                 & \texttt{ode45} & \texttt{tf} & \texttt{ss} \\
+            \bottomrule
+        \end{tabular}
+        \caption{Comparaci\'on de representaciones de sistemas din\'amicos}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Resumen de Reglas del \'Algebra de Bloques}
+    \begin{table}
+        \centering
+        \begin{tabular}{lll}
+            \toprule
+            \textbf{Configuraci\'on} & \textbf{Diagrama} & \textbf{Equivalente} \\
+            \midrule
+            Serie (cascada)       & $G_1 \rightarrow G_2$           & $G_1 \cdot G_2$ \\[0.3em]
+            Paralelo              & $G_1 \parallel G_2$             & $G_1 + G_2$ \\[0.3em]
+            Lazo cerrado ($-$)    & $G$ con retroalim. $H$          & $\dfrac{G}{1+GH}$ \\[0.5em]
+            Lazo cerrado ($+$)    & $G$ con retroalim. $+H$         & $\dfrac{G}{1-GH}$ \\[0.5em]
+            Retroalim. unitaria   & $G$, $H=1$                      & $\dfrac{G}{1+G}$ \\
+            \bottomrule
+        \end{tabular}
+        \caption{Reglas fundamentales de reducci\'on de diagramas de bloques}
+    \end{table}
+
+\end{frame}
+\begin{frame}{Resumen de Reglas del \'Algebra de Bloques}
+\begin{alertblock}{Estrategia}
+        Reducir primero los \textbf{lazos internos}, luego los externos. Simplificar serie y paralelo antes de aplicar la f\'ormula de retroalimentaci\'on.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Actividad Pr\'actica}
+    \begin{exampleblock}{Ejercicio}
+        Dado el sistema: $\quad \ddot{y} + 5\dot{y} + 6y = 3u$
+    \end{exampleblock}
+    Realizar en MATLAB:
+    \begin{enumerate}
+        \item Representar como \textbf{Funci\'on de Transferencia} con \texttt{tf()}
+        \item Representar en \textbf{Espacio de Estado} con \texttt{ss()} (desde la EDO y desde \texttt{tf})
+        \item Verificar que ambas dan la misma respuesta al escal\'on con \texttt{step()}
+        \item Calcular los \textbf{polos} con \texttt{pole()} y los \textbf{eigenvalores} con \texttt{eig(A)}
+        \item Agregar un \textbf{controlador proporcional} $G_c = K = 5$ en lazo cerrado con \texttt{feedback()}
+        \item Comparar la respuesta al escal\'on en lazo \textbf{abierto} vs \textbf{cerrado}
+        \item Entregables: Script de MATLAB comentado con figuras de respuesta al escal\'on para los puntos 3 y 6.
+    \end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Referencias y Recursos}
+    \begin{exampleblock}{Bibliograf\'ia recomendada}
+        \begin{itemize}
+            \item Ogata, K. (2010). \textit{Modern Control Engineering} (5th ed.). Prentice Hall.
+            \item Nise, N. S. (2019). \textit{Control Systems Engineering} (8th ed.). Wiley.
+            \item Franklin, G., Powell, J. D., \& Emami-Naeini, A. (2019). \textit{Feedback Control of Dynamic Systems}. Pearson.
+        \end{itemize}
+    \end{exampleblock}
+    \vspace{0.3em}
+    \begin{exampleblock}{Documentaci\'on MATLAB}
+        \begin{itemize}
+            \item \url{https://www.mathworks.com/help/control/}
+            \item Funciones: \texttt{tf}, \texttt{ss}, \texttt{series}, \texttt{parallel}, \texttt{feedback}, \texttt{step}, \texttt{lsim}, \texttt{pzmap}, \texttt{eig}, \texttt{pole}
+        \end{itemize}
+    \end{exampleblock}
+    \vspace{0.5em}
+    \begin{center}
+        \Large \textbf{!`Gracias!}\\[0.3em]
+        \normalsize \textit{Prof. D.Sc. BARSEKH-ONJI Aboud}\\
+        \small Facultad de Ingenier\'ia --- Universidad An\'ahuac M\'exico
+    \end{center}
+\end{frame}
+
+\end{document}

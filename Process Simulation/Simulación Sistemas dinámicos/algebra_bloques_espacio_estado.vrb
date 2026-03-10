@@ -1,0 +1,48 @@
+\frametitle{Espacio de Estado en MATLAB}
+\begin{columns}
+        \column{0.55\textwidth}
+\begin{lstlisting}[language=Matlab, style=MATLABStyle]
+%% Ejemplo 5 - Sistema 2do orden
+A = [0  1; -2 -3];
+B = [0; 1];
+C = [1  0];
+D = 0;
+
+% Crear sistema en espacio de estado
+sys_ss = ss(A, B, C, D);
+
+% Convertir a funcion de transferencia
+sys_tf = tf(sys_ss);
+disp('G(s):'); sys_tf
+
+% Respuesta al escalon
+figure; step(sys_ss); grid on;
+title('Respuesta al Escalon (EE)');
+
+% Eigenvalores = Polos
+disp('Eigenvalores:'); eig(A)
+disp('Polos:'); pole(sys_ss)
+\end{lstlisting}
+        \column{0.42\textwidth}
+\begin{lstlisting}[language=Matlab, style=MATLABStyle]
+%% Desde TF hacia EE
+G = tf(1, [1 3 2]);
+sys2 = ss(G);  % conversion
+sys2.A
+sys2.B
+sys2.C
+sys2.D
+
+%% Simulacion con CI no cero
+x0 = [1; 0];      % condicion inicial
+t  = 0:0.01:10;
+u  = zeros(size(t));
+[y, tout, x] = lsim(sys2, u, t, x0);
+figure;
+plot(tout, y, 'b', ...
+     tout, x(:,1), 'r--');
+legend('y(t)', 'x_1(t)');
+xlabel('t (s)');
+title('Respuesta libre con CI');
+\end{lstlisting}
+    \end{columns}

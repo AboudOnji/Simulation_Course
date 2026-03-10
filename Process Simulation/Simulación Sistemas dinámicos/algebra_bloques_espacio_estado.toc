@@ -1,0 +1,7 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Repaso: Funci\'on de Transferencia}{3}{0}{1}
+\beamer@sectionintoc {2}{\'Algebra de Bloques: Reglas Fundamentales}{7}{0}{2}
+\beamer@sectionintoc {3}{Ejemplos de Reducci\'on de Diagramas}{15}{0}{3}
+\beamer@sectionintoc {4}{Introducci\'on al Espacio de Estado}{23}{0}{4}
+\beamer@sectionintoc {5}{Ejemplos en Espacio de Estado}{32}{0}{5}
+\beamer@sectionintoc {6}{S\'intesis y Conexi\'on entre Representaciones}{39}{0}{6}
