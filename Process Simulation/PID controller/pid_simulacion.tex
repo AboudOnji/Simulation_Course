@@ -1,0 +1,779 @@
+\documentclass[aspectratio=169,xcolor=dvipsnames]{beamer}
+\usetheme{Berlin}
+
+\usepackage[spanish]{babel}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{lettrine}
+\setbeamertemplate{caption}[numbered]
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}
+\usepackage{xurl}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{adjustbox}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=cyan,
+    filecolor=blue,
+    urlcolor=blue,
+    citecolor=blue,
+}
+
+%----------------------------------------------------------------------------------------
+%   CODE LISTINGS SETTINGS
+%----------------------------------------------------------------------------------------
+\usepackage{listings}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.99}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+
+\lstdefinestyle{MATLABStyle}{
+  language=Matlab,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{codegreen},
+  stringstyle=\color{violet},
+  breaklines=true,
+  numbers=left,
+  numbersep=5pt,
+  frame=lines,
+  backgroundcolor=\color{backcolour}
+}
+\lstset{style=MATLABStyle}
+
+%----------------------------------------------------------------------------------------
+%   TITLE CONFIGURATION
+%----------------------------------------------------------------------------------------
+\title{Controladores PID}
+\subtitle{Simulación en MATLAB y Simulink}
+\author{Prof. D.Sc. BARSEKH-ONJI Aboud}
+\institute{
+    Facultad de Ingeniería \\
+    Universidad Anáhuac México
+}
+\date{\today}
+
+%----------------------------------------------------------------------------------------
+%   AUTO AGENDA AT EACH SECTION
+%----------------------------------------------------------------------------------------
+\AtBeginSection[]{
+  \begin{frame}{Agenda}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Tabla de Contenido}
+    \tableofcontents
+\end{frame}
+
+%------------------------------------------------
+\section{Recapitulación: Sistemas Dinámicos}
+%------------------------------------------------
+
+\begin{frame}{¿Dónde estamos?}
+    \footnotesize
+    \begin{block}{Continuidad de la materia}
+        En sesiones anteriores aprendimos a \textbf{modelar} y \textbf{simular} sistemas dinámicos:
+    \end{block}
+    \vspace{0.4em}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Lo que ya sabemos:}
+        \begin{itemize}
+            \item Obtener la ecuación diferencial de un sistema físico
+            \item Aplicar la Transformada de Laplace para obtener $G(s)$
+            \item Simular la respuesta en Simulink con bloques de \textit{Transfer Function}
+            \item Interpretar la respuesta temporal (transitorio y estado estacionario)
+        \end{itemize}
+        \column{0.5\textwidth}
+        \textbf{Lo que aprenderemos hoy:}
+        \begin{itemize}
+            \item Por qué el sistema abierto no es suficiente
+            \item Qué es un controlador PID y cómo actúa
+            \item Cómo cerrar el lazo en Simulink
+            \item Cómo sintonizar el PID con herramientas de MATLAB
+            \item Cómo analizar y comparar respuestas
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{El Problema: Sistema en Lazo Abierto}
+    \footnotesize
+    \begin{alertblock}{Limitación fundamental del lazo abierto}
+        Un sistema en lazo abierto aplica su entrada sin verificar si la salida es la correcta. Cualquier perturbación o error en el modelo genera una respuesta incorrecta \textbf{sin posibilidad de corrección automática}.
+    \end{alertblock}
+    \vspace{0.4em}
+    Consideremos nuestra planta ya conocida:
+    \begin{equation}
+        G(s) = \frac{1}{s^2 + 2s + 4}
+    \end{equation}
+    \begin{itemize}
+        \item Si aplicamos una entrada escalón $R(s) = \dfrac{1}{s}$, la salida converge a $y(\infty) = \dfrac{1}{4} = 0.25$ (por el teorema del valor final)
+        \item Pero si la referencia deseada es $r = 1.0$, \textbf{el sistema en lazo abierto nunca la alcanza}
+        \item Necesitamos \textbf{retroalimentación (feedback)} para corregir este error
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{De Lazo Abierto a Lazo Cerrado}
+    \footnotesize
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Lazo Abierto:}
+        \vspace{0.3em}
+
+        $R(s) \rightarrow G(s) \rightarrow Y(s)$
+
+        \vspace{0.4em}
+        \begin{itemize}
+            \item No hay corrección automática
+            \item Sensible a perturbaciones
+            \item Error de estado estacionario persistente
+        \end{itemize}
+
+        \column{0.5\textwidth}
+        \textbf{Lazo Cerrado (con controlador):}
+        \vspace{0.3em}
+
+        $E(s) = R(s) - Y(s)$
+
+        $U(s) = C(s) \cdot E(s)$
+
+        $Y(s) = G(s) \cdot U(s)$
+
+        \vspace{0.4em}
+        \begin{itemize}
+            \item El error se mide y corrige continuamente
+            \item Robusto frente a perturbaciones
+            \item El controlador $C(s)$ determina la calidad de la respuesta
+        \end{itemize}
+    \end{columns}
+    \vspace{0.4em}
+    \begin{exampleblock}{Función de transferencia en lazo cerrado}
+        \centering
+        $T(s) = \dfrac{C(s) \cdot G(s)}{1 + C(s) \cdot G(s)}$
+    \end{exampleblock}
+\end{frame}
+
+%------------------------------------------------
+\section{Teoría del Controlador PID}
+%------------------------------------------------
+
+\begin{frame}{¿Qué es un Controlador PID?}
+    \footnotesize
+    \begin{block}{Definición}
+        Un controlador \textbf{PID} (Proporcional--Integral--Derivativo) calcula una señal de control $u(t)$ a partir del \textbf{error} $e(t) = r(t) - y(t)$, combinando tres acciones correctivas independientes.
+    \end{block}
+    \vspace{0.4em}
+    \begin{equation}
+        u(t) = K_p \, e(t) \;+\; K_i \int_0^t e(\tau)\,d\tau \;+\; K_d \frac{d\,e(t)}{dt}
+    \end{equation}
+    \vspace{0.2em}
+    \begin{itemize}
+        \item $K_p$ --- Ganancia \textbf{Proporcional}
+        \item $K_i$ --- Ganancia \textbf{Integral}
+        \item $K_d$ --- Ganancia \textbf{Derivativa}
+        \item $e(t) = r(t) - y(t)$ --- Error entre referencia y salida actual
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Acción Proporcional (P)}
+    \footnotesize
+    \begin{block}{Principio}
+        La acción proporcional aplica una corrección \textbf{directamente proporcional} al error actual.
+    \end{block}
+    \begin{equation}
+        u_P(t) = K_p \cdot e(t)
+    \end{equation}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Efecto de aumentar $K_p$:}
+        \begin{itemize}
+            \item $\uparrow$ Velocidad de respuesta
+            \item $\downarrow$ Tiempo de subida ($t_r$)
+            \item $\uparrow$ Sobreimpulso (\textit{overshoot})
+            \item Puede generar inestabilidad
+        \end{itemize}
+        \column{0.5\textwidth}
+        \begin{alertblock}{Limitación clave}
+            La acción P sola \textbf{no elimina el error de estado estacionario} ($e_{ss} \neq 0$) en sistemas tipo 0. Siempre queda un error residual proporcional a $\frac{1}{1+K_p \cdot K_{DC}}$.
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Acción Integral (I)}
+    \footnotesize
+    \begin{block}{Principio}
+        La acción integral acumula el error en el tiempo. Si hay error persistente, la acción integral crece hasta que el error se elimine.
+    \end{block}
+    \begin{equation}
+        u_I(t) = K_i \int_0^t e(\tau)\,d\tau
+    \end{equation}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Efecto de aumentar $K_i$:}
+        \begin{itemize}
+            \item Elimina el \textbf{error de estado estacionario}
+            \item $\uparrow$ Sobreimpulso
+            \item $\downarrow$ Estabilidad (puede oscilar)
+            \item Respuesta más lenta al inicio
+        \end{itemize}
+        \column{0.5\textwidth}
+        \begin{alertblock}{\textit{Integrator Windup}}
+            Si la actuación está saturada y el error persiste, la integral sigue creciendo (\textit{windup}). Esto puede causar sobreimpulsos grandes al salir de la saturación. Los PID modernos incluyen \textbf{anti-windup}.
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Acción Derivativa (D)}
+    \footnotesize
+    \begin{block}{Principio}
+        La acción derivativa reacciona a la \textbf{velocidad de cambio} del error. Predice el error futuro y aplica una corrección anticipada.
+    \end{block}
+    \begin{equation}
+        u_D(t) = K_d \frac{d\,e(t)}{dt}
+    \end{equation}
+    \begin{columns}
+        \column{0.45\textwidth}
+        \textbf{Efecto de aumentar $K_d$:}
+        \begin{itemize}
+            \item $\downarrow$ Sobreimpulso
+            \item Amortigua oscilaciones
+            \item $\uparrow$ Estabilidad (hasta cierto punto)
+            \item Mejora la respuesta transitoria
+        \end{itemize}
+        \column{0.55\textwidth}
+        \begin{alertblock}{}
+            La derivada amplifica el \textbf{ruido de medición}. En la práctica, se limita su banda de acción con un filtro de primer orden:
+            \[C_D(s) = \frac{K_d \, s}{1 + s/N}\]
+            donde $N$ es el coeficiente de filtro (típicamente $5 \leq N \leq 20$).
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Función de Transferencia del PID}
+    \footnotesize
+    En el dominio de Laplace, el controlador PID tiene la siguiente función de transferencia:
+    \begin{equation}
+        C(s) = K_p + \frac{K_i}{s} + K_d \, s = \frac{K_d s^2 + K_p s + K_i}{s}
+    \end{equation}
+    \vspace{0.3em}
+    \textbf{Forma estándar (ISA):}
+    \begin{equation}
+        C(s) = K_p \left(1 + \frac{1}{T_i \, s} + T_d \, s\right)
+    \end{equation}
+    \begin{itemize}
+        \item $T_i = K_p / K_i$ \quad --- Tiempo integral (reset time)
+        \item $T_d = K_d / K_p$ \quad --- Tiempo derivativo
+    \end{itemize}
+    \vspace{0.2em}
+    \begin{exampleblock}{Función de lazo cerrado completa}
+        \centering
+        $T(s) = \dfrac{C(s)\cdot G(s)}{1 + C(s)\cdot G(s)} = \dfrac{(K_d s^2 + K_p s + K_i)}{s(s^2+2s+4) + (K_d s^2 + K_p s + K_i)}$
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Resumen: Efecto de las Ganancias PID}
+    \footnotesize
+    \begin{center}
+    \begin{tabular}{lccccc}
+        \toprule
+        \textbf{Parámetro} & \textbf{$t_r$ (subida)} & \textbf{Sobreimpulso} & \textbf{$t_s$ (asentam.)} & \textbf{$e_{ss}$} & \textbf{Estabilidad} \\
+        \midrule
+        $\uparrow K_p$ & Disminuye & Aumenta & Pequeño cambio & Disminuye & Empeora \\
+        $\uparrow K_i$ & Disminuye & Aumenta & Aumenta & \textbf{Elimina} & Empeora \\
+        $\uparrow K_d$ & Pequeño cambio & Disminuye & Disminuye & Sin cambio & Mejora \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+    \vspace{0.5em}
+    \begin{alertblock}{Regla práctica}
+        El ajuste de las ganancias PID es un balance entre rapidez, sobreimpulso y estabilidad. No existe un ajuste perfecto universal: depende de los \textbf{requerimientos del sistema} y del \textbf{proceso físico}.
+    \end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\section{Modelado en Simulink}
+%------------------------------------------------
+
+\begin{frame}{Arquitectura del Sistema de Control en Simulink}
+    \begin{block}{Diagrama de bloques a implementar}
+        El sistema de control en lazo cerrado con controlador PID se construye conectando los siguientes bloques en Simulink:
+    \end{block}
+    \vspace{0.5em}
+    \begin{center}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Bloque} & \textbf{Librería Simulink} & \textbf{Función} \\
+        \midrule
+        \texttt{Step} & Sources & Señal de referencia $r(t)$ \\
+        \texttt{Sum} & Math Operations & Cálculo del error $e = r - y$ \\
+        \texttt{Gain} & Math Operations & Ganancia de cadena directa \\
+        \texttt{PID Controller} & Continuous & Controlador PID \\
+        \texttt{Transfer Fcn} & Continuous & Planta $G(s)$ \\
+        \texttt{Scope} & Sinks & Visualización de señales \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+    \vspace{0.3em}
+    \begin{exampleblock}{Flujo de señales}
+        $r(t) \rightarrow \Sigma \rightarrow \text{Gain} \rightarrow \text{PID} \rightarrow G(s) \rightarrow y(t) \rightarrow [\text{retroalimentación}] \rightarrow \Sigma$
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Configuración del Bloque \texttt{Transfer Fcn} (Planta)}
+    \footnotesize
+    \begin{block}{Planta del sistema}
+        La función de transferencia de la planta que usamos como ejemplo es:
+    \end{block}
+    \begin{equation}
+        G(s) = \frac{1}{s^2 + 2s + 4}
+    \end{equation}
+    \begin{columns}
+        \column{0.55\textwidth}
+        \textbf{Análisis de la planta:}
+        \begin{itemize}
+            \item Sistema de \textbf{segundo orden} subamortiguado ($\zeta < 1$)
+            \item Polos en $s = -1 \pm j\sqrt{3}$ (  p.real (-) $\Rightarrow$ estable)
+            \item Ganancia DC: $G(0) = 1/4 = 0.25$
+            \item Sin ceros
+            \item En lazo abierto, ante escalón unitario: $y(\infty) = 0.25$
+        \end{itemize}
+        \column{0.45\textwidth}
+        \textbf{Configuración en Simulink:}
+        \begin{itemize}
+            \item Numerador: \texttt{[1]}
+            \item Denominador: \texttt{[1 2 4]}
+            \item Doble clic en el bloque y se ingresan estos vectores de coeficientes (de mayor a menor potencia de $s$)
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Configuración del Bloque \texttt{Sum} y \texttt{Gain}}
+    \footnotesize
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Bloque Sum (Nodo de error):}
+        \begin{itemize}
+            \item Doble clic $\rightarrow$ \textbf{List of signs}: \texttt{+-}
+            \item La primera entrada (+) recibe la referencia $r$
+            \item La segunda entrada (--) recibe la retroalimentación $y$
+            \item Salida: $e(t) = r(t) - y(t)$
+        \end{itemize}
+        \begin{alertblock}{Atención}
+            Verificar que el signo de retroalimentación sea negativo (\texttt{-}). Un error aquí convierte el lazo en positivo, desestabilizando el sistema.
+        \end{alertblock}
+
+        \column{0.5\textwidth}
+        \textbf{Bloque Gain (Ganancia de cadena directa):}
+        \begin{itemize}
+            \item Valor: \texttt{2.5} (escala el error antes del PID)
+            \item Equivale a un ajuste adicional de amplificación en la cadena directa
+            \item Se puede interpretar como parte del controlador proporcional total
+        \end{itemize}
+        \begin{exampleblock}{Nota pedagógica}
+            Este bloque \texttt{Gain} nos permite observar cómo una ganancia en la cadena directa modifica la respuesta, \textbf{independientemente} de las ganancias PID.
+        \end{exampleblock}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Configuración del Bloque \texttt{PID Controller}}
+    \begin{block}{Parámetros del bloque PID en Simulink}
+        El bloque \texttt{PID Controller} (librería \textit{Continuous}) implementa la forma paralela o estándar del PID.
+    \end{block}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Parámetros principales:}
+        \begin{itemize}
+            \item \textbf{Controller}: PID / PI / PD / P
+            \item \textbf{Form}: Parallel o Ideal
+            \item \textbf{P}: ganancia proporcional $K_p$
+            \item \textbf{I}: ganancia integral $K_i$
+            \item \textbf{D}: ganancia derivativa $K_d$
+            \item \textbf{N}: coeficiente del filtro derivativo
+        \end{itemize}
+        \column{0.5\textwidth}
+        \textbf{Opciones avanzadas:}
+        \begin{itemize}
+            \item \textbf{Anti-windup}: limita la acumulación de la integral durante saturación
+            \item \textbf{Output saturation}: define los límites físicos del actuador
+            \item \textbf{Enable tracking mode}: para conmutación entre controladores
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Configuración del Bloque \texttt{PID Controller}}
+    \begin{exampleblock}{Punto de partida}
+        Para la primera simulación: $K_p = 1$, $K_i = 0$, $K_d = 0$ (solo proporcional). Luego sintonizaremos.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Procedimiento para Construir el Modelo}
+    \begin{enumerate}
+        \item Abrir MATLAB y escribir \texttt{simulink} en la línea de comandos
+        \item Crear un nuevo modelo en blanco: \texttt{File} $\rightarrow$ \texttt{New} $\rightarrow$ \texttt{Model}
+        \item Agregar los bloques desde el \textit{Library Browser} (buscar por nombre)
+        \item Conectar los bloques en el orden: Step $\rightarrow$ Sum $\rightarrow$ Gain $\rightarrow$ PID $\rightarrow$ Transfer Fcn $\rightarrow$ Scope
+        \item Llevar la salida de \texttt{Transfer Fcn} de regreso a la entrada negativa del \texttt{Sum}
+        \item Conectar tanto $r(t)$ como $y(t)$ al \texttt{Scope} (configurarlo con 2 entradas)
+        \item Configurar los parámetros de simulación: \texttt{Modeling} $\rightarrow$ \texttt{Model Settings}
+        \begin{itemize}
+            \item Tiempo de parada: 30 segundos
+            \item Solver: \texttt{ode45} (apropiado para sistemas continuos)
+        \end{itemize}
+        \item Ejecutar la simulación con \texttt{Run} ($\triangleright$) y observar la respuesta en el \texttt{Scope}
+    \end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\section{Sintonización del PID}
+%------------------------------------------------
+
+\begin{frame}{¿Por Qué Sintonizar el PID?}
+    \footnotesize
+    \begin{alertblock}{Problema de la sintonización}
+        Elegir valores incorrectos para $K_p$, $K_i$, $K_d$ puede resultar en respuestas inaceptables o en un sistema inestable.
+    \end{alertblock}
+    \vspace{0.4em}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Criterios de desempeño típicos:}
+        \begin{itemize}
+            \item \textbf{Tiempo de subida} $t_r$: rapidez de la respuesta
+            \item \textbf{Sobreimpulso} $M_p$: máximo porcentaje sobre la referencia
+            \item \textbf{Tiempo de asentamiento} $t_s$: cuándo la respuesta se queda en $\pm 2\%$ o $\pm 5\%$ de la referencia
+            \item \textbf{Error de estado estacionario} $e_{ss}$: error residual permanente
+        \end{itemize}
+        \column{0.5\textwidth}
+        \textbf{Métodos de sintonización:}
+        \begin{itemize}
+            \item \textbf{Ziegler-Nichols} (manual, clásico)
+            \item \textbf{PID Tuner App} (automático, MATLAB)
+            \item \textbf{Optimización} (basada en criterios ITAE, ISE, IAE)
+            \item \textbf{Prueba y error} (válido para aprendizaje)
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Método de Ziegler-Nichols (Referencia Teórica)}
+    \footnotesize
+    \begin{block}{Método de la ganancia última (lazo cerrado)}
+        Este método clásico determina parámetros PID a partir de la \textbf{ganancia última} $K_u$ y el \textbf{período de oscilación sostenida} $T_u$.
+    \end{block}
+    \vspace{0.3em}
+    \textbf{Procedimiento:}
+    \begin{enumerate}
+        \item Desactivar las acciones I y D ($K_i = 0$, $K_d = 0$)
+        \item Aumentar $K_p$ hasta que el sistema oscile de forma \textbf{sostenida y constante}
+        \item Registrar $K_u$ (ganancia en ese punto) y $T_u$ (período de oscilación en segundos)
+        \item Aplicar las fórmulas de la tabla:
+    \end{enumerate}
+    \vspace{0.3em}
+    \begin{center}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Tipo} & $K_p$ & $T_i$ & $T_d$ \\
+        \midrule
+        P & $0.50\, K_u$ & --- & --- \\
+        PI & $0.45\, K_u$ & $T_u / 1.2$ & --- \\
+        PID & $0.60\, K_u$ & $T_u / 2$ & $T_u / 8$ \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}{La App \textit{PID Tuner} de MATLAB/Simulink}
+    \footnotesize
+    \begin{block}{¿Qué es el PID Tuner?}
+        Es una herramienta interactiva integrada en Simulink que \textbf{lineariza automáticamente} el modelo y propone ganancias óptimas mediante técnicas de diseño en frecuencia.
+    \end{block}
+    \vspace{0.3em}
+    \textbf{Cómo acceder al PID Tuner:}
+    \begin{enumerate}
+        \item Doble clic sobre el bloque \texttt{PID Controller} en el modelo
+        \item En la ventana del bloque, hacer clic en \textbf{``Tune...''} (o ``Manage and Tune'' según versión)
+        \item Simulink linealiza el modelo alrededor del punto de operación actual
+        \item Se abre la ventana del \textbf{PID Tuner}
+    \end{enumerate}
+    \vspace{0.3em}
+    \begin{exampleblock}{Ventaja}
+        No requiere conocer la planta analíticamente. El PID Tuner la identifica desde el modelo de Simulink automáticamente.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Uso del PID Tuner: Controles de la Interfaz}
+    \footnotesize
+    \begin{columns}
+        \column{0.55\textwidth}
+        \textbf{Elementos principales de la interfaz:}
+        \begin{itemize}
+            \item \textbf{Response plot}: muestra la respuesta al escalón con las ganancias actuales
+            \item \textbf{Performance/Robustness slider}: desplazar hacia la izquierda para más robustez, hacia la derecha para más rapidez
+            \item \textbf{Bandwidth / Phase margin}: métricas en frecuencia para la sintonización
+            \item \textbf{Controller parameters}: muestra los valores de $K_p$, $K_i$, $K_d$ calculados
+        \end{itemize}
+        \column{0.45\textwidth}
+        \textbf{Flujo de trabajo:}
+        \begin{enumerate}
+            \item Observar la respuesta inicial propuesta
+            \item Ajustar el slider para balancear rapidez vs. robustez
+            \item Verificar el sobreimpulso y el tiempo de asentamiento
+            \item Verificar el margen de fase (ideal $> 60°$)
+            \item Hacer clic en \textbf{``Update Block''} para aplicar al modelo
+            \item Ejecutar la simulación y comparar
+        \end{enumerate}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\section{Análisis de Respuesta en MATLAB}
+%------------------------------------------------
+
+\begin{frame}[fragile]{Simulación desde MATLAB: Definir el Sistema}
+    \begin{block}{Enfoque alternativo: usar MATLAB directamente (sin Simulink)}
+        MATLAB permite simular y analizar el mismo sistema de control mediante comandos, lo cual es útil para comparar múltiples sintonías rápidamente.
+    \end{block}
+    \vspace{0.3em}
+\begin{lstlisting}[language=Matlab, style=MATLABStyle]
+% =========================================================
+% Definicion del sistema de control PID en lazo cerrado
+% Materia: Simulacion | UAM - Ingenieria
+% =========================================================
+% Planta G(s) = 1 / (s^2 + 2s + 4)
+num_G = [1];
+den_G = [1 2 4];
+G = tf(num_G, den_G);
+
+% Controlador PID: C(s) = Kp + Ki/s + Kd*s
+Kp = 1.0;    Ki = 0.0;    Kd = 0.0;   % Solo proporcional (inicio)
+
+% Crear el objeto PID de MATLAB
+C = pid(Kp, Ki, Kd);
+
+% Sistema en lazo cerrado: T(s) = C(s)*G(s) / (1 + C(s)*G(s))
+T = feedback(C * G, 1);
+
+disp('Polos del sistema en lazo cerrado:')
+disp(pole(T))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulación: Respuesta al Escalón y Análisis}
+\begin{lstlisting}[language=Matlab, style=MATLABStyle]
+% =========================================================
+% Comparacion de distintas sintonias PID
+% =========================================================
+t = 0:0.01:30;   % Vector de tiempo (0 a 30 segundos)
+
+% Solo Proporcional (P)
+C_P  = pid(1.0, 0,   0);    T_P  = feedback(C_P  * G, 1);
+% Proporcional + Integral (PI)
+C_PI = pid(1.5, 0.8, 0);    T_PI = feedback(C_PI * G, 1);
+% PID completo (sintonizado)
+C_PID = pid(2.0, 1.2, 0.5); T_PID = feedback(C_PID * G, 1);
+
+figure;
+step(T_P, T_PI, T_PID, t);
+legend('Solo P', 'PI', 'PID');
+title('Comparacion de respuestas: P vs PI vs PID');
+xlabel('Tiempo (s)'); ylabel('Salida y(t)');
+grid on;
+
+% Informacion de desempeno
+S_PID = stepinfo(T_PID);
+fprintf('Tiempo de subida:     %.3f s\n', S_PID.RiseTime);
+fprintf('Sobreimpulso:         %.2f %%\n', S_PID.Overshoot);
+fprintf('Tiempo de asentam.:   %.3f s\n', S_PID.SettlingTime);
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Sintonización Automática con \texttt{pidtune}}
+    \begin{block}{Comando \texttt{pidtune}}
+        MATLAB incluye la función \texttt{pidtune()} que diseña automáticamente un controlador PID dado el modelo de la planta y un tipo de controlador.
+    \end{block}
+\begin{lstlisting}[language=Matlab, style=MATLABStyle]
+% =========================================================
+% Sintonia automatica con pidtune()
+% =========================================================
+% Planta
+G = tf(1, [1 2 4]);
+
+% Sintonizar un controlador PID con pidtune
+[C_auto, info] = pidtune(G, 'PID');
+
+fprintf('--- Ganancias sintonizadas automaticamente ---\n');
+fprintf('Kp = %.4f\n', C_auto.Kp);
+fprintf('Ki = %.4f\n', C_auto.Ki);
+fprintf('Kd = %.4f\n', C_auto.Kd);
+fprintf('Margen de fase: %.2f grados\n', info.PhaseMargin);
+fprintf('Frecuencia de cruce: %.4f rad/s\n', info.CrossoverFrequency);
+
+% Lazo cerrado con PID automatico
+T_auto = feedback(C_auto * G, 1);
+figure; step(T_auto);
+title('Respuesta con PID sintonizado por pidtune()');
+xlabel('Tiempo (s)'); ylabel('y(t)'); grid on;
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Análisis Completo: \texttt{stepinfo} y Comparativa}
+\begin{lstlisting}[language=Matlab, style=MATLABStyle]
+% =========================================================
+% Analisis de desempeno con stepinfo()
+% =========================================================
+% Sistemas a comparar
+G  = tf(1, [1 2 4]);
+C1 = pid(1,   0,   0  );  T1 = feedback(C1 * G, 1);  % P
+C2 = pid(1.5, 0.8, 0  );  T2 = feedback(C2 * G, 1);  % PI
+C3 = pid(2,   1.2, 0.5);  T3 = feedback(C3 * G, 1);  % PID
+
+S1 = stepinfo(T1); S2 = stepinfo(T2); S3 = stepinfo(T3);
+
+fprintf('\n%-20s %8s %8s %8s\n','Metrica','P','PI','PID');
+fprintf('%-20s %8.3f %8.3f %8.3f\n','t_rise (s)',...
+        S1.RiseTime, S2.RiseTime, S3.RiseTime);
+fprintf('%-20s %8.2f %8.2f %8.2f\n','Overshoot (%%)',...
+        S1.Overshoot, S2.Overshoot, S3.Overshoot);
+fprintf('%-20s %8.3f %8.3f %8.3f\n','t_settle (s)',...
+        S1.SettlingTime, S2.SettlingTime, S3.SettlingTime);
+% Valor final
+yf = @(T) dcgain(T);
+fprintf('%-20s %8.4f %8.4f %8.4f\n','y_final',...
+        yf(T1), yf(T2), yf(T3));
+\end{lstlisting}
+\end{frame}
+
+%------------------------------------------------
+\section{Interpretación de Resultados}
+%------------------------------------------------
+
+\begin{frame}{Métricas de Desempeño: ¿Qué Observar en el Scope?}
+    \footnotesize
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{En la respuesta al escalón, analizar:}
+        \begin{itemize}
+            \item \textbf{Tiempo de retardo} $t_d$: tiempo en que la salida alcanza el 50\% del valor final
+            \item \textbf{Tiempo de subida} $t_r$: tiempo de 10\% a 90\% del valor final
+            \item \textbf{Tiempo de pico} $t_p$: instante del máximo sobreimpulso
+            \item \textbf{Sobreimpulso} $M_p$: $\dfrac{y_{max} - y_{ss}}{y_{ss}} \times 100\%$
+            \item \textbf{Tiempo de asentamiento} $t_s$: cuando la respuesta entra y permanece en banda $\pm 2\%$
+        \end{itemize}
+        \column{0.5\textwidth}
+        \textbf{Criterios aceptables (típicos en ingeniería):}
+        \begin{itemize}
+            \item $M_p < 5\%$ (aplicaciones críticas)
+            \item $M_p < 20\%$ (aplicaciones generales)
+            \item $e_{ss} = 0$ (con acción integral)
+            \item $t_s$ mínimo según requisitos
+        \end{itemize}
+        \vspace{0.3em}
+        \begin{alertblock}{Regla general}
+            Un buen diseño de control siempre especifica primero los \textbf{requerimientos de desempeño} antes de elegir las ganancias.
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Comparativa de Respuestas: Efecto de la Sintonía}
+    \footnotesize
+    \begin{block}{Lectura de la tabla de resultados esperados (ejemplo)}
+        Al ejecutar el código de comparación, se obtienen resultados similares a los siguientes para $G(s) = 1/(s^2+2s+4)$:
+    \end{block}
+    \vspace{0.4em}
+    \begin{center}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Controlador} & $t_r$ (s) & $M_p$ (\%) & $t_s$ (s) & $e_{ss}$ \\
+        \midrule
+        Solo P ($K_p=1$) & $\sim 2.5$ & $0$ & $\sim 5$ & $0.20$ \\
+        PI ($K_p=1.5$, $K_i=0.8$) & $\sim 1.8$ & $\sim 8$ & $\sim 12$ & $0$ \\
+        PID ($K_p=2$, $K_i=1.2$, $K_d=0.5$) & $\sim 1.2$ & $\sim 5$ & $\sim 8$ & $0$ \\
+        \texttt{pidtune()} automático & Óptimo & Mínimo & Mínimo & $0$ \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+    \vspace{0.3em}
+    \begin{exampleblock}{Observación pedagógica}
+        La acción P sola reduce el tiempo de subida pero deja error residual. La acción I lo elimina a costo de mayor sobreimpulso. La acción D reduce el sobreimpulso y el tiempo de asentamiento.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Diagrama de Bode y Margen de Estabilidad}
+\begin{lstlisting}[language=Matlab, style=MATLABStyle]
+% =========================================================
+% Analisis de estabilidad: Diagrama de Bode y margenes
+% =========================================================
+G  = tf(1, [1 2 4]);
+C  = pid(2, 1.2, 0.5);
+L  = C * G;          % Funcion de lazo abierto L(s)
+
+% Margenes de ganancia y fase
+[Gm, Pm, Wcg, Wcp] = margin(L);
+fprintf('Margen de ganancia: %.2f dB (%.2f veces)\n', 20*log10(Gm), Gm);
+fprintf('Margen de fase:     %.2f grados\n', Pm);
+fprintf('Freq. cruce ganancia: %.4f rad/s\n', Wcg);
+fprintf('Freq. cruce fase:     %.4f rad/s\n', Wcp);
+
+% Graficar Diagrama de Bode del lazo abierto
+figure;
+margin(L);      % margin() grafica el Bode y marca los margenes
+title('Diagrama de Bode - Lazo Abierto con PID');
+grid on;
+\end{lstlisting}
+    \begin{exampleblock}{Criterio de estabilidad}
+        Margen de fase $> 45°$ (recomendado) garantiza un sistema estable con buena amortiguación.
+    \end{exampleblock}
+\end{frame}
+
+%------------------------------------------------
+\section{Conclusiones}
+%------------------------------------------------
+
+\begin{frame}{Conclusiones}
+    \footnotesize
+    \begin{block}{Lo que aprendimos en esta sesión}
+        \begin{enumerate}
+            \item Los sistemas en lazo abierto tienen error de estado estacionario y no corrigen perturbaciones automáticamente.
+            \item El controlador PID combina tres acciones: \textbf{P} (rapidez), \textbf{I} (precisión), \textbf{D} (amortiguación).
+            \item En Simulink, el lazo cerrado se construye conectando: \texttt{Step} $\rightarrow$ \texttt{Sum} $\rightarrow$ \texttt{PID} $\rightarrow$ \texttt{Plant} $\rightarrow$ (retroalimentación).
+            \item La \textbf{App PID Tuner} y el comando \texttt{pidtune()} permiten sintonizar automáticamente.
+            \item El comando \texttt{stepinfo()} cuantifica el desempeño y permite comparar sintonías.
+            \item El \textbf{Diagrama de Bode} y los márgenes de fase/ganancia verifican la estabilidad del diseño.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+\begin{frame}{Conclusiones}
+
+    \begin{alertblock}{Para la práctica}
+        Experimentar con diferentes valores de $K_p$, $K_i$, $K_d$ y documentar el efecto en $t_r$, $M_p$, $t_s$ y $e_{ss}$ mediante una tabla comparativa.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Referencias y Recursos}
+    \footnotesize
+    \begin{exampleblock}{Documentación oficial MATLAB/Simulink}
+        \url{https://la.mathworks.com/help/simulink/}
+        \url{https://la.mathworks.com/help/simulink/slref/pidcontroller.html}
+        \url{https://la.mathworks.com/help/control/ref/pidtune.html}
+    \end{exampleblock}
+    \vspace{0.3em}
+    \begin{block}{Bibliografía de referencia}
+        \begin{itemize}
+            \item Ogata, K. (2010). \textit{Modern Control Engineering} (5th ed.). Prentice Hall.
+            \item Dorf, R. \& Bishop, R. (2017). \textit{Modern Control Systems} (13th ed.). Pearson.
+            \item Franklin, G., Powell, J. \& Emami-Naeini, A. (2019). \textit{Feedback Control of Dynamic Systems}. Pearson.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+%--- Fin del Documento ---
+\end{document}
