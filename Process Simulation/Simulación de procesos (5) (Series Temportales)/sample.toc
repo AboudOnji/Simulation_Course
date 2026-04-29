@@ -1,0 +1,16 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Introducción al Modelado de Series Temporales}{2}{0}{1}
+\beamer@sectionintoc {2}{Análisis de Correlación Pearson}{6}{0}{2}
+\beamer@subsectionintoc {2}{1}{Correlación de Pearson}{9}{0}{2}
+\beamer@subsectionintoc {2}{2}{Identificación de la Dependencia Temporal: ACF y PACF}{11}{0}{2}
+\beamer@sectionintoc {3}{Pruebas Estadísticas para la detección de estacionariedad}{15}{0}{3}
+\beamer@subsectionintoc {3}{1}{La Prueba Q de Ljung-Box}{17}{0}{3}
+\beamer@subsectionintoc {3}{2}{Detección de Volatilidad Condicional: Prueba de Efectos ARCH}{20}{0}{3}
+\beamer@subsectionintoc {3}{3}{Pruebas de Raíz Unitaria}{23}{0}{3}
+\beamer@subsectionintoc {3}{4}{Ejemplo Práctico: Detección de Estacionariedad}{24}{0}{3}
+\beamer@sectionintoc {4}{Modelos Autorregresivos Integrados de Media Móvil (ARIMA)}{27}{0}{4}
+\beamer@subsectionintoc {4}{1}{Componentes Fundamentales: Procesos AR y MA}{29}{0}{4}
+\beamer@subsectionintoc {4}{2}{El Modelo ARMA: Combinando Dependencia Pasada y Errores Aleatorios}{31}{0}{4}
+\beamer@subsectionintoc {4}{3}{El Modelo ARIMA: Manejando la No Estacionariedad}{33}{0}{4}
+\beamer@subsectionintoc {4}{4}{Extensiones del Modelo ARIMA}{35}{0}{4}
+\beamer@subsectionintoc {4}{5}{La Metodología Box-Jenkins para el Modelado ARIMA}{36}{0}{4}
